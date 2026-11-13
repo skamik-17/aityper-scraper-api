@@ -1,0 +1,4682 @@
+[
+ {
+  "market_id": "bc:2514284562",
+  "match_id": "bc:31333515",
+  "line": 2.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 8,
+  "markets_class_id": 5196,
+  "name": "1. połowa - Liczba goli (3-drogowo)",
+  "label": "1 half total goals 3 way",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Suma",
+   "position": 2,
+   "sports_group_id": 1,
+   "markets_group_id": 280
+  },
+  "selections": [
+   {
+    "name": "Powyżej (2.0)",
+    "label": "over 2.0",
+    "rate": {
+     "decimal": 4.8,
+     "american": 380,
+     "fractional": "19/5"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2514284562",
+    "selection_id": "bc:7400703064"
+   },
+   {
+    "name": "Dokładnie (2.0)",
+    "label": "exactly 2.0",
+    "rate": {
+     "decimal": 3.7,
+     "american": 270,
+     "fractional": "27/10"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2514284562",
+    "selection_id": "bc:7400703066"
+   },
+   {
+    "name": "Poniżej (2.0)",
+    "label": "under 2.0",
+    "rate": {
+     "decimal": 1.65,
+     "american": -154,
+     "fractional": "13/20"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2514284562",
+    "selection_id": "bc:7400703068"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511214334",
+  "match_id": "bc:31333515",
+  "line": 2.5,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 8,
+  "markets_class_id": 2020,
+  "name": "Rezultat lub ilość bramek (2.5)",
+  "label": "outcome or total goals 2.5",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Wynik i suma",
+   "position": 14,
+   "sports_group_id": 1,
+   "markets_group_id": 533
+  },
+  "selections": [
+   {
+    "name": "Arsenal lub powyżej (2.5)",
+    "label": "Arsenal or over 2.5",
+    "rate": {
+     "decimal": 1.09,
+     "american": -1111,
+     "fractional": "1/11"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511214334",
+    "selection_id": "bc:7392423999"
+   },
+   {
+    "name": "Arsenal lub poniżej (2.5)",
+    "label": "Arsenal or under 2.5",
+    "rate": {
+     "decimal": 1.03,
+     "american": -3333,
+     "fractional": "1/33"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511214334",
+    "selection_id": "bc:7392424001"
+   },
+   {
+    "name": "Remis lub powyżej (2.5)",
+    "label": "draw or over 2.5",
+    "rate": {
+     "decimal": 1.3,
+     "american": -333,
+     "fractional": "3/10"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511214334",
+    "selection_id": "bc:7392424003"
+   },
+   {
+    "name": "Remis lub poniżej (2.5)",
+    "label": "draw or under 2.5",
+    "rate": {
+     "decimal": 2.17,
+     "american": 117,
+     "fractional": "7/6"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2511214334",
+    "selection_id": "bc:7392424005"
+   },
+   {
+    "name": "Hull City lub powyżej (2.5)",
+    "label": "Hull City or over 2.5",
+    "rate": {
+     "decimal": 1.42,
+     "american": -238,
+     "fractional": "5/12"
+    },
+    "order": 4,
+    "status": "open",
+    "market_id": "bc:2511214334",
+    "selection_id": "bc:7392424007"
+   },
+   {
+    "name": "Hull City lub poniżej (2.5)",
+    "label": "Hull City or under 2.5",
+    "rate": {
+     "decimal": 2.15,
+     "american": 115,
+     "fractional": "23/20"
+    },
+    "order": 5,
+    "status": "open",
+    "market_id": "bc:2511214334",
+    "selection_id": "bc:7392424009"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511215600",
+  "match_id": "bc:31333515",
+  "line": 1.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 8,
+  "markets_class_id": 5196,
+  "name": "1. połowa - Liczba goli (3-drogowo)",
+  "label": "1 half total goals 3 way",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Suma",
+   "position": 2,
+   "sports_group_id": 1,
+   "markets_group_id": 280
+  },
+  "selections": [
+   {
+    "name": "Powyżej (1.0)",
+    "label": "over 1.0",
+    "rate": {
+     "decimal": 2.22,
+     "american": 122,
+     "fractional": "11/9"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511215600",
+    "selection_id": "bc:7392429448"
+   },
+   {
+    "name": "Dokładnie (1.0)",
+    "label": "exactly 1.0",
+    "rate": {
+     "decimal": 2.7,
+     "american": 170,
+     "fractional": "17/10"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511215600",
+    "selection_id": "bc:7392429449"
+   },
+   {
+    "name": "Poniżej (1.0)",
+    "label": "under 1.0",
+    "rate": {
+     "decimal": 3.8,
+     "american": 280,
+     "fractional": "14/5"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511215600",
+    "selection_id": "bc:7392429450"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840766",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15868,
+  "name": "Strzały w obramowanie (słupek/poprzeczka)",
+  "label": "player shots against woodwork",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 23.0,
+     "american": 2200,
+     "fractional": "22"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840766",
+    "selection_id": "bc:7444759972"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 26.0,
+     "american": 2500,
+     "fractional": "25"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840766",
+    "selection_id": "bc:7444759976"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 31.0,
+     "american": 3000,
+     "fractional": "30"
+    },
+    "order": 64,
+    "status": "open",
+    "market_id": "bc:2530840766",
+    "selection_id": "bc:7444759967"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 9.5,
+     "american": 850,
+     "fractional": "17/2"
+    },
+    "order": 65,
+    "status": "open",
+    "market_id": "bc:2530840766",
+    "selection_id": "bc:7444759969"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840911",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15873,
+  "name": "Spalone zawodnika",
+  "label": "player to be in offside",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 3.95,
+     "american": 295,
+     "fractional": "59/20"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763457"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 9.75,
+     "american": 875,
+     "fractional": "35/4"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763367"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 3.65,
+     "american": 265,
+     "fractional": "53/20"
+    },
+    "order": 5,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763452"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 6,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763451"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 15.0,
+     "american": 1400,
+     "fractional": "14"
+    },
+    "order": 118,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763401"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.95,
+     "american": -105,
+     "fractional": "19/20"
+    },
+    "order": 119,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763400"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 5.75,
+     "american": 475,
+     "fractional": "19/4"
+    },
+    "order": 120,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763399"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 14.0,
+     "american": 1300,
+     "fractional": "13"
+    },
+    "order": 121,
+    "status": "open",
+    "market_id": "bc:2530840911",
+    "selection_id": "bc:7444763398"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530841383",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 4,
+  "markets_class_id": 11511,
+  "name": "Zawodnik strzeli gola lub zanotuje asystę",
+  "label": "player to score or assist",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy",
+   "position": 7,
+   "sports_group_id": 1,
+   "markets_group_id": 291
+  },
+  "selections": [
+   {
+    "name": "Christos Tzolis",
+    "label": "christos tzolis",
+    "rate": {
+     "decimal": 1.5,
+     "american": -200,
+     "fractional": "1/2"
+    },
+    "order": 29,
+    "status": "open",
+    "market_id": "bc:2530841383",
+    "selection_id": "bc:7444772360"
+   },
+   {
+    "name": "Viktor Gyokeres",
+    "label": "viktor gyokeres",
+    "rate": {
+     "decimal": 1.55,
+     "american": -182,
+     "fractional": "5/9"
+    },
+    "order": 30,
+    "status": "open",
+    "market_id": "bc:2530841383",
+    "selection_id": "bc:7444772305"
+   },
+   {
+    "name": "Kai Havertz",
+    "label": "kai havertz",
+    "rate": {
+     "decimal": 1.57,
+     "american": -175,
+     "fractional": "4/7"
+    },
+    "order": 31,
+    "status": "open",
+    "market_id": "bc:2530841383",
+    "selection_id": "bc:7444772340"
+   },
+   {
+    "name": "Noni Madueke",
+    "label": "noni madueke",
+    "rate": {
+     "decimal": 1.65,
+     "american": -154,
+     "fractional": "13/20"
+    },
+    "order": 32,
+    "status": "open",
+    "market_id": "bc:2530841383",
+    "selection_id": "bc:7444772314"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840827",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15869,
+  "name": "Strzały celne głową",
+  "label": "player headed shots on target",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840827",
+    "selection_id": "bc:7444762839"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 36.0,
+     "american": 3500,
+     "fractional": "35"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840827",
+    "selection_id": "bc:7444762771"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 17.0,
+     "american": 1600,
+     "fractional": "16"
+    },
+    "order": 5,
+    "status": "open",
+    "market_id": "bc:2530840827",
+    "selection_id": "bc:7444762865"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 31.0,
+     "american": 3000,
+     "fractional": "30"
+    },
+    "order": 118,
+    "status": "open",
+    "market_id": "bc:2530840827",
+    "selection_id": "bc:7444762806"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 2.9,
+     "american": 190,
+     "fractional": "19/10"
+    },
+    "order": 119,
+    "status": "open",
+    "market_id": "bc:2530840827",
+    "selection_id": "bc:7444762805"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 11.0,
+     "american": 1000,
+     "fractional": "10"
+    },
+    "order": 120,
+    "status": "open",
+    "market_id": "bc:2530840827",
+    "selection_id": "bc:7444762804"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 25.0,
+     "american": 2400,
+     "fractional": "24"
+    },
+    "order": 121,
+    "status": "open",
+    "market_id": "bc:2530840827",
+    "selection_id": "bc:7444762803"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530841316",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 2,
+  "markets_class_id": 12237,
+  "name": "Strzały celne",
+  "label": "player shots on target",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 2.15,
+     "american": 115,
+     "fractional": "23/20"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769606"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 7.0,
+     "american": 600,
+     "fractional": "6"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769502"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 15.0,
+     "american": 1400,
+     "fractional": "14"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769635"
+   },
+   {
+    "name": "Abdulkadir Omur 4+",
+    "label": "abdulkadir omur 4+",
+    "rate": {
+     "decimal": 36.0,
+     "american": 3500,
+     "fractional": "35"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769636"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 4.2,
+     "american": 320,
+     "fractional": "16/5"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769641"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 15.0,
+     "american": 1400,
+     "fractional": "14"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769642"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 4.7,
+     "american": 370,
+     "fractional": "37/10"
+    },
+    "order": 204,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769571"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 14.0,
+     "american": 1300,
+     "fractional": "13"
+    },
+    "order": 205,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769572"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.22,
+     "american": -455,
+     "fractional": "2/9"
+    },
+    "order": 206,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769573"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 2.0,
+     "american": 100,
+     "fractional": "1"
+    },
+    "order": 207,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769574"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 4.2,
+     "american": 320,
+     "fractional": "16/5"
+    },
+    "order": 208,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769575"
+   },
+   {
+    "name": "Viktor Gyokeres 4+",
+    "label": "viktor gyokeres 4+",
+    "rate": {
+     "decimal": 9.5,
+     "american": 850,
+     "fractional": "17/2"
+    },
+    "order": 209,
+    "status": "open",
+    "market_id": "bc:2530841316",
+    "selection_id": "bc:7444769576"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840668",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15880,
+  "name": "Strzały celne zawodnika - 2. połowa",
+  "label": "рlayer 2nd half shots on target",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 3.25,
+     "american": 225,
+     "fractional": "9/4"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758920"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758776"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 26.0,
+     "american": 2500,
+     "fractional": "25"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758897"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 6.5,
+     "american": 550,
+     "fractional": "11/2"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758902"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 17.0,
+     "american": 1600,
+     "fractional": "16"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758903"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 7.25,
+     "american": 625,
+     "fractional": "25/4"
+    },
+    "order": 180,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758837"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 181,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758838"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.6,
+     "american": -167,
+     "fractional": "3/5"
+    },
+    "order": 182,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758839"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 3.75,
+     "american": 275,
+     "fractional": "11/4"
+    },
+    "order": 183,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758840"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 10.0,
+     "american": 900,
+     "fractional": "9"
+    },
+    "order": 184,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758841"
+   },
+   {
+    "name": "Viktor Gyokeres 4+",
+    "label": "viktor gyokeres 4+",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 185,
+    "status": "open",
+    "market_id": "bc:2530840668",
+    "selection_id": "bc:7444758842"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840716",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15870,
+  "name": "Strzały celne zawodnika - 1. połowa",
+  "label": "рlayer 1st half shots on target",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 3.7,
+     "american": 270,
+     "fractional": "27/10"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759513"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 14.0,
+     "american": 1300,
+     "fractional": "13"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759427"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 36.0,
+     "american": 3500,
+     "fractional": "35"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759537"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 7.25,
+     "american": 625,
+     "fractional": "25/4"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759542"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 19.0,
+     "american": 1800,
+     "fractional": "18"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759543"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 8.25,
+     "american": 725,
+     "fractional": "29/4"
+    },
+    "order": 169,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759483"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 170,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759484"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.72,
+     "american": -139,
+     "fractional": "5/7"
+    },
+    "order": 171,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759485"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 4.65,
+     "american": 365,
+     "fractional": "73/20"
+    },
+    "order": 172,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759486"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 12.0,
+     "american": 1100,
+     "fractional": "11"
+    },
+    "order": 173,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759487"
+   },
+   {
+    "name": "Viktor Gyokeres 4+",
+    "label": "viktor gyokeres 4+",
+    "rate": {
+     "decimal": 25.0,
+     "american": 2400,
+     "fractional": "24"
+    },
+    "order": 174,
+    "status": "open",
+    "market_id": "bc:2530840716",
+    "selection_id": "bc:7444759488"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530841224",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15882,
+  "name": "Popełnione faule",
+  "label": "player fouls committed",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 1.28,
+     "american": -357,
+     "fractional": "2/7"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767967"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 2.25,
+     "american": 125,
+     "fractional": "5/4"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767830"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 5.1,
+     "american": 410,
+     "fractional": "41/10"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444768004"
+   },
+   {
+    "name": "Abdulkadir Omur 4+",
+    "label": "abdulkadir omur 4+",
+    "rate": {
+     "decimal": 12.0,
+     "american": 1100,
+     "fractional": "11"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444768005"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 1.6,
+     "american": -167,
+     "fractional": "3/5"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444768011"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 3.85,
+     "american": 285,
+     "fractional": "20/7"
+    },
+    "order": 10,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444768012"
+   },
+   {
+    "name": "Ben White 3+",
+    "label": "ben white 3+",
+    "rate": {
+     "decimal": 10.0,
+     "american": 900,
+     "fractional": "9"
+    },
+    "order": 11,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444768013"
+   },
+   {
+    "name": "Ben White 4+",
+    "label": "ben white 4+",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 12,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444768014"
+   },
+   {
+    "name": "David Raya 1+",
+    "label": "david raya 1+",
+    "rate": {
+     "decimal": 7.25,
+     "american": 625,
+     "fractional": "25/4"
+    },
+    "order": 57,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767990"
+   },
+   {
+    "name": "Jack Butland 1+",
+    "label": "jack butland 1+",
+    "rate": {
+     "decimal": 26.0,
+     "american": 2500,
+     "fractional": "25"
+    },
+    "order": 104,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444768072"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 1.42,
+     "american": -238,
+     "fractional": "5/12"
+    },
+    "order": 266,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767927"
+   },
+   {
+    "name": "Tim Iroegbunam 3+",
+    "label": "tim iroegbunam 3+",
+    "rate": {
+     "decimal": 2.25,
+     "american": 125,
+     "fractional": "5/4"
+    },
+    "order": 267,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767926"
+   },
+   {
+    "name": "Tim Iroegbunam 4+",
+    "label": "tim iroegbunam 4+",
+    "rate": {
+     "decimal": 4.3,
+     "american": 330,
+     "fractional": "33/10"
+    },
+    "order": 268,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767925"
+   },
+   {
+    "name": "Tim Iroegbunam 5+",
+    "label": "tim iroegbunam 5+",
+    "rate": {
+     "decimal": 9.0,
+     "american": 800,
+     "fractional": "8"
+    },
+    "order": 269,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767931"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.28,
+     "american": -357,
+     "fractional": "2/7"
+    },
+    "order": 270,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767924"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 2.2,
+     "american": 120,
+     "fractional": "6/5"
+    },
+    "order": 271,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767922"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 4.9,
+     "american": 390,
+     "fractional": "39/10"
+    },
+    "order": 272,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767921"
+   },
+   {
+    "name": "Viktor Gyokeres 4+",
+    "label": "viktor gyokeres 4+",
+    "rate": {
+     "decimal": 12.0,
+     "american": 1100,
+     "fractional": "11"
+    },
+    "order": 273,
+    "status": "open",
+    "market_id": "bc:2530841224",
+    "selection_id": "bc:7444767920"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840806",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15879,
+  "name": "Strzały celne lewą nogą",
+  "label": "player left foot shots on target",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 2.95,
+     "american": 195,
+     "fractional": "39/20"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761627"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 12.0,
+     "american": 1100,
+     "fractional": "11"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761550"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 25.0,
+     "american": 2400,
+     "fractional": "24"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761649"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 15.0,
+     "american": 1400,
+     "fractional": "14"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761654"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 12.0,
+     "american": 1100,
+     "fractional": "11"
+    },
+    "order": 153,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761602"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 31.0,
+     "american": 3000,
+     "fractional": "30"
+    },
+    "order": 154,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761603"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 4.15,
+     "american": 315,
+     "fractional": "63/20"
+    },
+    "order": 155,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761604"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 156,
+    "status": "open",
+    "market_id": "bc:2530840806",
+    "selection_id": "bc:7444761605"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840789",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15877,
+  "name": "Strzały celne spoza pola karnego",
+  "label": "player shots on target outside the box",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 4.0,
+     "american": 300,
+     "fractional": "3"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760294"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 12.0,
+     "american": 1100,
+     "fractional": "11"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760180"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 36.0,
+     "american": 3500,
+     "fractional": "35"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760277"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 9.5,
+     "american": 850,
+     "fractional": "17/2"
+    },
+    "order": 6,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760281"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 23.0,
+     "american": 2200,
+     "fractional": "22"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760282"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 10.0,
+     "american": 900,
+     "fractional": "9"
+    },
+    "order": 150,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760230"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 23.0,
+     "american": 2200,
+     "fractional": "22"
+    },
+    "order": 151,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760231"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 4.85,
+     "american": 385,
+     "fractional": "27/7"
+    },
+    "order": 152,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760232"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 153,
+    "status": "open",
+    "market_id": "bc:2530840789",
+    "selection_id": "bc:7444760233"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840973",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15883,
+  "name": "Podania celne",
+  "label": "player passes",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 25+",
+    "label": "abdulkadir omur 25+",
+    "rate": {
+     "decimal": 1.57,
+     "american": -175,
+     "fractional": "4/7"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764894"
+   },
+   {
+    "name": "Abdulkadir Omur 30+",
+    "label": "abdulkadir omur 30+",
+    "rate": {
+     "decimal": 2.1,
+     "american": 110,
+     "fractional": "11/10"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764866"
+   },
+   {
+    "name": "Abdulkadir Omur 35+",
+    "label": "abdulkadir omur 35+",
+    "rate": {
+     "decimal": 3.05,
+     "american": 205,
+     "fractional": "41/20"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764985"
+   },
+   {
+    "name": "Ben White 60+",
+    "label": "ben white 60+",
+    "rate": {
+     "decimal": 1.55,
+     "american": -182,
+     "fractional": "5/9"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764990"
+   },
+   {
+    "name": "Ben White 65+",
+    "label": "ben white 65+",
+    "rate": {
+     "decimal": 1.85,
+     "american": -118,
+     "fractional": "6/7"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764991"
+   },
+   {
+    "name": "Ben White 70+",
+    "label": "ben white 70+",
+    "rate": {
+     "decimal": 2.35,
+     "american": 135,
+     "fractional": "27/20"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764992"
+   },
+   {
+    "name": "Ben White 75+",
+    "label": "ben white 75+",
+    "rate": {
+     "decimal": 3.05,
+     "american": 205,
+     "fractional": "41/20"
+    },
+    "order": 10,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764993"
+   },
+   {
+    "name": "Tim Iroegbunam 25+",
+    "label": "tim iroegbunam 25+",
+    "rate": {
+     "decimal": 1.35,
+     "american": -286,
+     "fractional": "7/20"
+    },
+    "order": 190,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444765057"
+   },
+   {
+    "name": "Tim Iroegbunam 30+",
+    "label": "tim iroegbunam 30+",
+    "rate": {
+     "decimal": 1.67,
+     "american": -149,
+     "fractional": "2/3"
+    },
+    "order": 191,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764923"
+   },
+   {
+    "name": "Tim Iroegbunam 35+",
+    "label": "tim iroegbunam 35+",
+    "rate": {
+     "decimal": 2.27,
+     "american": 127,
+     "fractional": "14/11"
+    },
+    "order": 192,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764924"
+   },
+   {
+    "name": "Tim Iroegbunam 40+",
+    "label": "tim iroegbunam 40+",
+    "rate": {
+     "decimal": 3.4,
+     "american": 240,
+     "fractional": "12/5"
+    },
+    "order": 193,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764925"
+   },
+   {
+    "name": "Viktor Gyokeres 15+",
+    "label": "viktor gyokeres 15+",
+    "rate": {
+     "decimal": 1.33,
+     "american": -303,
+     "fractional": "1/3"
+    },
+    "order": 194,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764926"
+   },
+   {
+    "name": "Viktor Gyokeres 20+",
+    "label": "viktor gyokeres 20+",
+    "rate": {
+     "decimal": 1.6,
+     "american": -167,
+     "fractional": "3/5"
+    },
+    "order": 195,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764927"
+   },
+   {
+    "name": "Viktor Gyokeres 25+",
+    "label": "viktor gyokeres 25+",
+    "rate": {
+     "decimal": 2.15,
+     "american": 115,
+     "fractional": "23/20"
+    },
+    "order": 196,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764928"
+   },
+   {
+    "name": "Viktor Gyokeres 30+",
+    "label": "viktor gyokeres 30+",
+    "rate": {
+     "decimal": 3.15,
+     "american": 215,
+     "fractional": "43/20"
+    },
+    "order": 197,
+    "status": "open",
+    "market_id": "bc:2530840973",
+    "selection_id": "bc:7444764929"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840949",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15876,
+  "name": "Podania (celne + niecelne)",
+  "label": "player passes attempted",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 30+",
+    "label": "abdulkadir omur 30+",
+    "rate": {
+     "decimal": 1.47,
+     "american": -213,
+     "fractional": "7/15"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763914"
+   },
+   {
+    "name": "Abdulkadir Omur 35+",
+    "label": "abdulkadir omur 35+",
+    "rate": {
+     "decimal": 1.88,
+     "american": -114,
+     "fractional": "7/8"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763885"
+   },
+   {
+    "name": "Abdulkadir Omur 40+",
+    "label": "abdulkadir omur 40+",
+    "rate": {
+     "decimal": 2.65,
+     "american": 165,
+     "fractional": "33/20"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444764067"
+   },
+   {
+    "name": "Ben White 70+",
+    "label": "ben white 70+",
+    "rate": {
+     "decimal": 1.5,
+     "american": -200,
+     "fractional": "1/2"
+    },
+    "order": 6,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444764075"
+   },
+   {
+    "name": "Ben White 75+",
+    "label": "ben white 75+",
+    "rate": {
+     "decimal": 1.8,
+     "american": -125,
+     "fractional": "4/5"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444764076"
+   },
+   {
+    "name": "Ben White 80+",
+    "label": "ben white 80+",
+    "rate": {
+     "decimal": 2.22,
+     "american": 122,
+     "fractional": "11/9"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444764078"
+   },
+   {
+    "name": "Ben White 85+",
+    "label": "ben white 85+",
+    "rate": {
+     "decimal": 2.9,
+     "american": 190,
+     "fractional": "19/10"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444764191"
+   },
+   {
+    "name": "Tim Iroegbunam 30+",
+    "label": "tim iroegbunam 30+",
+    "rate": {
+     "decimal": 1.3,
+     "american": -333,
+     "fractional": "3/10"
+    },
+    "order": 191,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444764204"
+   },
+   {
+    "name": "Tim Iroegbunam 35+",
+    "label": "tim iroegbunam 35+",
+    "rate": {
+     "decimal": 1.6,
+     "american": -167,
+     "fractional": "3/5"
+    },
+    "order": 192,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763955"
+   },
+   {
+    "name": "Tim Iroegbunam 40+",
+    "label": "tim iroegbunam 40+",
+    "rate": {
+     "decimal": 2.1,
+     "american": 110,
+     "fractional": "11/10"
+    },
+    "order": 193,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763957"
+   },
+   {
+    "name": "Tim Iroegbunam 45+",
+    "label": "tim iroegbunam 45+",
+    "rate": {
+     "decimal": 3.05,
+     "american": 205,
+     "fractional": "41/20"
+    },
+    "order": 194,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763958"
+   },
+   {
+    "name": "Viktor Gyokeres 25+",
+    "label": "viktor gyokeres 25+",
+    "rate": {
+     "decimal": 1.77,
+     "american": -130,
+     "fractional": "7/9"
+    },
+    "order": 195,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763960"
+   },
+   {
+    "name": "Viktor Gyokeres 30+",
+    "label": "viktor gyokeres 30+",
+    "rate": {
+     "decimal": 2.45,
+     "american": 145,
+     "fractional": "13/9"
+    },
+    "order": 196,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763964"
+   },
+   {
+    "name": "Viktor Gyokeres 35+",
+    "label": "viktor gyokeres 35+",
+    "rate": {
+     "decimal": 3.7,
+     "american": 270,
+     "fractional": "27/10"
+    },
+    "order": 197,
+    "status": "open",
+    "market_id": "bc:2530840949",
+    "selection_id": "bc:7444763966"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840813",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15874,
+  "name": "Strzały celne prawą nogą",
+  "label": "player right foot shots on target",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 6.25,
+     "american": 525,
+     "fractional": "21/4"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762298"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 19.0,
+     "american": 1800,
+     "fractional": "18"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762203"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 6.25,
+     "american": 525,
+     "fractional": "21/4"
+    },
+    "order": 6,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762334"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 17.0,
+     "american": 1600,
+     "fractional": "16"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762335"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 7.0,
+     "american": 600,
+     "fractional": "6"
+    },
+    "order": 152,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762257"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 153,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762258"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.47,
+     "american": -213,
+     "fractional": "7/15"
+    },
+    "order": 154,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762259"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 3.15,
+     "american": 215,
+     "fractional": "43/20"
+    },
+    "order": 155,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762260"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 8.25,
+     "american": 725,
+     "fractional": "29/4"
+    },
+    "order": 156,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762261"
+   },
+   {
+    "name": "Viktor Gyokeres 4+",
+    "label": "viktor gyokeres 4+",
+    "rate": {
+     "decimal": 19.0,
+     "american": 1800,
+     "fractional": "18"
+    },
+    "order": 157,
+    "status": "open",
+    "market_id": "bc:2530840813",
+    "selection_id": "bc:7444762262"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840897",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15878,
+  "name": "Obrony bramkarza",
+  "label": "goalkeeper saves",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "David Raya 1+",
+    "label": "david raya 1+",
+    "rate": {
+     "decimal": 1.18,
+     "american": -556,
+     "fractional": "2/11"
+    },
+    "order": 4,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763071"
+   },
+   {
+    "name": "David Raya 2+",
+    "label": "david raya 2+",
+    "rate": {
+     "decimal": 1.77,
+     "american": -130,
+     "fractional": "7/9"
+    },
+    "order": 5,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763073"
+   },
+   {
+    "name": "David Raya 3+",
+    "label": "david raya 3+",
+    "rate": {
+     "decimal": 3.3,
+     "american": 230,
+     "fractional": "23/10"
+    },
+    "order": 6,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763075"
+   },
+   {
+    "name": "David Raya 4+",
+    "label": "david raya 4+",
+    "rate": {
+     "decimal": 7.5,
+     "american": 650,
+     "fractional": "13/2"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763077"
+   },
+   {
+    "name": "Jack Butland 4+",
+    "label": "jack butland 4+",
+    "rate": {
+     "decimal": 1.38,
+     "american": -263,
+     "fractional": "3/8"
+    },
+    "order": 16,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763091"
+   },
+   {
+    "name": "Jack Butland 5+",
+    "label": "jack butland 5+",
+    "rate": {
+     "decimal": 1.85,
+     "american": -118,
+     "fractional": "6/7"
+    },
+    "order": 17,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763081"
+   },
+   {
+    "name": "Jack Butland 6+",
+    "label": "jack butland 6+",
+    "rate": {
+     "decimal": 2.7,
+     "american": 170,
+     "fractional": "17/10"
+    },
+    "order": 18,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763065"
+   },
+   {
+    "name": "Jack Butland 7+",
+    "label": "jack butland 7+",
+    "rate": {
+     "decimal": 4.35,
+     "american": 335,
+     "fractional": "67/20"
+    },
+    "order": 19,
+    "status": "open",
+    "market_id": "bc:2530840897",
+    "selection_id": "bc:7444763101"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840795",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15875,
+  "name": "Strzały spoza pola karnego",
+  "label": "player shots outside the box",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 1.75,
+     "american": -133,
+     "fractional": "3/4"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761104"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 4.8,
+     "american": 380,
+     "fractional": "19/5"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444760990"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761136"
+   },
+   {
+    "name": "Abdulkadir Omur 4+",
+    "label": "abdulkadir omur 4+",
+    "rate": {
+     "decimal": 25.0,
+     "american": 2400,
+     "fractional": "24"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761137"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 2.42,
+     "american": 142,
+     "fractional": "17/12"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761142"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 8.75,
+     "american": 775,
+     "fractional": "31/4"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761143"
+   },
+   {
+    "name": "Ben White 3+",
+    "label": "ben white 3+",
+    "rate": {
+     "decimal": 19.0,
+     "american": 1800,
+     "fractional": "18"
+    },
+    "order": 10,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761144"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 2.22,
+     "american": 122,
+     "fractional": "11/9"
+    },
+    "order": 223,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761066"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 7.75,
+     "american": 675,
+     "fractional": "27/4"
+    },
+    "order": 224,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761067"
+   },
+   {
+    "name": "Tim Iroegbunam 3+",
+    "label": "tim iroegbunam 3+",
+    "rate": {
+     "decimal": 17.0,
+     "american": 1600,
+     "fractional": "16"
+    },
+    "order": 225,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761068"
+   },
+   {
+    "name": "Tim Iroegbunam 4+",
+    "label": "tim iroegbunam 4+",
+    "rate": {
+     "decimal": 36.0,
+     "american": 3500,
+     "fractional": "35"
+    },
+    "order": 226,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761069"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 2.17,
+     "american": 117,
+     "fractional": "7/6"
+    },
+    "order": 227,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761070"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 7.5,
+     "american": 650,
+     "fractional": "13/2"
+    },
+    "order": 228,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761071"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 15.0,
+     "american": 1400,
+     "fractional": "14"
+    },
+    "order": 229,
+    "status": "open",
+    "market_id": "bc:2530840795",
+    "selection_id": "bc:7444761072"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530841276",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 1,
+  "markets_class_id": 12238,
+  "name": "Strzały",
+  "label": "player shots",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 1.33,
+     "american": -303,
+     "fractional": "1/3"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768977"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 2.4,
+     "american": 140,
+     "fractional": "7/5"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768841"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 5.6,
+     "american": 460,
+     "fractional": "23/5"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444769012"
+   },
+   {
+    "name": "Abdulkadir Omur 4+",
+    "label": "abdulkadir omur 4+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444769013"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 1.57,
+     "american": -175,
+     "fractional": "4/7"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444769017"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 3.75,
+     "american": 275,
+     "fractional": "11/4"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444769018"
+   },
+   {
+    "name": "Ben White 3+",
+    "label": "ben white 3+",
+    "rate": {
+     "decimal": 11.0,
+     "american": 1000,
+     "fractional": "10"
+    },
+    "order": 10,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444769019"
+   },
+   {
+    "name": "Ben White 4+",
+    "label": "ben white 4+",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 11,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444769020"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 1.62,
+     "american": -161,
+     "fractional": "5/8"
+    },
+    "order": 252,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768931"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 3.95,
+     "american": 295,
+     "fractional": "59/20"
+    },
+    "order": 253,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768932"
+   },
+   {
+    "name": "Tim Iroegbunam 3+",
+    "label": "tim iroegbunam 3+",
+    "rate": {
+     "decimal": 11.0,
+     "american": 1000,
+     "fractional": "10"
+    },
+    "order": 254,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768933"
+   },
+   {
+    "name": "Tim Iroegbunam 4+",
+    "label": "tim iroegbunam 4+",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 255,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768934"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 1.35,
+     "american": -286,
+     "fractional": "7/20"
+    },
+    "order": 256,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768935"
+   },
+   {
+    "name": "Viktor Gyokeres 4+",
+    "label": "viktor gyokeres 4+",
+    "rate": {
+     "decimal": 1.88,
+     "american": -114,
+     "fractional": "7/8"
+    },
+    "order": 257,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768936"
+   },
+   {
+    "name": "Viktor Gyokeres 5+",
+    "label": "viktor gyokeres 5+",
+    "rate": {
+     "decimal": 2.95,
+     "american": 195,
+     "fractional": "39/20"
+    },
+    "order": 258,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768937"
+   },
+   {
+    "name": "Viktor Gyokeres 6+",
+    "label": "viktor gyokeres 6+",
+    "rate": {
+     "decimal": 5.2,
+     "american": 420,
+     "fractional": "21/5"
+    },
+    "order": 259,
+    "status": "open",
+    "market_id": "bc:2530841276",
+    "selection_id": "bc:7444768938"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530841351",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 29,
+  "markets_class_id": 15390,
+  "name": "Zawodnik strzeli gola i zanotuje asystę",
+  "label": "player to score and assist",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy",
+   "position": 7,
+   "sports_group_id": 1,
+   "markets_group_id": 291
+  },
+  "selections": [
+   {
+    "name": "Christos Tzolis",
+    "label": "christos tzolis",
+    "rate": {
+     "decimal": 4.45,
+     "american": 345,
+     "fractional": "31/9"
+    },
+    "order": 17,
+    "status": "open",
+    "market_id": "bc:2530841351",
+    "selection_id": "bc:7444771552"
+   },
+   {
+    "name": "Noni Madueke",
+    "label": "noni madueke",
+    "rate": {
+     "decimal": 5.25,
+     "american": 425,
+     "fractional": "17/4"
+    },
+    "order": 18,
+    "status": "open",
+    "market_id": "bc:2530841351",
+    "selection_id": "bc:7444771568"
+   },
+   {
+    "name": "Martin Odegaard",
+    "label": "martin odegaard",
+    "rate": {
+     "decimal": 5.65,
+     "american": 465,
+     "fractional": "93/20"
+    },
+    "order": 19,
+    "status": "open",
+    "market_id": "bc:2530841351",
+    "selection_id": "bc:7444771562"
+   },
+   {
+    "name": "Viktor Gyokeres",
+    "label": "viktor gyokeres",
+    "rate": {
+     "decimal": 6.25,
+     "american": 525,
+     "fractional": "21/4"
+    },
+    "order": 20,
+    "status": "open",
+    "market_id": "bc:2530841351",
+    "selection_id": "bc:7444771558"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840580",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15881,
+  "name": "Strzały celne zawodnika - Każda połowa",
+  "label": "player shots on target each half",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 9.5,
+     "american": 850,
+     "fractional": "17/2"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840580",
+    "selection_id": "bc:7444758083"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 29.0,
+     "american": 2800,
+     "fractional": "28"
+    },
+    "order": 4,
+    "status": "open",
+    "market_id": "bc:2530840580",
+    "selection_id": "bc:7449453425"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 31.0,
+     "american": 3000,
+     "fractional": "30"
+    },
+    "order": 75,
+    "status": "open",
+    "market_id": "bc:2530840580",
+    "selection_id": "bc:7444758067"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 2.55,
+     "american": 155,
+     "fractional": "14/9"
+    },
+    "order": 76,
+    "status": "open",
+    "market_id": "bc:2530840580",
+    "selection_id": "bc:7444758066"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 10.0,
+     "american": 900,
+     "fractional": "9"
+    },
+    "order": 77,
+    "status": "open",
+    "market_id": "bc:2530840580",
+    "selection_id": "bc:7444758116"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530841031",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15871,
+  "name": "Odbiory (tackle)",
+  "label": "player tackles",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 1.52,
+     "american": -192,
+     "fractional": "13/25"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765714"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 2.65,
+     "american": 165,
+     "fractional": "33/20"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765540"
+   },
+   {
+    "name": "Abdulkadir Omur 4+",
+    "label": "abdulkadir omur 4+",
+    "rate": {
+     "decimal": 5.5,
+     "american": 450,
+     "fractional": "9/2"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765764"
+   },
+   {
+    "name": "Abdulkadir Omur 5+",
+    "label": "abdulkadir omur 5+",
+    "rate": {
+     "decimal": 9.0,
+     "american": 800,
+     "fractional": "8"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765841"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 1.14,
+     "american": -714,
+     "fractional": "1/7"
+    },
+    "order": 7,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765768"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 1.62,
+     "american": -161,
+     "fractional": "5/8"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765769"
+   },
+   {
+    "name": "Ben White 3+",
+    "label": "ben white 3+",
+    "rate": {
+     "decimal": 2.9,
+     "american": 190,
+     "fractional": "19/10"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765770"
+   },
+   {
+    "name": "Ben White 4+",
+    "label": "ben white 4+",
+    "rate": {
+     "decimal": 6.25,
+     "american": 525,
+     "fractional": "21/4"
+    },
+    "order": 10,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765771"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 1.14,
+     "american": -714,
+     "fractional": "1/7"
+    },
+    "order": 207,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765623"
+   },
+   {
+    "name": "Tim Iroegbunam 3+",
+    "label": "tim iroegbunam 3+",
+    "rate": {
+     "decimal": 1.42,
+     "american": -238,
+     "fractional": "5/12"
+    },
+    "order": 208,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765624"
+   },
+   {
+    "name": "Tim Iroegbunam 4+",
+    "label": "tim iroegbunam 4+",
+    "rate": {
+     "decimal": 2.05,
+     "american": 105,
+     "fractional": "21/20"
+    },
+    "order": 209,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765625"
+   },
+   {
+    "name": "Tim Iroegbunam 5+",
+    "label": "tim iroegbunam 5+",
+    "rate": {
+     "decimal": 3.35,
+     "american": 235,
+     "fractional": "47/20"
+    },
+    "order": 210,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765626"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.62,
+     "american": -161,
+     "fractional": "5/8"
+    },
+    "order": 211,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765627"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 4.0,
+     "american": 300,
+     "fractional": "3"
+    },
+    "order": 212,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765628"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 11.0,
+     "american": 1000,
+     "fractional": "10"
+    },
+    "order": 213,
+    "status": "open",
+    "market_id": "bc:2530841031",
+    "selection_id": "bc:7444765629"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2536521545",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 23,
+  "markets_class_id": 13940,
+  "name": "Zawodnik strzeli gola lub zanotuje asystę - Podwójna szansa",
+  "label": "player to score or assist double chance",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy",
+   "position": 7,
+   "sports_group_id": 1,
+   "markets_group_id": 291
+  },
+  "selections": [
+   {
+    "name": "Christos Tzolis or Kai Havertz",
+    "label": "christos tzolis or kai havertz",
+    "rate": {
+     "decimal": 1.18,
+     "american": -556,
+     "fractional": "2/11"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2536521545",
+    "selection_id": "bc:7459707398"
+   },
+   {
+    "name": "Martin Odegaard or Kai Havertz",
+    "label": "martin odegaard or kai havertz",
+    "rate": {
+     "decimal": 1.2,
+     "american": -500,
+     "fractional": "1/5"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2536521545",
+    "selection_id": "bc:7459707397"
+   },
+   {
+    "name": "Christos Tzolis or Martin Odegaard",
+    "label": "christos tzolis or martin odegaard",
+    "rate": {
+     "decimal": 1.22,
+     "american": -455,
+     "fractional": "2/9"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2536521545",
+    "selection_id": "bc:7459707400"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511214432",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 23,
+  "markets_class_id": 2287,
+  "name": "Arsenal - Dokładna liczba goli",
+  "label": "Arsenal total goals bands",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Drużyna 1",
+   "position": 12,
+   "sports_group_id": 1,
+   "markets_group_id": 298
+  },
+  "selections": [
+   {
+    "name": "0 lub 1",
+    "label": "0 or 1",
+    "rate": {
+     "decimal": 3.55,
+     "american": 255,
+     "fractional": "23/9"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511214432",
+    "selection_id": "bc:7392424555"
+   },
+   {
+    "name": "2 lub 3",
+    "label": "2 or 3",
+    "rate": {
+     "decimal": 1.92,
+     "american": -109,
+     "fractional": "11/12"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511214432",
+    "selection_id": "bc:7392424558"
+   },
+   {
+    "name": "4 do 6",
+    "label": "4 to 6",
+    "rate": {
+     "decimal": 3.25,
+     "american": 225,
+     "fractional": "9/4"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511214432",
+    "selection_id": "bc:7392424559"
+   },
+   {
+    "name": "7 lub więcej",
+    "label": "7 or more",
+    "rate": {
+     "decimal": 34.0,
+     "american": 3300,
+     "fractional": "33"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2511214432",
+    "selection_id": "bc:7392424562"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511214779",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 13,
+  "markets_class_id": 3944,
+  "name": "Dokładnie 1 gol w meczu",
+  "label": "exactly 1 goal in the match",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Suma",
+   "position": 2,
+   "sports_group_id": 1,
+   "markets_group_id": 280
+  },
+  "selections": [
+   {
+    "name": "Tak",
+    "label": "yes",
+    "rate": {
+     "decimal": 5.85,
+     "american": 485,
+     "fractional": "34/7"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511214779",
+    "selection_id": "bc:7392425713"
+   },
+   {
+    "name": "Nie",
+    "label": "no",
+    "rate": {
+     "decimal": 1.1,
+     "american": -1000,
+     "fractional": "1/10"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511214779",
+    "selection_id": "bc:7392425714"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511214843",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 13,
+  "markets_class_id": 3944,
+  "name": "Dokładna liczba goli",
+  "label": "exact number of goals",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Suma",
+   "position": 2,
+   "sports_group_id": 1,
+   "markets_group_id": 280
+  },
+  "selections": [
+   {
+    "name": "Bez goli",
+    "label": "no goal",
+    "rate": {
+     "decimal": 14.0,
+     "american": 1300,
+     "fractional": "13"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511214843",
+    "selection_id": "bc:7392425957"
+   },
+   {
+    "name": "Dokładnie 1",
+    "label": "exactly 1",
+    "rate": {
+     "decimal": 5.85,
+     "american": 485,
+     "fractional": "34/7"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511214843",
+    "selection_id": "bc:7392425958"
+   },
+   {
+    "name": "Dokładnie 2",
+    "label": "exactly 2",
+    "rate": {
+     "decimal": 4.05,
+     "american": 305,
+     "fractional": "61/20"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511214843",
+    "selection_id": "bc:7392425959"
+   },
+   {
+    "name": "Dokładnie 3",
+    "label": "exactly 3",
+    "rate": {
+     "decimal": 3.85,
+     "american": 285,
+     "fractional": "20/7"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2511214843",
+    "selection_id": "bc:7392425960"
+   },
+   {
+    "name": "Dokładnie 4",
+    "label": "exactly 4",
+    "rate": {
+     "decimal": 4.55,
+     "american": 355,
+     "fractional": "32/9"
+    },
+    "order": 4,
+    "status": "open",
+    "market_id": "bc:2511214843",
+    "selection_id": "bc:7392425961"
+   },
+   {
+    "name": "Dokładnie 5",
+    "label": "exactly 5",
+    "rate": {
+     "decimal": 6.75,
+     "american": 575,
+     "fractional": "23/4"
+    },
+    "order": 5,
+    "status": "open",
+    "market_id": "bc:2511214843",
+    "selection_id": "bc:7392425962"
+   },
+   {
+    "name": "Dokładnie 6 lub więcej",
+    "label": "exactly 6 or more",
+    "rate": {
+     "decimal": 7.25,
+     "american": 625,
+     "fractional": "25/4"
+    },
+    "order": 6,
+    "status": "open",
+    "market_id": "bc:2511214843",
+    "selection_id": "bc:7392425963"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511214422",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 12,
+  "markets_class_id": 2039,
+  "name": "Dokładna liczba goli",
+  "label": "total goals exact",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Suma",
+   "position": 2,
+   "sports_group_id": 1,
+   "markets_group_id": 280
+  },
+  "selections": [
+   {
+    "name": "0",
+    "label": "0",
+    "rate": {
+     "decimal": 14.0,
+     "american": 1300,
+     "fractional": "13"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511214422",
+    "selection_id": "bc:7392424501"
+   },
+   {
+    "name": "1",
+    "label": "1",
+    "rate": {
+     "decimal": 5.85,
+     "american": 485,
+     "fractional": "34/7"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511214422",
+    "selection_id": "bc:7392424502"
+   },
+   {
+    "name": "2",
+    "label": "2",
+    "rate": {
+     "decimal": 4.05,
+     "american": 305,
+     "fractional": "61/20"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511214422",
+    "selection_id": "bc:7392424505"
+   },
+   {
+    "name": "3",
+    "label": "3",
+    "rate": {
+     "decimal": 3.85,
+     "american": 285,
+     "fractional": "20/7"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2511214422",
+    "selection_id": "bc:7392424510"
+   },
+   {
+    "name": "4",
+    "label": "4",
+    "rate": {
+     "decimal": 4.55,
+     "american": 355,
+     "fractional": "32/9"
+    },
+    "order": 4,
+    "status": "open",
+    "market_id": "bc:2511214422",
+    "selection_id": "bc:7392424513"
+   },
+   {
+    "name": "5",
+    "label": "5",
+    "rate": {
+     "decimal": 6.75,
+     "american": 575,
+     "fractional": "23/4"
+    },
+    "order": 5,
+    "status": "open",
+    "market_id": "bc:2511214422",
+    "selection_id": "bc:7392424515"
+   },
+   {
+    "name": "6+",
+    "label": "6+",
+    "rate": {
+     "decimal": 7.25,
+     "american": 625,
+     "fractional": "25/4"
+    },
+    "order": 6,
+    "status": "open",
+    "market_id": "bc:2511214422",
+    "selection_id": "bc:7392424517"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530841045",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": null,
+  "markets_class_id": 15872,
+  "name": "Faule na zawodniku",
+  "label": "player to be fouled",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 1.28,
+     "american": -357,
+     "fractional": "2/7"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766818"
+   },
+   {
+    "name": "Abdulkadir Omur 2+",
+    "label": "abdulkadir omur 2+",
+    "rate": {
+     "decimal": 2.25,
+     "american": 125,
+     "fractional": "5/4"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766687"
+   },
+   {
+    "name": "Abdulkadir Omur 3+",
+    "label": "abdulkadir omur 3+",
+    "rate": {
+     "decimal": 5.1,
+     "american": 410,
+     "fractional": "41/10"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766859"
+   },
+   {
+    "name": "Abdulkadir Omur 4+",
+    "label": "abdulkadir omur 4+",
+    "rate": {
+     "decimal": 12.0,
+     "american": 1100,
+     "fractional": "11"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766860"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 1.45,
+     "american": -222,
+     "fractional": "4/9"
+    },
+    "order": 8,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766870"
+   },
+   {
+    "name": "Ben White 2+",
+    "label": "ben white 2+",
+    "rate": {
+     "decimal": 3.1,
+     "american": 210,
+     "fractional": "21/10"
+    },
+    "order": 9,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766872"
+   },
+   {
+    "name": "Ben White 3+",
+    "label": "ben white 3+",
+    "rate": {
+     "decimal": 8.25,
+     "american": 725,
+     "fractional": "29/4"
+    },
+    "order": 10,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766874"
+   },
+   {
+    "name": "Ben White 4+",
+    "label": "ben white 4+",
+    "rate": {
+     "decimal": 15.0,
+     "american": 1400,
+     "fractional": "14"
+    },
+    "order": 11,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766876"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 1.33,
+     "american": -303,
+     "fractional": "1/3"
+    },
+    "order": 254,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766772"
+   },
+   {
+    "name": "Tim Iroegbunam 2+",
+    "label": "tim iroegbunam 2+",
+    "rate": {
+     "decimal": 2.47,
+     "american": 147,
+     "fractional": "22/15"
+    },
+    "order": 255,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766773"
+   },
+   {
+    "name": "Tim Iroegbunam 3+",
+    "label": "tim iroegbunam 3+",
+    "rate": {
+     "decimal": 5.9,
+     "american": 490,
+     "fractional": "49/10"
+    },
+    "order": 256,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766774"
+   },
+   {
+    "name": "Tim Iroegbunam 4+",
+    "label": "tim iroegbunam 4+",
+    "rate": {
+     "decimal": 14.0,
+     "american": 1300,
+     "fractional": "13"
+    },
+    "order": 257,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766775"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 1.28,
+     "american": -357,
+     "fractional": "2/7"
+    },
+    "order": 258,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766776"
+   },
+   {
+    "name": "Viktor Gyokeres 2+",
+    "label": "viktor gyokeres 2+",
+    "rate": {
+     "decimal": 2.22,
+     "american": 122,
+     "fractional": "11/9"
+    },
+    "order": 259,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766777"
+   },
+   {
+    "name": "Viktor Gyokeres 3+",
+    "label": "viktor gyokeres 3+",
+    "rate": {
+     "decimal": 5.0,
+     "american": 400,
+     "fractional": "4"
+    },
+    "order": 260,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766778"
+   },
+   {
+    "name": "Viktor Gyokeres 4+",
+    "label": "viktor gyokeres 4+",
+    "rate": {
+     "decimal": 11.0,
+     "american": 1000,
+     "fractional": "10"
+    },
+    "order": 261,
+    "status": "open",
+    "market_id": "bc:2530841045",
+    "selection_id": "bc:7444766779"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2530840565",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 4,
+  "markets_class_id": 12239,
+  "name": "Asysty",
+  "label": "player to assist a goal",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy - statystyki",
+   "position": 8,
+   "sports_group_id": 1,
+   "markets_group_id": 1088
+  },
+  "selections": [
+   {
+    "name": "Abdulkadir Omur 1+",
+    "label": "abdulkadir omur 1+",
+    "rate": {
+     "decimal": 9.75,
+     "american": 875,
+     "fractional": "35/4"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2530840565",
+    "selection_id": "bc:7444757736"
+   },
+   {
+    "name": "Ben White 1+",
+    "label": "ben white 1+",
+    "rate": {
+     "decimal": 4.35,
+     "american": 335,
+     "fractional": "67/20"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2530840565",
+    "selection_id": "bc:7444757739"
+   },
+   {
+    "name": "Tim Iroegbunam 1+",
+    "label": "tim iroegbunam 1+",
+    "rate": {
+     "decimal": 13.0,
+     "american": 1200,
+     "fractional": "12"
+    },
+    "order": 64,
+    "status": "open",
+    "market_id": "bc:2530840565",
+    "selection_id": "bc:7444757733"
+   },
+   {
+    "name": "Viktor Gyokeres 1+",
+    "label": "viktor gyokeres 1+",
+    "rate": {
+     "decimal": 3.9,
+     "american": 290,
+     "fractional": "29/10"
+    },
+    "order": 65,
+    "status": "open",
+    "market_id": "bc:2530840565",
+    "selection_id": "bc:7444757734"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2531870070",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 32,
+  "markets_class_id": 12766,
+  "name": "Oba zespoły otrzymają 2 lub więcej punktów za kartki (ŻK-1p. CzK-2p.)",
+  "label": "both teams to receive 2 or more card points",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Kartki",
+   "position": 6,
+   "sports_group_id": 1,
+   "markets_group_id": 283
+  },
+  "selections": [
+   {
+    "name": "Tak",
+    "label": "yes",
+    "rate": {
+     "decimal": 4.1,
+     "american": 310,
+     "fractional": "31/10"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2531870070",
+    "selection_id": "bc:7447891461"
+   },
+   {
+    "name": "Nie",
+    "label": "no",
+    "rate": {
+     "decimal": 1.18,
+     "american": -556,
+     "fractional": "2/11"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2531870070",
+    "selection_id": "bc:7447891462"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511215548",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 29,
+  "markets_class_id": 2744,
+  "name": "1. Połowa - Arsenal dokładna liczba goli",
+  "label": "1st half Arsenal total goals bands",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "1. Połowa",
+   "position": 4,
+   "sports_group_id": 1,
+   "markets_group_id": 282
+  },
+  "selections": [
+   {
+    "name": "0 lub 1",
+    "label": "0 or 1",
+    "rate": {
+     "decimal": 1.42,
+     "american": -238,
+     "fractional": "5/12"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511215548",
+    "selection_id": "bc:7392429291"
+   },
+   {
+    "name": "2 lub 3",
+    "label": "2 or 3",
+    "rate": {
+     "decimal": 2.75,
+     "american": 175,
+     "fractional": "7/4"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511215548",
+    "selection_id": "bc:7392429292"
+   },
+   {
+    "name": "4 lub więcej",
+    "label": "4 or more",
+    "rate": {
+     "decimal": 21.0,
+     "american": 2000,
+     "fractional": "20"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511215548",
+    "selection_id": "bc:7392429293"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2528076236",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 30,
+  "markets_class_id": 10360,
+  "name": "Zawodnik strzeli 4 lub więcej goli",
+  "label": "player to score 4 or more",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy",
+   "position": 7,
+   "sports_group_id": 1,
+   "markets_group_id": 291
+  },
+  "selections": [
+   {
+    "name": "Viktor Gyokeres",
+    "label": "viktor gyokeres",
+    "rate": {
+     "decimal": 56.0,
+     "american": 5500,
+     "fractional": "55"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2528076236",
+    "selection_id": "bc:7437710109"
+   },
+   {
+    "name": "Kai Havertz",
+    "label": "kai havertz",
+    "rate": {
+     "decimal": 81.0,
+     "american": 8000,
+     "fractional": "80"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2528076236",
+    "selection_id": "bc:7437710088"
+   },
+   {
+    "name": "Christos Tzolis",
+    "label": "christos tzolis",
+    "rate": {
+     "decimal": 200.0,
+     "american": 19900,
+     "fractional": "199"
+    },
+    "order": 4,
+    "status": "open",
+    "market_id": "bc:2528076236",
+    "selection_id": "bc:7437710086"
+   },
+   {
+    "name": "Noni Madueke",
+    "label": "noni madueke",
+    "rate": {
+     "decimal": 230.0,
+     "american": 22900,
+     "fractional": "229"
+    },
+    "order": 5,
+    "status": "open",
+    "market_id": "bc:2528076236",
+    "selection_id": "bc:7437710083"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2536332338",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 51,
+  "markets_class_id": 11755,
+  "name": "Obaj gracze strzelą łącznie przynajmniej 3 gole",
+  "label": "2 players combined to score over 2.5 goals",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy",
+   "position": 7,
+   "sports_group_id": 1,
+   "markets_group_id": 291
+  },
+  "selections": [
+   {
+    "name": "V. Gyokeres & K. Havertz",
+    "label": "v. gyokeres k. havertz",
+    "rate": {
+     "decimal": 5.5,
+     "american": 450,
+     "fractional": "9/2"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2536332338",
+    "selection_id": "bc:7459204094"
+   },
+   {
+    "name": "V. Gyokeres & C. Tzolis",
+    "label": "v. gyokeres c. tzolis",
+    "rate": {
+     "decimal": 7.75,
+     "american": 675,
+     "fractional": "27/4"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2536332338",
+    "selection_id": "bc:7459204133"
+   },
+   {
+    "name": "V. Gyokeres & N. Madueke",
+    "label": "v. gyokeres n. madueke",
+    "rate": {
+     "decimal": 8.0,
+     "american": 700,
+     "fractional": "7"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2536332338",
+    "selection_id": "bc:7459204072"
+   },
+   {
+    "name": "M. Merino & V. Gyokeres",
+    "label": "m. merino v. gyokeres",
+    "rate": {
+     "decimal": 8.5,
+     "american": 750,
+     "fractional": "15/2"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2536332338",
+    "selection_id": "bc:7459204105"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2536332347",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 50,
+  "markets_class_id": 11754,
+  "name": "Obaj gracze strzelą łącznie przynajmniej 2 gole",
+  "label": "2 players combined to score over 1.5 goals",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Zawodnicy",
+   "position": 7,
+   "sports_group_id": 1,
+   "markets_group_id": 291
+  },
+  "selections": [
+   {
+    "name": "V. Gyokeres & K. Havertz",
+    "label": "v. gyokeres k. havertz",
+    "rate": {
+     "decimal": 2.12,
+     "american": 112,
+     "fractional": "9/8"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2536332347",
+    "selection_id": "bc:7459204276"
+   },
+   {
+    "name": "V. Gyokeres & C. Tzolis",
+    "label": "v. gyokeres c. tzolis",
+    "rate": {
+     "decimal": 2.65,
+     "american": 165,
+     "fractional": "33/20"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2536332347",
+    "selection_id": "bc:7459204237"
+   },
+   {
+    "name": "V. Gyokeres & N. Madueke",
+    "label": "v. gyokeres n. madueke",
+    "rate": {
+     "decimal": 2.7,
+     "american": 170,
+     "fractional": "17/10"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2536332347",
+    "selection_id": "bc:7459204328"
+   },
+   {
+    "name": "V. Gyokeres & E. Eze",
+    "label": "v. gyokeres e. eze",
+    "rate": {
+     "decimal": 2.75,
+     "american": 175,
+     "fractional": "7/4"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2536332347",
+    "selection_id": "bc:7459204272"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511215561",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 27,
+  "markets_class_id": 2468,
+  "name": "1. Połowa - Arsenal dokładna liczba goli",
+  "label": "1st half Arsenal total goals exact",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "1. Połowa",
+   "position": 4,
+   "sports_group_id": 1,
+   "markets_group_id": 282
+  },
+  "selections": [
+   {
+    "name": "0",
+    "label": "0",
+    "rate": {
+     "decimal": 2.95,
+     "american": 195,
+     "fractional": "39/20"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511215561",
+    "selection_id": "bc:7392429346"
+   },
+   {
+    "name": "1",
+    "label": "1",
+    "rate": {
+     "decimal": 2.5,
+     "american": 150,
+     "fractional": "3/2"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511215561",
+    "selection_id": "bc:7392429348"
+   },
+   {
+    "name": "2+",
+    "label": "2+",
+    "rate": {
+     "decimal": 2.45,
+     "american": 145,
+     "fractional": "13/9"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511215561",
+    "selection_id": "bc:7392429350"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511214347",
+  "match_id": "bc:31333515",
+  "line": 0.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": false,
+  "position": 10,
+  "markets_class_id": 6251,
+  "name": "Arsenal - Dokładna liczba goli",
+  "label": "Arsenal total goals exact",
+  "primary_column": null,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Drużyna 1",
+   "position": 12,
+   "sports_group_id": 1,
+   "markets_group_id": 298
+  },
+  "selections": [
+   {
+    "name": "0",
+    "label": "0",
+    "rate": {
+     "decimal": 7.25,
+     "american": 625,
+     "fractional": "25/4"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511214347",
+    "selection_id": "bc:7392424097"
+   },
+   {
+    "name": "1",
+    "label": "1",
+    "rate": {
+     "decimal": 4.75,
+     "american": 375,
+     "fractional": "15/4"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511214347",
+    "selection_id": "bc:7392424098"
+   },
+   {
+    "name": "2",
+    "label": "2",
+    "rate": {
+     "decimal": 3.4,
+     "american": 240,
+     "fractional": "12/5"
+    },
+    "order": 2,
+    "status": "open",
+    "market_id": "bc:2511214347",
+    "selection_id": "bc:7392424099"
+   },
+   {
+    "name": "3",
+    "label": "3",
+    "rate": {
+     "decimal": 3.8,
+     "american": 280,
+     "fractional": "14/5"
+    },
+    "order": 3,
+    "status": "open",
+    "market_id": "bc:2511214347",
+    "selection_id": "bc:7392424100"
+   },
+   {
+    "name": "4+",
+    "label": "4+",
+    "rate": {
+     "decimal": 3.1,
+     "american": 210,
+     "fractional": "21/10"
+    },
+    "order": 4,
+    "status": "open",
+    "market_id": "bc:2511214347",
+    "selection_id": "bc:7392424101"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511211325",
+  "match_id": "bc:31333515",
+  "line": 2.5,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": true,
+  "position": 4,
+  "markets_class_id": 3499,
+  "name": "Liczba goli",
+  "label": "total goals",
+  "primary_column": 33,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "Suma",
+   "position": 2,
+   "sports_group_id": 1,
+   "markets_group_id": 280
+  },
+  "selections": [
+   {
+    "name": "Powyżej (2.5)",
+    "label": "over 2.5",
+    "rate": {
+     "decimal": 1.55,
+     "american": -182,
+     "fractional": "5/9"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511211325",
+    "selection_id": "bc:7392415565"
+   },
+   {
+    "name": "Poniżej (2.5)",
+    "label": "under 2.5",
+    "rate": {
+     "decimal": 2.5,
+     "american": 150,
+     "fractional": "3/2"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511211325",
+    "selection_id": "bc:7392415566"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511216004",
+  "match_id": "bc:31333515",
+  "line": 1.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": true,
+  "position": 5,
+  "markets_class_id": 6568,
+  "name": "1. Połowa - Liczba goli",
+  "label": "1st half total goals",
+  "primary_column": 302,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "1. Połowa",
+   "position": 4,
+   "sports_group_id": 1,
+   "markets_group_id": 282
+  },
+  "selections": [
+   {
+    "name": "Powyżej (1.0)",
+    "label": "over 1.0",
+    "rate": {
+     "decimal": 1.47,
+     "american": -213,
+     "fractional": "7/15"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511216004",
+    "selection_id": "bc:7392430666"
+   },
+   {
+    "name": "Poniżej (1.0)",
+    "label": "under 1.0",
+    "rate": {
+     "decimal": 2.55,
+     "american": 155,
+     "fractional": "14/9"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511216004",
+    "selection_id": "bc:7392430667"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ },
+ {
+  "market_id": "bc:2511215772",
+  "match_id": "bc:31333515",
+  "line": 2.0,
+  "selections_reversible": false,
+  "sort_selections_by_odds_asc": false,
+  "is_primary": true,
+  "position": 5,
+  "markets_class_id": 6568,
+  "name": "1. Połowa - Liczba goli",
+  "label": "1st half total goals",
+  "primary_column": 302,
+  "state": {
+   "status": "open"
+  },
+  "markets_group": {
+   "name": "1. Połowa",
+   "position": 4,
+   "sports_group_id": 1,
+   "markets_group_id": 282
+  },
+  "selections": [
+   {
+    "name": "Powyżej (2.0)",
+    "label": "over 2.0",
+    "rate": {
+     "decimal": 3.7,
+     "american": 270,
+     "fractional": "27/10"
+    },
+    "order": 0,
+    "status": "open",
+    "market_id": "bc:2511215772",
+    "selection_id": "bc:7392429982"
+   },
+   {
+    "name": "Poniżej (2.0)",
+    "label": "under 2.0",
+    "rate": {
+     "decimal": 1.25,
+     "american": -400,
+     "fractional": "1/4"
+    },
+    "order": 1,
+    "status": "open",
+    "market_id": "bc:2511215772",
+    "selection_id": "bc:7392429983"
+   }
+  ],
+  "expanded": null,
+  "group_key": null,
+  "description": null
+ }
+]

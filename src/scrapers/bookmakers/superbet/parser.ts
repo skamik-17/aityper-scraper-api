@@ -342,25 +342,41 @@ const PLAYER_LIST_MARKET_IDS = new Set<number>([
 ]);
 
 /**
- * Per-player STAT-LINE markets (PLAYER_SHOTS, PLAYER_OFFSIDES,
- * PLAYER_HEADER_SHOTS_ON_TARGET): unlike PLAYER_LIST_MARKET_IDS above, the
- * normalizer keys these by the PLAYER as the market parameter and reduces
- * every selection to just the threshold outcome ("1+"/"2+"). Superbet tags
- * every player's row with the THRESHOLD as `specialBetValue` (e.g. "0.5",
- * "2.5"), not a per-player id, so grouping by marketId+specialBetValue like
- * the generic O/U markets bundles every player who happens to share that
- * threshold into one raw group - the normalizer then reads only the first
- * bundled row's player name as the group's single param and mixes every
- * other player's price under that one player's column (confirmed:
- * PLAYER_OFFSIDES mixed Sbai's and Mbappe's higher-threshold rows in under
- * whichever player's row the API happened to list first). Group these by
- * the player identity embedded in the selection name instead, so one raw
- * group always corresponds to exactly one player.
+ * Per-player STAT-LINE markets (shots, shots on target, fouls, fouls won,
+ * tackles, assists, offsides; one catalog code per id below): unlike
+ * PLAYER_LIST_MARKET_IDS above, the normalizer keys these by the PLAYER as
+ * the market parameter and reduces every selection to just the threshold
+ * outcome ("1+"/"2+"), so one raw group must hold exactly one player's
+ * whole ladder. Grouping by marketId+specialBetValue like the generic O/U
+ * markets breaks that in both formats Superbet has used:
+ * - Today (2026-11-06 capture) `specialBetValue` is
+ *   `sr:player:<id>-<Name>-<line>` (e.g. "sr:player:100578-John Egan-0.5"),
+ *   one value per player-line row, so that key would split every player's
+ *   ladder into one single-selection raw market per line.
+ * - Earlier (2026-08-19 capture) it was the bare THRESHOLD ("0.5", "2.5"),
+ *   shared by every player, so that key bundled every player who happened to
+ *   share a threshold into one raw group - the normalizer then read only the
+ *   first bundled row's player name as the group's single param and mixed
+ *   every other player's price under that one player's column (confirmed:
+ *   PLAYER_OFFSIDES mixed Sbai's and Mbappe's higher-threshold rows in under
+ *   whichever player's row the API happened to list first).
+ * Group these by the player identity embedded in the selection name instead
+ * ("John Egan - powyżej 0.5", or the older "Sbai, Amine - powyżej 2.5"), so
+ * one raw group always corresponds to exactly one player.
  */
 const PLAYER_STAT_LINE_MARKET_IDS = new Set<number>([
   236218, // PLAYER_SHOTS: "Zawodnik - liczba strzałów"
   236224, // PLAYER_OFFSIDES: "Zawodnik - liczba spalonych"
   238465, // PLAYER_HEADER_SHOTS_ON_TARGET: "Zawodnik - liczba celnych strzałów głową"
+  236216, // PLAYER_FOULS: "Zawodnik - liczba popełnionych fauli"
+  238449, // PLAYER_FOULS_WON: "Zawodnik - liczba fauli na zawodniku"
+  236220, // PLAYER_SHOTS_ON_TARGET: "Zawodnik - liczba celnych strzałów"
+  236222, // PLAYER_TACKLES: "Zawodnik - liczba odbiorów"
+  238485, // PLAYER_SHOTS_OUTSIDE_BOX: "Zawodnik - liczba strzałów spoza pola karnego"
+  238469, // PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX: "Zawodnik - liczba celnych strzałów spoza pola karnego"
+  239621, // PLAYER_ASSISTS: "Zawodnik - liczba asyst"
+  // The OTHER-mapped stat lines (238453, 238457, 238461, 238473, 238477,
+  // 238481) are left out on purpose: OTHER has no player key to group by.
 ]);
 
 /**
@@ -464,7 +480,9 @@ export function parseAllMarkets(
       .map((sel) => ({
         name: getSelectionName(sel.code, sel.name, marketId, parsedTeams),
         odds: sel.price || 0,
-        externalId: String(sel.id),
+        // The uuid is the real per-selection id; outcomeId is shared across
+        // lines and players, so it is deliberately not a fallback.
+        externalId: sel.uuid ?? (sel.id != null ? String(sel.id) : undefined),
         status: sel.status === "active" ? "active" as const : undefined,
       }))
       .filter((sel) => sel.odds > 0);

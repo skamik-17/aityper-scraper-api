@@ -92,6 +92,13 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2395: "PLAYER_SHOTS_ON_TARGET",
   2396: "PLAYER_SHOTS_ON_TARGET_OUTSIDE_BOX",
   2397: "PLAYER_ASSISTS",
+  // STS renumbered the unconditional per-player ladders again (2026-11,
+  // Arsenal vs Hull City snapshot f2921898): same "<player> - strzały /
+  // celne strzały / asysty" names and "N+" selections as 2394/2395/2397.
+  // Both id sets stay mapped in case STS switches back.
+  2003: "PLAYER_SHOTS",
+  2008: "PLAYER_SHOTS_ON_TARGET",
+  2146: "PLAYER_ASSISTS",
   // id 2361 ("Zawodnik - celne strzały głową - N lub więcej") is the
   // transposed twin of 2404 with cell-for-cell identical prices. Because
   // PLAYER_HEADER_SHOTS_ON_TARGET is not in extractParamValue()'s
@@ -113,6 +120,13 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2357: "PLAYER_LEFT_FOOT_GOAL",
   2358: "PLAYER_RIGHT_FOOT_GOAL",
   2318: "PLAYER_GOAL_OUTSIDE_BOX",
+  // 2026-11 renumbering of the "Zawodnik - <event>" dropdowns (snapshot
+  // f2921898). STS now sends one line per player; the parser folds them
+  // back into this dropdown shape, so the old ids' handling applies as is.
+  2435: "GOALSCORER_ANYTIME", // twin of 54
+  2012: "PLAYER_CARDS", // twin of 1894, which still resolves by name
+  2436: "PLAYER_GOAL_OR_ASSIST", // twin of 1903
+  2291: "FIRST_PLAYER_CARDED", // "Zawodnik - otrzyma 1. kartkę"
 
   25: "TOTAL_GOALS",
   28: "HOME_TEAM_TOTAL_GOALS",
@@ -207,6 +221,9 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   198: "OTHER",
   217: "HALF_TIME_RED_CARD",
   2098: "EACH_TEAM_TOTAL_CARDS_OVER",
+  // "Kartki - każda drużyna - N lub więcej": one "Tak" outcome per line, the
+  // threshold lives in the name (see extractParamValue).
+  2287: "EACH_TEAM_TOTAL_CARDS_OVER",
 
   125: "FIRST_GOAL_TIME_ALT",
   126: "FIRST_GOAL_TIME",
@@ -284,6 +301,8 @@ export const STS_MARKET_ID_TO_CODE: Record<number, NormalizedMarketType> = {
   2113: "OTHER",
   2114: "OWN_GOAL",
   2097: "EACH_TEAM_TOTAL_CORNERS_OVER",
+  // "Rzuty rożne - każda drużyna - N lub więcej": same shape as 2287.
+  1287: "EACH_TEAM_TOTAL_CORNERS_OVER",
   2153: "PLAYER_RED_CARD",
 };
 
@@ -489,6 +508,19 @@ function stsPlayerNameSelection(trimmed: string): NormalizedSelection {
   return stsCanonicalizePlayerName(trimmed) as NormalizedSelection;
 }
 
+// STS names the team of its per-team stat lines by position: "1. drużyna" is
+// the home team, "2. drużyna" the away team (ids 188/191 cards, 231/234
+// corners). Returns null when the name names neither side (or both), so the
+// side never comes from odds order or a default.
+function stsTeamSideFromMarketName(marketName: string | undefined): "HOME" | "AWAY" | null {
+  if (!marketName) return null;
+  const lower = marketName.toLowerCase();
+  const home = /(?:^|\s)1\.\s*dru[zż]yn/u.test(lower);
+  const away = /(?:^|\s)2\.\s*dru[zż]yn/u.test(lower);
+  if (home === away) return null;
+  return home ? "HOME" : "AWAY";
+}
+
 function normalizeSelectionForMarket(
   selName: string,
   marketCode: NormalizedMarketType,
@@ -641,11 +673,25 @@ function normalizeSelectionForMarket(
     case "CARDS_TOTAL":
     case "HALF_TIME_CARDS_TOTAL":
     case "FOULS_TOTAL":
-    case "CARDS_TEAM":
       if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
         return trimmed as NormalizedSelection;
       }
       return normalizeOverUnderSelection(trimmed);
+
+    case "CARDS_TEAM": {
+      // CARDS_TEAM carries the side in the selection (HOME_OVER/AWAY_UNDER,
+      // the peer-majority convention), so ids 188 (home) and 191 (away) at
+      // the same line merge into one CARDS_TEAM:<line> row.
+      if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
+      const sel = normalizeOverUnderSelection(trimmed);
+      const side = stsTeamSideFromMarketName(marketName);
+      if (side && (sel === "OVER" || sel === "UNDER")) {
+        return `${side}_${sel}` as NormalizedSelection;
+      }
+      return sel;
+    }
 
     case "CARDS_EXACT_RANGE":
       if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
@@ -659,8 +705,15 @@ function normalizeSelectionForMarket(
       }
       return normalizeOverUnderSelection(trimmed);
 
-    case "HALF_TIME_CORNERS_TEAM":
     case "CORNERS_TEAM":
+      // Plain OVER/UNDER like every peer: the team side of ids 231/234 goes
+      // into the param ("HOME:8.5"), see extractParamValue.
+      if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
+        return trimmed as NormalizedSelection;
+      }
+      return normalizeOverUnderSelection(trimmed);
+
+    case "HALF_TIME_CORNERS_TEAM":
       if (/^\d+-\d+$/.test(trimmed) || /^\d+\+$/.test(trimmed) || /^\d+$/.test(trimmed)) {
         return trimmed as NormalizedSelection;
       }
@@ -710,6 +763,11 @@ function normalizeSelectionForMarket(
     // a player-name dropdown like the other *_LINEUP codes.
     case "PLAYER_CARDS_LINEUP":
       if ((marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") && trimmed.startsWith("+")) return "OVER";
+      // ids 1287/2287 ("... każda drużyna - N lub więcej") quote one "Tak"
+      // outcome: every team reaches N, i.e. OVER the N - 0.5 line in the
+      // param. "Nie" (some team stays below N) is not UNDER, so only "Tak"
+      // maps here.
+      if ((marketCode === "EACH_TEAM_TOTAL_CORNERS_OVER" || marketCode === "EACH_TEAM_TOTAL_CARDS_OVER") && lower === "tak") return "OVER";
       return normalizeYesNoSelection(trimmed);
 
     case "PLAYER_RED_CARD":
@@ -887,6 +945,8 @@ function normalizeSelectionForMarket(
     case "PLAYER_LEFT_FOOT_GOAL":
     case "PLAYER_RIGHT_FOOT_GOAL":
     case "PLAYER_GOAL_OUTSIDE_BOX":
+    // id 2291 "Zawodnik - otrzyma 1. kartkę", same dropdown shape.
+    case "FIRST_PLAYER_CARDED":
       return stsPlayerNameSelection(trimmed);
 
     case "PLAYER_SHOTS":
@@ -1172,12 +1232,22 @@ function extractParamValue(
   // CORNERS_TEAM_RANGE's catalog param is the team side (HOME/AWAY), not a
   // numeric line - ids 236/237 always name the side in the raw market name
   // ("1. drużyna" = home, "2. drużyna" = away), same convention used for
-  // CORNERS_TEAM's HOME_/AWAY_ selection prefix above.
+  // CORNERS_TEAM's side param below.
   if (marketCode === "CORNERS_TEAM_RANGE") {
     const n = raw.name.toLowerCase();
     if (n.includes("1. dru")) return "HOME";
     if (n.includes("2. dru")) return "AWAY";
     return undefined;
+  }
+
+  // CORNERS_TEAM's selections are plain OVER/UNDER, so the team side rides
+  // in the param as "<HOME|AWAY>:<line>", the convention every peer uses;
+  // otherwise ids 231 and 234 collide on one CORNERS_TEAM:<line> key. A name
+  // that names no side keeps the bare line (never guess a side).
+  if (marketCode === "CORNERS_TEAM") {
+    const line = parseOverUnderLine(raw.selections.map((s) => s.name));
+    const side = stsTeamSideFromMarketName(raw.name);
+    return side && line ? `${side}:${line}` : line;
   }
 
   // Extract interval type from raw market name (e.g., "1. gol - przedziały 15-minutowe" → "15min")
@@ -1204,6 +1274,13 @@ function extractParamValue(
       if (match) {
         return match[1].replace(",", ".");
       }
+    }
+    // ids 1287/2287 carry no "+N" selection: the threshold is in the name
+    // ("Kartki - każda drużyna - 2 lub więcej"), and "N or more" is OVER the
+    // N - 0.5 line.
+    const threshold = raw.name.match(/(\d+)\s+lub\s+więcej/i);
+    if (threshold && Number(threshold[1]) >= 1) {
+      return String(Number(threshold[1]) - 0.5);
     }
   }
 

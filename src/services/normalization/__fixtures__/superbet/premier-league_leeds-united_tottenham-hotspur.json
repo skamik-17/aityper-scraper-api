@@ -1,0 +1,2179 @@
+{
+  "bookmaker": "superbet",
+  "ctx": {
+    "awayTeam": "Tottenham Hotspur",
+    "homeTeam": "Leeds United",
+    "league": "premier-league",
+    "leagueName": "premier-league"
+  },
+  "entries": [
+    {
+      "index": 0,
+      "raw": {
+        "bookmakerMarketId": "547",
+        "groupId": "",
+        "groupName": "Wynik meczu",
+        "name": "Mecz",
+        "selections": [
+          {
+            "externalId": "1ff4ee8a-24ba-5593-9115-98352021aca9",
+            "name": "Leeds United",
+            "odds": 2.75
+          },
+          {
+            "externalId": "05c2357b-d7c4-5818-b284-db8158497a83",
+            "name": "Remis",
+            "odds": 3.3
+          },
+          {
+            "externalId": "51cf5eef-4d68-5e66-8c3d-8fb523761e4b",
+            "name": "Tottenham",
+            "odds": 2.57
+          }
+        ]
+      }
+    },
+    {
+      "index": 578,
+      "raw": {
+        "bookmakerMarketId": "200734",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli",
+        "selections": [
+          {
+            "externalId": "71bf4e3e-d684-5e30-9247-c9d1018c1cfc",
+            "name": "poniżej 0.5",
+            "odds": 9.6
+          },
+          {
+            "externalId": "60b951ac-c393-5cdf-845a-153f3aa7bba2",
+            "name": "powyżej 0.5",
+            "odds": 1.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 579,
+      "raw": {
+        "bookmakerMarketId": "200734",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli",
+        "selections": [
+          {
+            "externalId": "0f16ade9-bae0-556a-b355-1bf72c23f1d8",
+            "name": "poniżej 1.5",
+            "odds": 3.55
+          },
+          {
+            "externalId": "7af14878-d690-5cba-8a9b-511b77c32fdc",
+            "name": "powyżej 1.5",
+            "odds": 1.29
+          }
+        ]
+      }
+    },
+    {
+      "index": 580,
+      "raw": {
+        "bookmakerMarketId": "200734",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli",
+        "selections": [
+          {
+            "externalId": "89e04667-434f-5797-ba42-2fd348a31728",
+            "name": "poniżej 2.5",
+            "odds": 1.87
+          },
+          {
+            "externalId": "0278a655-999e-5124-8cff-e85ea9f96acc",
+            "name": "powyżej 2.5",
+            "odds": 1.92
+          }
+        ]
+      }
+    },
+    {
+      "index": 581,
+      "raw": {
+        "bookmakerMarketId": "200734",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli",
+        "selections": [
+          {
+            "externalId": "230aa676-8cb0-5279-b25f-1815c3c7bbfa",
+            "name": "poniżej 3.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "af8cd78b-9358-5108-99af-d25f75bd2bf5",
+            "name": "powyżej 3.5",
+            "odds": 3.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 582,
+      "raw": {
+        "bookmakerMarketId": "200734",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli",
+        "selections": [
+          {
+            "externalId": "b29d95d1-f78b-5eb1-aaa8-53c130ddc9a9",
+            "name": "poniżej 4.5",
+            "odds": 1.11
+          },
+          {
+            "externalId": "5d3f2e69-a15d-5513-b94f-021e8097454e",
+            "name": "powyżej 4.5",
+            "odds": 6.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 583,
+      "raw": {
+        "bookmakerMarketId": "200734",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli",
+        "selections": [
+          {
+            "externalId": "9b41eacc-0092-516f-8bdd-05c53981620c",
+            "name": "poniżej 5.5",
+            "odds": 1.03
+          },
+          {
+            "externalId": "9cc51c1a-7bc1-5d68-8b72-89d89587a19c",
+            "name": "powyżej 5.5",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 584,
+      "raw": {
+        "bookmakerMarketId": "200734",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "Liczba goli",
+        "selections": [
+          {
+            "externalId": "6eb133cf-dc0c-58cb-80f7-baa60b087331",
+            "name": "poniżej 6.5",
+            "odds": 1.007
+          },
+          {
+            "externalId": "9fe9468a-1921-517d-ac3e-12d22a424de1",
+            "name": "powyżej 6.5",
+            "odds": 28
+          }
+        ]
+      }
+    },
+    {
+      "index": 687,
+      "raw": {
+        "bookmakerMarketId": "236226",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - strzeli gola",
+        "selections": [
+          {
+            "externalId": "b59ec78d-ea12-5529-bda3-1d5696b6fbda",
+            "name": "Dominic Calvert-Lewin",
+            "odds": 2.65
+          },
+          {
+            "externalId": "f95697c5-5de8-5081-973f-690232b5205a",
+            "name": "Lukas Nmecha",
+            "odds": 3.05
+          },
+          {
+            "externalId": "9aaf5360-63c1-5924-9efc-b88f6c38395f",
+            "name": "Dominic Solanke",
+            "odds": 3.25
+          },
+          {
+            "externalId": "647f0d07-3c4d-5d3d-a0fe-fa2745d4a1b7",
+            "name": "Omar Marmoush",
+            "odds": 3.45
+          },
+          {
+            "externalId": "8f2f4436-e87d-5320-8981-3df53c32554c",
+            "name": "Noah Okafor",
+            "odds": 3.6
+          },
+          {
+            "externalId": "e0cb97fb-e3df-5b9f-aaeb-0437700a71dc",
+            "name": "Harry Wilson",
+            "odds": 3.75
+          },
+          {
+            "externalId": "80bdd2fb-127e-5a4c-a694-bffc7e48e05d",
+            "name": "Daniel James",
+            "odds": 4
+          },
+          {
+            "externalId": "1ba18028-a176-5133-a82d-d473b6e243b7",
+            "name": "Mathys Tel",
+            "odds": 4.15
+          },
+          {
+            "externalId": "6a09ddd5-0288-5ece-af53-3c0f21d51cbf",
+            "name": "Dejan Kulusekvski",
+            "odds": 4.2
+          },
+          {
+            "externalId": "e30df499-e8f9-579c-aeff-a99e80e7e5ec",
+            "name": "Jean Matteo Bahoya",
+            "odds": 4.3
+          },
+          {
+            "externalId": "c2d4d043-9ef7-5a75-b6c2-81f493a02ffa",
+            "name": "Mohammed Kudus",
+            "odds": 4.4
+          },
+          {
+            "externalId": "9b077815-f20e-53bd-8695-d10cf3729ac6",
+            "name": "James Maddison",
+            "odds": 4.4
+          },
+          {
+            "externalId": "71728d6b-eeca-57fe-86d1-ac97ff3719cd",
+            "name": "Brenden Aaronson",
+            "odds": 4.65
+          },
+          {
+            "externalId": "e862a2ba-3f62-5a78-84e8-b1002b5126fe",
+            "name": "Conor Gallagher",
+            "odds": 5.35
+          },
+          {
+            "externalId": "22eabf72-b33d-55b4-b22c-d4ae3c85b973",
+            "name": "Sean Longstaff",
+            "odds": 5.4
+          },
+          {
+            "externalId": "c66ac830-e228-53d4-bd4f-e3cfeaeae204",
+            "name": "Anton Stach",
+            "odds": 5.55
+          },
+          {
+            "externalId": "56a9f1ac-cae5-5ef8-8c6b-e6c60e7ede31",
+            "name": "Ao Tanaka",
+            "odds": 5.65
+          },
+          {
+            "externalId": "b1689cf8-3bec-5aaf-a02c-bb3239f0b430",
+            "name": "Mateus Fernandes",
+            "odds": 6
+          },
+          {
+            "externalId": "7399a4ee-54a8-519d-bc53-09692e0994f7",
+            "name": "Melvin Bard",
+            "odds": 7.2
+          },
+          {
+            "externalId": "7b395440-e5b8-5adf-a335-8a3d93684bb3",
+            "name": "Sandro Tonali",
+            "odds": 7.2
+          },
+          {
+            "externalId": "c1c76bc4-186b-584f-9bf5-87527f56434b",
+            "name": "Jayden Bogle",
+            "odds": 7.8
+          },
+          {
+            "externalId": "eb10a6ec-04a2-56fb-88e7-b81674eb12e4",
+            "name": "Archie Gray",
+            "odds": 7.8
+          },
+          {
+            "externalId": "54e89650-fe37-5c09-b3ad-9924d7b24ab2",
+            "name": "Pedro Porro",
+            "odds": 8.2
+          },
+          {
+            "externalId": "8cdfd7f4-3bd6-50b2-b57f-9d0e8bc8bdb5",
+            "name": "James Justin",
+            "odds": 8.6
+          },
+          {
+            "externalId": "4aced3cb-ad4c-536f-b066-4af58a2c34b4",
+            "name": "Micky van de Ven",
+            "odds": 8.9
+          },
+          {
+            "externalId": "5777d3b1-50bd-5625-a4d7-531f2971b063",
+            "name": "Marcos Senesi",
+            "odds": 9
+          },
+          {
+            "externalId": "a59b1e1d-67d0-5da1-ae3e-bf4833213192",
+            "name": "Ben Davies",
+            "odds": 9.2
+          },
+          {
+            "externalId": "f1d290e0-c403-5243-9f34-66d38e4aabce",
+            "name": "Jaka Bijol",
+            "odds": 9.3
+          },
+          {
+            "externalId": "8ce2c1c2-b6ec-5d2b-8a79-76ffc24cb31a",
+            "name": "Gabriel Gudmundsson",
+            "odds": 9.4
+          },
+          {
+            "externalId": "5ff7312b-501f-5be3-b8a6-19a904ec7450",
+            "name": "Ilia Gruev",
+            "odds": 9.7
+          },
+          {
+            "externalId": "edbcc3c1-5eb6-51f4-898e-ca2762ddfa7a",
+            "name": "Jan-Paul van Hecke",
+            "odds": 9.7
+          },
+          {
+            "externalId": "3b854616-9479-5d61-89a5-a187ca92bf7b",
+            "name": "Andy Robertson",
+            "odds": 9.8
+          },
+          {
+            "externalId": "8591e912-5d73-5a86-858d-4ee169ce7407",
+            "name": "Destiny Udogie",
+            "odds": 9.8
+          },
+          {
+            "externalId": "37326b96-6387-5cea-b3eb-405c84aa77b4",
+            "name": "Nico Elvedi",
+            "odds": 10
+          },
+          {
+            "externalId": "7e1bd6a9-e9f0-567d-ba3e-bb364a785504",
+            "name": "Ethan Ampadu",
+            "odds": 11
+          },
+          {
+            "externalId": "53817dce-8825-5306-8c89-9c993a190174",
+            "name": "Tarik Muharemovic",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 803,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "bbfb873b-5c77-5589-81df-63a862f4af47",
+            "name": "Anton Stach - powyżej 0.5",
+            "odds": 1.06
+          },
+          {
+            "externalId": "ee653c7a-5129-5648-9420-8190c76e7b0c",
+            "name": "Anton Stach - powyżej 1.5",
+            "odds": 1.43
+          },
+          {
+            "externalId": "ee5d2eb5-a92c-50e8-9eb4-32a1e8148e39",
+            "name": "Anton Stach - powyżej 2.5",
+            "odds": 2.27
+          },
+          {
+            "externalId": "035e01b8-9c92-5492-b88d-bbfa9bd9013b",
+            "name": "Anton Stach - powyżej 3.5",
+            "odds": 4
+          },
+          {
+            "externalId": "3fc2c9f5-b9a3-568e-b49f-1ebc255995d0",
+            "name": "Anton Stach - powyżej 4.5",
+            "odds": 6.9
+          },
+          {
+            "externalId": "8d172e6a-c159-542e-98d1-82e4986ff619",
+            "name": "Anton Stach - powyżej 5.5",
+            "odds": 13
+          },
+          {
+            "externalId": "7f69febd-523c-5b5a-a16b-694c25388f53",
+            "name": "Anton Stach - powyżej 6.5",
+            "odds": 27
+          }
+        ]
+      }
+    },
+    {
+      "index": 804,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "c0278c01-0253-5b60-ac3c-8b17b0005a85",
+            "name": "Noah Okafor - powyżej 0.5",
+            "odds": 1.07
+          },
+          {
+            "externalId": "43d0a13d-ac80-5f0c-b24e-26496a31ad24",
+            "name": "Noah Okafor - powyżej 1.5",
+            "odds": 1.48
+          },
+          {
+            "externalId": "d507ceec-5cac-5a63-8d4b-3efafa45be12",
+            "name": "Noah Okafor - powyżej 2.5",
+            "odds": 2.4
+          },
+          {
+            "externalId": "1edf5d17-d627-5582-a980-97c6c802d931",
+            "name": "Noah Okafor - powyżej 3.5",
+            "odds": 4.25
+          },
+          {
+            "externalId": "34af7c64-6a2b-5dc7-b05b-03567d3052c2",
+            "name": "Noah Okafor - powyżej 4.5",
+            "odds": 7.5
+          },
+          {
+            "externalId": "d78c9389-f215-5702-9226-31e79429dd45",
+            "name": "Noah Okafor - powyżej 5.5",
+            "odds": 14
+          },
+          {
+            "externalId": "2fd1947f-71af-51fb-9dc6-a4d96f117573",
+            "name": "Noah Okafor - powyżej 6.5",
+            "odds": 30
+          }
+        ]
+      }
+    },
+    {
+      "index": 805,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "423194a5-f1a7-53f3-bc35-cc231ee3567e",
+            "name": "Ilia Gruev - powyżej 0.5",
+            "odds": 1.56
+          },
+          {
+            "externalId": "a5b6a95a-4265-51e1-b2ef-4fe60749d145",
+            "name": "Ilia Gruev - powyżej 1.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "3eda2010-8b0a-596d-94a7-853c2caea2b0",
+            "name": "Ilia Gruev - powyżej 2.5",
+            "odds": 8.3
+          },
+          {
+            "externalId": "ff6aeb4e-238e-5cdd-8e0d-c7ce217b3cd6",
+            "name": "Ilia Gruev - powyżej 3.5",
+            "odds": 22
+          }
+        ]
+      }
+    },
+    {
+      "index": 806,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "95a872f8-5fe8-588c-897f-6d50db01a4f3",
+            "name": "Dejan Kulusekvski - powyżej 0.5",
+            "odds": 1.07
+          },
+          {
+            "externalId": "ab38034a-0f26-5617-a337-20e7761fcabe",
+            "name": "Dejan Kulusekvski - powyżej 1.5",
+            "odds": 1.46
+          },
+          {
+            "externalId": "4305993d-7e5b-5a33-8113-023d00d77949",
+            "name": "Dejan Kulusekvski - powyżej 2.5",
+            "odds": 2.35
+          },
+          {
+            "externalId": "c03a0f8d-f52a-5dcf-90eb-76a853992ec0",
+            "name": "Dejan Kulusekvski - powyżej 3.5",
+            "odds": 4.1
+          },
+          {
+            "externalId": "be05a479-c4d0-5bfa-80af-a784195c77d1",
+            "name": "Dejan Kulusekvski - powyżej 4.5",
+            "odds": 7.1
+          },
+          {
+            "externalId": "ac6e6619-0385-56a3-a0e7-21d3aa7c4368",
+            "name": "Dejan Kulusekvski - powyżej 5.5",
+            "odds": 14
+          },
+          {
+            "externalId": "c60ead7a-3f2c-5a16-a707-78b1c5c13914",
+            "name": "Dejan Kulusekvski - powyżej 6.5",
+            "odds": 28
+          }
+        ]
+      }
+    },
+    {
+      "index": 807,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "d133561a-dccc-58be-a0cb-733f3f37de57",
+            "name": "Sean Longstaff - powyżej 0.5",
+            "odds": 1.21
+          },
+          {
+            "externalId": "7b75b2fb-1bfa-5e83-86ec-f0e4e48561d4",
+            "name": "Sean Longstaff - powyżej 1.5",
+            "odds": 2
+          },
+          {
+            "externalId": "f6cbd465-d965-5de4-95e1-a28bc45c4061",
+            "name": "Sean Longstaff - powyżej 2.5",
+            "odds": 3.9
+          },
+          {
+            "externalId": "99b478b3-b290-5925-9efe-b8c3d150523b",
+            "name": "Sean Longstaff - powyżej 3.5",
+            "odds": 7.6
+          },
+          {
+            "externalId": "655e3915-39cf-5a44-a6b2-532db553d9e2",
+            "name": "Sean Longstaff - powyżej 4.5",
+            "odds": 16
+          },
+          {
+            "externalId": "7a7817cf-8cef-5bac-a2e2-66d8e131cc69",
+            "name": "Sean Longstaff - powyżej 5.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 808,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "fbe2c6d1-4183-5b86-9f64-dc89e4a1d1f4",
+            "name": "Omar Marmoush - powyżej 0.5",
+            "odds": 1.04
+          },
+          {
+            "externalId": "0c3f2ca6-e302-524b-a900-11cb7d9a8b6a",
+            "name": "Omar Marmoush - powyżej 1.5",
+            "odds": 1.33
+          },
+          {
+            "externalId": "a935ffb9-3c51-5142-920d-c0523a88c653",
+            "name": "Omar Marmoush - powyżej 2.5",
+            "odds": 2
+          },
+          {
+            "externalId": "c3b3a3fb-48b6-5fb8-8f7e-322eab23ab94",
+            "name": "Omar Marmoush - powyżej 3.5",
+            "odds": 3.3
+          },
+          {
+            "externalId": "998dbc97-65fa-5e33-9dcd-b69d049168f2",
+            "name": "Omar Marmoush - powyżej 4.5",
+            "odds": 5.65
+          },
+          {
+            "externalId": "cf14b5e0-6413-5efd-aa16-dd7990802abd",
+            "name": "Omar Marmoush - powyżej 5.5",
+            "odds": 10
+          },
+          {
+            "externalId": "3abeea6f-005d-58ad-bc4d-930d0bb41f9a",
+            "name": "Omar Marmoush - powyżej 6.5",
+            "odds": 19
+          },
+          {
+            "externalId": "51f94c7a-e7be-54e2-b955-f3d337228f80",
+            "name": "Omar Marmoush - powyżej 7.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 809,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "85a0eaea-3e5d-5f3d-bfb2-9758d5257e30",
+            "name": "Jaka Bijol - powyżej 0.5",
+            "odds": 1.58
+          },
+          {
+            "externalId": "531e4129-c838-528e-9587-17ac1cf6e334",
+            "name": "Jaka Bijol - powyżej 1.5",
+            "odds": 3.65
+          },
+          {
+            "externalId": "74fe8c75-72f4-582c-9a3d-ea94335bfe4d",
+            "name": "Jaka Bijol - powyżej 2.5",
+            "odds": 8.8
+          },
+          {
+            "externalId": "25b8df02-1eab-5aa4-b201-005cbaccd955",
+            "name": "Jaka Bijol - powyżej 3.5",
+            "odds": 24
+          }
+        ]
+      }
+    },
+    {
+      "index": 810,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "eef138dc-cab2-565e-8ad8-da14a4bb9c8d",
+            "name": "Sandro Tonali - powyżej 0.5",
+            "odds": 1.31
+          },
+          {
+            "externalId": "d45734d7-1f8f-52d7-af45-048e152dff16",
+            "name": "Sandro Tonali - powyżej 1.5",
+            "odds": 2.45
+          },
+          {
+            "externalId": "26fd08e9-14e5-50a1-9f88-780bae3a340e",
+            "name": "Sandro Tonali - powyżej 2.5",
+            "odds": 5.15
+          },
+          {
+            "externalId": "7e3d1bc6-f70a-590b-ab63-7a5af5ace79f",
+            "name": "Sandro Tonali - powyżej 3.5",
+            "odds": 11
+          },
+          {
+            "externalId": "ed03960b-b91e-567e-acb8-4be4eaf0d107",
+            "name": "Sandro Tonali - powyżej 4.5",
+            "odds": 27
+          }
+        ]
+      }
+    },
+    {
+      "index": 811,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "23ce678d-e292-5b9b-b06e-ba9d43926997",
+            "name": "Conor Gallagher - powyżej 0.5",
+            "odds": 1.13
+          },
+          {
+            "externalId": "ce690043-2acb-5585-bfb9-bf3af542d267",
+            "name": "Conor Gallagher - powyżej 1.5",
+            "odds": 1.68
+          },
+          {
+            "externalId": "dcab6cf7-cf7e-52cf-bd62-d48bd91e5d83",
+            "name": "Conor Gallagher - powyżej 2.5",
+            "odds": 2.95
+          },
+          {
+            "externalId": "9fbda345-0116-5cee-9a7f-388463c2a5e7",
+            "name": "Conor Gallagher - powyżej 3.5",
+            "odds": 5.55
+          },
+          {
+            "externalId": "c344e393-9170-5927-8db7-368c71f60251",
+            "name": "Conor Gallagher - powyżej 4.5",
+            "odds": 11
+          },
+          {
+            "externalId": "d1ebcb41-5548-53ca-8ecf-e77acea3dd2e",
+            "name": "Conor Gallagher - powyżej 5.5",
+            "odds": 22
+          }
+        ]
+      }
+    },
+    {
+      "index": 812,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "db450551-33e4-5844-9087-8aac33608af0",
+            "name": "Mohammed Kudus - powyżej 0.5",
+            "odds": 1.04
+          },
+          {
+            "externalId": "2e60ad36-b539-501b-971a-5617d1133d40",
+            "name": "Mohammed Kudus - powyżej 1.5",
+            "odds": 1.37
+          },
+          {
+            "externalId": "3798def1-69b1-510d-a599-7719ad8eb8f1",
+            "name": "Mohammed Kudus - powyżej 2.5",
+            "odds": 2.07
+          },
+          {
+            "externalId": "8b2d2f36-653c-5186-b684-d8eed6dd5f35",
+            "name": "Mohammed Kudus - powyżej 3.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "e77eebce-e996-52c8-be0d-d77f2e0bc6ab",
+            "name": "Mohammed Kudus - powyżej 4.5",
+            "odds": 6.1
+          },
+          {
+            "externalId": "5b7edfd3-d338-5367-924b-a094f91037a6",
+            "name": "Mohammed Kudus - powyżej 5.5",
+            "odds": 11
+          },
+          {
+            "externalId": "2e9717a1-bca7-587e-b402-69df33a34268",
+            "name": "Mohammed Kudus - powyżej 6.5",
+            "odds": 21
+          },
+          {
+            "externalId": "96e46650-1638-58ea-b863-74e349901008",
+            "name": "Mohammed Kudus - powyżej 7.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 813,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "f60bc080-312b-5773-a241-74b2b491995b",
+            "name": "Melvin Bard - powyżej 0.5",
+            "odds": 1.31
+          },
+          {
+            "externalId": "7cd344e6-5b4a-5a02-8fd2-9ad504df5212",
+            "name": "Melvin Bard - powyżej 1.5",
+            "odds": 2.42
+          },
+          {
+            "externalId": "a0cd8a8b-985d-57d9-9d00-f4da2fef0662",
+            "name": "Melvin Bard - powyżej 2.5",
+            "odds": 5.1
+          },
+          {
+            "externalId": "01753912-176f-53d1-8956-278f516fab20",
+            "name": "Melvin Bard - powyżej 3.5",
+            "odds": 11
+          },
+          {
+            "externalId": "c6628552-2c56-5a9b-a171-f0a8b5eb48ad",
+            "name": "Melvin Bard - powyżej 4.5",
+            "odds": 27
+          }
+        ]
+      }
+    },
+    {
+      "index": 814,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "f65e5bfd-856c-5c83-9d3a-764786cbde4e",
+            "name": "Pedro Porro - powyżej 0.5",
+            "odds": 1.3
+          },
+          {
+            "externalId": "55f7a777-0571-5c4d-8fe7-034265565fc5",
+            "name": "Pedro Porro - powyżej 1.5",
+            "odds": 2.37
+          },
+          {
+            "externalId": "f2fc81e4-caa5-58b1-a92c-c212d57b6b6c",
+            "name": "Pedro Porro - powyżej 2.5",
+            "odds": 4.9
+          },
+          {
+            "externalId": "8ef9b488-e0e8-563e-9189-f85becec146e",
+            "name": "Pedro Porro - powyżej 3.5",
+            "odds": 11
+          },
+          {
+            "externalId": "96e4ec45-5d93-5e09-9c6e-c7cc085c27a2",
+            "name": "Pedro Porro - powyżej 4.5",
+            "odds": 25
+          }
+        ]
+      }
+    },
+    {
+      "index": 815,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "8679fa4c-30fb-5128-8bdc-151cfa89a9c8",
+            "name": "Brenden Aaronson - powyżej 0.5",
+            "odds": 1.08
+          },
+          {
+            "externalId": "0227dd08-7f3f-5e9f-a19c-73646caff74b",
+            "name": "Brenden Aaronson - powyżej 1.5",
+            "odds": 1.5
+          },
+          {
+            "externalId": "b3c292b4-8ee4-5d1c-90b6-692f563c1402",
+            "name": "Brenden Aaronson - powyżej 2.5",
+            "odds": 2.47
+          },
+          {
+            "externalId": "4fb5816d-5ebc-55d6-9445-25d0f195125a",
+            "name": "Brenden Aaronson - powyżej 3.5",
+            "odds": 4.4
+          },
+          {
+            "externalId": "e09a94bc-fbb0-5c83-becc-373b4355836e",
+            "name": "Brenden Aaronson - powyżej 4.5",
+            "odds": 7.8
+          },
+          {
+            "externalId": "2cb10c5d-9519-540f-a843-3762bf123772",
+            "name": "Brenden Aaronson - powyżej 5.5",
+            "odds": 15
+          },
+          {
+            "externalId": "ad373228-513c-53bb-af0d-8d3fbaa05ec1",
+            "name": "Brenden Aaronson - powyżej 6.5",
+            "odds": 32
+          }
+        ]
+      }
+    },
+    {
+      "index": 816,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "5d6767aa-21c1-5481-9744-6d227a503a1a",
+            "name": "Jayden Bogle - powyżej 0.5",
+            "odds": 1.32
+          },
+          {
+            "externalId": "f3e9ff9c-79ad-5765-8e36-599fd17ea6f1",
+            "name": "Jayden Bogle - powyżej 1.5",
+            "odds": 2.47
+          },
+          {
+            "externalId": "7ee7b0db-dc14-5370-81db-36b4b625969e",
+            "name": "Jayden Bogle - powyżej 2.5",
+            "odds": 5.2
+          },
+          {
+            "externalId": "9d6720c3-94b2-5952-96ce-68952ae08691",
+            "name": "Jayden Bogle - powyżej 3.5",
+            "odds": 12
+          },
+          {
+            "externalId": "db46282b-8280-5fae-bec2-b66e8fa94187",
+            "name": "Jayden Bogle - powyżej 4.5",
+            "odds": 28
+          }
+        ]
+      }
+    },
+    {
+      "index": 817,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "08d042b1-6114-5819-a467-04b663a530f4",
+            "name": "Jan-Paul van Hecke - powyżej 0.5",
+            "odds": 1.78
+          },
+          {
+            "externalId": "e954e66f-07a3-5321-8dfe-1ff79f481c53",
+            "name": "Jan-Paul van Hecke - powyżej 1.5",
+            "odds": 4.55
+          },
+          {
+            "externalId": "7df929f9-bba4-5f21-b95e-226082471522",
+            "name": "Jan-Paul van Hecke - powyżej 2.5",
+            "odds": 12
+          },
+          {
+            "externalId": "ca83d299-f40b-58db-8e44-92816bc764a3",
+            "name": "Jan-Paul van Hecke - powyżej 3.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 818,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "7f469f30-ccc4-54aa-97d3-d7221b66e670",
+            "name": "Destiny Udogie - powyżej 0.5",
+            "odds": 1.69
+          },
+          {
+            "externalId": "ffbc4995-9731-5967-b53f-bed35d4cc438",
+            "name": "Destiny Udogie - powyżej 1.5",
+            "odds": 4.1
+          },
+          {
+            "externalId": "525c24cd-0ea9-55bc-aee4-d13e2862749b",
+            "name": "Destiny Udogie - powyżej 2.5",
+            "odds": 11
+          },
+          {
+            "externalId": "80654076-764c-5937-9a6f-f3b3544c9c6d",
+            "name": "Destiny Udogie - powyżej 3.5",
+            "odds": 30
+          }
+        ]
+      }
+    },
+    {
+      "index": 819,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "3ab6e0da-a6a3-5a96-95f8-6a5cef98e37a",
+            "name": "Micky van de Ven - powyżej 0.5",
+            "odds": 2.02
+          },
+          {
+            "externalId": "b366ed6d-2921-520c-966f-bb1db4da9a96",
+            "name": "Micky van de Ven - powyżej 1.5",
+            "odds": 5.7
+          },
+          {
+            "externalId": "f0d7e230-82a4-52a2-8226-a857af053a37",
+            "name": "Micky van de Ven - powyżej 2.5",
+            "odds": 17
+          }
+        ]
+      }
+    },
+    {
+      "index": 820,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "43be44cf-11e0-5fb9-a7ec-ed18f4d7ec76",
+            "name": "Mathys Tel - powyżej 0.5",
+            "odds": 1.05
+          },
+          {
+            "externalId": "c92b113d-dd1c-5a02-922e-ae1496803e89",
+            "name": "Mathys Tel - powyżej 1.5",
+            "odds": 1.39
+          },
+          {
+            "externalId": "316a810f-a862-56db-b69a-193aac782a61",
+            "name": "Mathys Tel - powyżej 2.5",
+            "odds": 2.15
+          },
+          {
+            "externalId": "bb960b00-2ca0-527a-95a7-8ce835549eb5",
+            "name": "Mathys Tel - powyżej 3.5",
+            "odds": 3.65
+          },
+          {
+            "externalId": "9d10f4c7-2459-567e-aff7-e8fb84a4edb5",
+            "name": "Mathys Tel - powyżej 4.5",
+            "odds": 6.3
+          },
+          {
+            "externalId": "f36e3c24-804c-51d4-9169-9d98b0b20b64",
+            "name": "Mathys Tel - powyżej 5.5",
+            "odds": 12
+          },
+          {
+            "externalId": "045314d2-8856-5335-9553-d2874c6b68cd",
+            "name": "Mathys Tel - powyżej 6.5",
+            "odds": 23
+          }
+        ]
+      }
+    },
+    {
+      "index": 821,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "6ce407f6-dc7a-515f-9e00-7f7e377ceb4b",
+            "name": "Tarik Muharemovic - powyżej 0.5",
+            "odds": 1.66
+          },
+          {
+            "externalId": "58f21f18-56a7-5c92-be4c-ddcf93eb8708",
+            "name": "Tarik Muharemovic - powyżej 1.5",
+            "odds": 4
+          },
+          {
+            "externalId": "03c323a4-065c-5474-b8e3-cb02dc2e4483",
+            "name": "Tarik Muharemovic - powyżej 2.5",
+            "odds": 10
+          },
+          {
+            "externalId": "7a6919c1-a7c8-5db3-a319-a4df44232d06",
+            "name": "Tarik Muharemovic - powyżej 3.5",
+            "odds": 28
+          }
+        ]
+      }
+    },
+    {
+      "index": 822,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "9f12e257-554b-5fa4-8d16-92ce1fe8becf",
+            "name": "Mateus Fernandes - powyżej 0.5",
+            "odds": 1.26
+          },
+          {
+            "externalId": "8071505b-267f-5c0c-a50b-1bf16a6e928d",
+            "name": "Mateus Fernandes - powyżej 1.5",
+            "odds": 2.2
+          },
+          {
+            "externalId": "0976f1bb-0630-59e4-8adb-e25dd1e57636",
+            "name": "Mateus Fernandes - powyżej 2.5",
+            "odds": 4.45
+          },
+          {
+            "externalId": "8a9bc6c6-8a0a-5f48-a648-7949fcbf3b2c",
+            "name": "Mateus Fernandes - powyżej 3.5",
+            "odds": 9.3
+          },
+          {
+            "externalId": "8639d0ce-3488-5971-83a3-a58dd91a48ef",
+            "name": "Mateus Fernandes - powyżej 4.5",
+            "odds": 21
+          }
+        ]
+      }
+    },
+    {
+      "index": 823,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "e744e546-7ff6-5d6a-83ba-8f2fd56936e9",
+            "name": "Archie Gray - powyżej 0.5",
+            "odds": 1.61
+          },
+          {
+            "externalId": "69f4556f-5caa-557c-971b-5a56a81e2a0d",
+            "name": "Archie Gray - powyżej 1.5",
+            "odds": 3.75
+          },
+          {
+            "externalId": "b0498a11-701a-541d-813e-a74e1b51f5d5",
+            "name": "Archie Gray - powyżej 2.5",
+            "odds": 9.2
+          },
+          {
+            "externalId": "e888c753-3234-5d78-9534-acab0edeafa7",
+            "name": "Archie Gray - powyżej 3.5",
+            "odds": 25
+          }
+        ]
+      }
+    },
+    {
+      "index": 824,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "94d99d2b-3cf6-5154-aab2-c5778400e4b7",
+            "name": "Lucas Bergvall - powyżej 0.5",
+            "odds": 1.22
+          },
+          {
+            "externalId": "9a75819f-f24e-5295-81d6-2e4f13e9735f",
+            "name": "Lucas Bergvall - powyżej 1.5",
+            "odds": 2.05
+          },
+          {
+            "externalId": "95d193b6-c6f3-5429-90bf-0cfec7555b76",
+            "name": "Lucas Bergvall - powyżej 2.5",
+            "odds": 4
+          },
+          {
+            "externalId": "fd32bada-d625-5eee-a4f2-8fc4282ddb8e",
+            "name": "Lucas Bergvall - powyżej 3.5",
+            "odds": 7.9
+          },
+          {
+            "externalId": "3e78a265-011e-5548-9f55-6d8127a8d8d3",
+            "name": "Lucas Bergvall - powyżej 4.5",
+            "odds": 17
+          },
+          {
+            "externalId": "a69021ad-d94b-5702-8d43-e2332ca5916f",
+            "name": "Lucas Bergvall - powyżej 5.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 825,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "f344d2bb-caec-5d10-aacc-073f51982a32",
+            "name": "Jean Matteo Bahoya - powyżej 0.5",
+            "odds": 1.17
+          },
+          {
+            "externalId": "9a25c91d-d5bc-5d61-807f-24ac325870c6",
+            "name": "Jean Matteo Bahoya - powyżej 1.5",
+            "odds": 1.87
+          },
+          {
+            "externalId": "fc748712-b5e1-59ca-90c5-ecf91f948122",
+            "name": "Jean Matteo Bahoya - powyżej 2.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "6b7fae7d-4fa7-570d-a070-f4b8c9e5f6ae",
+            "name": "Jean Matteo Bahoya - powyżej 3.5",
+            "odds": 6.7
+          },
+          {
+            "externalId": "601a0eda-3dea-56e4-bf91-f42cc1b6b9ae",
+            "name": "Jean Matteo Bahoya - powyżej 4.5",
+            "odds": 14
+          },
+          {
+            "externalId": "6c3edc46-a09f-5a8c-af5e-45b56c2a70ea",
+            "name": "Jean Matteo Bahoya - powyżej 5.5",
+            "odds": 32
+          }
+        ]
+      }
+    },
+    {
+      "index": 826,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "46fb9391-27d7-517d-abcd-e9e833affd34",
+            "name": "Andy Robertson - powyżej 0.5",
+            "odds": 1.59
+          },
+          {
+            "externalId": "6e547f37-28e9-5bfb-a69e-ae22e6d9b2b2",
+            "name": "Andy Robertson - powyżej 1.5",
+            "odds": 3.65
+          },
+          {
+            "externalId": "dfa23758-e245-5bdd-bb72-c8f262a561a8",
+            "name": "Andy Robertson - powyżej 2.5",
+            "odds": 8.8
+          },
+          {
+            "externalId": "1573320d-e699-595e-9538-8e92bdb0e8d4",
+            "name": "Andy Robertson - powyżej 3.5",
+            "odds": 24
+          }
+        ]
+      }
+    },
+    {
+      "index": 827,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "f6c62573-58d5-5137-a068-b5b2aa60919b",
+            "name": "Nico Elvedi - powyżej 0.5",
+            "odds": 1.82
+          },
+          {
+            "externalId": "a690403f-5652-5465-89f7-b0834c56afa6",
+            "name": "Nico Elvedi - powyżej 1.5",
+            "odds": 4.75
+          },
+          {
+            "externalId": "c323491c-8499-52a5-b513-168fad5e0da9",
+            "name": "Nico Elvedi - powyżej 2.5",
+            "odds": 13
+          },
+          {
+            "externalId": "69c3d74d-cf00-546f-a950-efede886400d",
+            "name": "Nico Elvedi - powyżej 3.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 828,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "23e5ab65-ab59-5976-93d3-c38fb92af021",
+            "name": "Tosin Adarabioyo - powyżej 0.5",
+            "odds": 1.47
+          },
+          {
+            "externalId": "6e77884f-55ba-57c3-b7a9-d3c31f65abd4",
+            "name": "Tosin Adarabioyo - powyżej 1.5",
+            "odds": 3.1
+          },
+          {
+            "externalId": "56a6cd32-292c-524a-904d-3117c80df2ca",
+            "name": "Tosin Adarabioyo - powyżej 2.5",
+            "odds": 6.9
+          },
+          {
+            "externalId": "fbe74641-2b45-596f-a3e6-f66608246dcb",
+            "name": "Tosin Adarabioyo - powyżej 3.5",
+            "odds": 17
+          }
+        ]
+      }
+    },
+    {
+      "index": 829,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "89f4d1c7-6dac-588a-93ef-4564436c0bc6",
+            "name": "Daniel James - powyżej 0.5",
+            "odds": 1.05
+          },
+          {
+            "externalId": "03507459-3524-5bd3-b19d-58ef017c68b6",
+            "name": "Daniel James - powyżej 1.5",
+            "odds": 1.37
+          },
+          {
+            "externalId": "99af5b76-6ffb-53f4-8248-57e71167c552",
+            "name": "Daniel James - powyżej 2.5",
+            "odds": 2.1
+          },
+          {
+            "externalId": "d063a8d6-ec21-52ee-920a-bb2a56beae03",
+            "name": "Daniel James - powyżej 3.5",
+            "odds": 3.6
+          },
+          {
+            "externalId": "95e1869f-7658-5eb8-940d-423f930d617f",
+            "name": "Daniel James - powyżej 4.5",
+            "odds": 6.2
+          },
+          {
+            "externalId": "da26b35d-d6eb-5109-8687-1f36b770560e",
+            "name": "Daniel James - powyżej 5.5",
+            "odds": 12
+          },
+          {
+            "externalId": "01393274-5a21-59bd-bd64-a1c56923e295",
+            "name": "Daniel James - powyżej 6.5",
+            "odds": 22
+          }
+        ]
+      }
+    },
+    {
+      "index": 830,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "a0352a4a-c155-5a5c-b6e5-fef7805fc5c5",
+            "name": "Harry Wilson - powyżej 0.5",
+            "odds": 1.03
+          },
+          {
+            "externalId": "01d9d86a-767a-5def-8bf3-f8d51612449f",
+            "name": "Harry Wilson - powyżej 1.5",
+            "odds": 1.3
+          },
+          {
+            "externalId": "c0a6ab97-6cdd-504b-9ee3-f6629fa0a94e",
+            "name": "Harry Wilson - powyżej 2.5",
+            "odds": 1.9
+          },
+          {
+            "externalId": "881d9d0e-7e0d-5641-964c-e3e70b97a3d5",
+            "name": "Harry Wilson - powyżej 3.5",
+            "odds": 3.1
+          },
+          {
+            "externalId": "17f539ce-bae2-5657-9aae-c1c57016d2d7",
+            "name": "Harry Wilson - powyżej 4.5",
+            "odds": 5.35
+          },
+          {
+            "externalId": "46ff58b0-4f42-518b-9fca-cc5cd9d8807f",
+            "name": "Harry Wilson - powyżej 5.5",
+            "odds": 9.3
+          },
+          {
+            "externalId": "d7babf12-7358-53c3-a4cf-f2c50bfce1b2",
+            "name": "Harry Wilson - powyżej 6.5",
+            "odds": 17
+          },
+          {
+            "externalId": "7e231665-b75b-54c8-a0bf-719a639e13c6",
+            "name": "Harry Wilson - powyżej 7.5",
+            "odds": 34
+          }
+        ]
+      }
+    },
+    {
+      "index": 831,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "2aac47b1-4a7f-5731-ae41-3ea559b0db27",
+            "name": "James Maddison - powyżej 0.5",
+            "odds": 1.05
+          },
+          {
+            "externalId": "69316ff2-fae4-5da6-9023-fef6197735f1",
+            "name": "James Maddison - powyżej 1.5",
+            "odds": 1.39
+          },
+          {
+            "externalId": "81c1bfbe-3490-507c-a337-95fc10630116",
+            "name": "James Maddison - powyżej 2.5",
+            "odds": 2.15
+          },
+          {
+            "externalId": "68b267fd-4441-554e-8dac-230fc78514ef",
+            "name": "James Maddison - powyżej 3.5",
+            "odds": 3.65
+          },
+          {
+            "externalId": "d5f2eb90-5b76-5a72-b1a7-25de6ececaf1",
+            "name": "James Maddison - powyżej 4.5",
+            "odds": 6.3
+          },
+          {
+            "externalId": "8a3ac0d7-cc88-559c-bbd3-546e01d4d691",
+            "name": "James Maddison - powyżej 5.5",
+            "odds": 12
+          },
+          {
+            "externalId": "5150d5bc-019c-54f6-a367-1ac6e09f0978",
+            "name": "James Maddison - powyżej 6.5",
+            "odds": 23
+          }
+        ]
+      }
+    },
+    {
+      "index": 832,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "570ffacc-b545-5a30-a119-765cee0a3f10",
+            "name": "Dominic Solanke - powyżej 0.5",
+            "odds": 1.03
+          },
+          {
+            "externalId": "db4f17a7-21c7-50bf-bfd7-a11529d92ee5",
+            "name": "Dominic Solanke - powyżej 1.5",
+            "odds": 1.28
+          },
+          {
+            "externalId": "2c83898f-3e0e-5a67-a3b1-b0ef56688ab4",
+            "name": "Dominic Solanke - powyżej 2.5",
+            "odds": 1.85
+          },
+          {
+            "externalId": "d60db1be-c9ea-5b3e-8913-b8fa3b19aed6",
+            "name": "Dominic Solanke - powyżej 3.5",
+            "odds": 3
+          },
+          {
+            "externalId": "bfd9d765-8f29-51be-a984-8806b72ba2b4",
+            "name": "Dominic Solanke - powyżej 4.5",
+            "odds": 5
+          },
+          {
+            "externalId": "ade9f034-5c52-5525-8cd9-fab77c4fd514",
+            "name": "Dominic Solanke - powyżej 5.5",
+            "odds": 8.6
+          },
+          {
+            "externalId": "1409fd07-998f-545b-a6fd-ec66fd7ca3ff",
+            "name": "Dominic Solanke - powyżej 6.5",
+            "odds": 16
+          },
+          {
+            "externalId": "ede54906-ad2b-5662-892a-7f021a3c74c8",
+            "name": "Dominic Solanke - powyżej 7.5",
+            "odds": 31
+          }
+        ]
+      }
+    },
+    {
+      "index": 833,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "7a3e4d1b-8dc5-5133-af86-ee3bc4144aa7",
+            "name": "Dominic Calvert-Lewin - powyżej 0.5",
+            "odds": 1.02
+          },
+          {
+            "externalId": "75fc94d6-7b05-5530-9bab-92dd96b9423d",
+            "name": "Dominic Calvert-Lewin - powyżej 1.5",
+            "odds": 1.25
+          },
+          {
+            "externalId": "954ffdea-5afe-57a1-aec4-2b56b1204666",
+            "name": "Dominic Calvert-Lewin - powyżej 2.5",
+            "odds": 1.78
+          },
+          {
+            "externalId": "62ffa2f9-36fe-5e90-a393-f011bc766ca7",
+            "name": "Dominic Calvert-Lewin - powyżej 3.5",
+            "odds": 2.82
+          },
+          {
+            "externalId": "e17577d8-5029-5128-a1ac-4125e61095f7",
+            "name": "Dominic Calvert-Lewin - powyżej 4.5",
+            "odds": 4.75
+          },
+          {
+            "externalId": "acaf2192-401f-5f57-965c-a70a26549d65",
+            "name": "Dominic Calvert-Lewin - powyżej 5.5",
+            "odds": 7.9
+          },
+          {
+            "externalId": "4c4b936e-0a38-55ba-8891-d6c3803050c3",
+            "name": "Dominic Calvert-Lewin - powyżej 6.5",
+            "odds": 14
+          },
+          {
+            "externalId": "df649721-7a80-511f-83e7-d31a15fe4296",
+            "name": "Dominic Calvert-Lewin - powyżej 7.5",
+            "odds": 27
+          }
+        ]
+      }
+    },
+    {
+      "index": 834,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "956037d4-0787-5707-9a07-923b990b7d2c",
+            "name": "Lukas Nmecha - powyżej 0.5",
+            "odds": 1.02
+          },
+          {
+            "externalId": "d373deb2-885a-5141-be37-d70b626f0fa5",
+            "name": "Lukas Nmecha - powyżej 1.5",
+            "odds": 1.26
+          },
+          {
+            "externalId": "bfb5dd8e-8aee-5f3a-8350-27d10ca46aa8",
+            "name": "Lukas Nmecha - powyżej 2.5",
+            "odds": 1.8
+          },
+          {
+            "externalId": "78d973f4-19a7-5995-91fe-c33a3d4412ff",
+            "name": "Lukas Nmecha - powyżej 3.5",
+            "odds": 2.87
+          },
+          {
+            "externalId": "961b4df7-4c4b-5487-88a9-fb2b81daa74f",
+            "name": "Lukas Nmecha - powyżej 4.5",
+            "odds": 4.8
+          },
+          {
+            "externalId": "3c45e42c-9229-5196-8c8f-33506b9fe02d",
+            "name": "Lukas Nmecha - powyżej 5.5",
+            "odds": 8.1
+          },
+          {
+            "externalId": "798f1c1b-a09d-568a-aa80-adebead9bff1",
+            "name": "Lukas Nmecha - powyżej 6.5",
+            "odds": 15
+          },
+          {
+            "externalId": "6ced5c1e-1c21-565c-8d0c-c5a69f04915a",
+            "name": "Lukas Nmecha - powyżej 7.5",
+            "odds": 28
+          }
+        ]
+      }
+    },
+    {
+      "index": 835,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "38c4cdc7-ea25-5d98-bf53-e613b5fcdd3a",
+            "name": "Ao Tanaka - powyżej 0.5",
+            "odds": 1.22
+          },
+          {
+            "externalId": "9ea05a3f-fcd7-5a24-a2a5-cd74a277b28b",
+            "name": "Ao Tanaka - powyżej 1.5",
+            "odds": 2.07
+          },
+          {
+            "externalId": "1ffb237e-ce62-5619-821c-6b52aba107a9",
+            "name": "Ao Tanaka - powyżej 2.5",
+            "odds": 4.1
+          },
+          {
+            "externalId": "ba141a2d-1374-5656-8d19-5fdee4634360",
+            "name": "Ao Tanaka - powyżej 3.5",
+            "odds": 8.1
+          },
+          {
+            "externalId": "e6694a86-2240-521c-8e40-0c202b93f9a1",
+            "name": "Ao Tanaka - powyżej 4.5",
+            "odds": 17
+          },
+          {
+            "externalId": "f8258e49-d90c-5c8a-a7e8-9a5dc680221f",
+            "name": "Ao Tanaka - powyżej 5.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 836,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "007bfeac-bca2-5ac9-a55f-80070b578e13",
+            "name": "James Justin - powyżej 0.5",
+            "odds": 1.41
+          },
+          {
+            "externalId": "18636919-43b2-5d3f-9ce5-df3919969833",
+            "name": "James Justin - powyżej 1.5",
+            "odds": 2.85
+          },
+          {
+            "externalId": "004cd28e-faa1-50bc-8106-b597f67af405",
+            "name": "James Justin - powyżej 2.5",
+            "odds": 6.3
+          },
+          {
+            "externalId": "23311810-6706-5d6b-8ed4-c3c6d6dfd800",
+            "name": "James Justin - powyżej 3.5",
+            "odds": 15
+          },
+          {
+            "externalId": "28680ad7-f9db-59a8-8e23-f664d26cf9d0",
+            "name": "James Justin - powyżej 4.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 837,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "c05b0976-5909-58f7-ac36-5b391eb2bf42",
+            "name": "Ben Davies - powyżej 0.5",
+            "odds": 1.51
+          },
+          {
+            "externalId": "1f7471ea-f61a-589b-a3df-2dc6a1894d58",
+            "name": "Ben Davies - powyżej 1.5",
+            "odds": 3.3
+          },
+          {
+            "externalId": "7ecc9caa-b9a0-5f8f-9e6e-2931607daa63",
+            "name": "Ben Davies - powyżej 2.5",
+            "odds": 7.5
+          },
+          {
+            "externalId": "1448a9f3-05d3-5ddb-b8d4-5a3e13540969",
+            "name": "Ben Davies - powyżej 3.5",
+            "odds": 19
+          }
+        ]
+      }
+    },
+    {
+      "index": 838,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "c1d83818-62bc-5a3f-898c-8478516923f9",
+            "name": "Joe Rodon - powyżej 0.5",
+            "odds": 1.76
+          },
+          {
+            "externalId": "b52630e0-72a0-5786-b0db-862e8fbcd974",
+            "name": "Joe Rodon - powyżej 1.5",
+            "odds": 4.45
+          },
+          {
+            "externalId": "624066bf-aaad-5e3e-8974-a4cf1d4dc931",
+            "name": "Joe Rodon - powyżej 2.5",
+            "odds": 12
+          },
+          {
+            "externalId": "16d34f85-4c6c-5a88-aec7-b6a9c62057a9",
+            "name": "Joe Rodon - powyżej 3.5",
+            "odds": 35
+          }
+        ]
+      }
+    },
+    {
+      "index": 839,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "4a537398-0336-5e4c-b7d9-71e35d0bbb33",
+            "name": "Marcos Senesi - powyżej 0.5",
+            "odds": 1.63
+          },
+          {
+            "externalId": "4277446f-3346-5628-9106-b9e5062b5b0a",
+            "name": "Marcos Senesi - powyżej 1.5",
+            "odds": 3.85
+          },
+          {
+            "externalId": "3b9af765-68c3-599f-8b12-3d5c00c30f18",
+            "name": "Marcos Senesi - powyżej 2.5",
+            "odds": 9.5
+          },
+          {
+            "externalId": "af3295f1-86e5-5d67-9e9e-1f8772767698",
+            "name": "Marcos Senesi - powyżej 3.5",
+            "odds": 26
+          }
+        ]
+      }
+    },
+    {
+      "index": 840,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "7bcfa1c7-ac42-52c0-a428-dc6f41b9e80b",
+            "name": "Gabriel Gudmundsson - powyżej 0.5",
+            "odds": 1.37
+          },
+          {
+            "externalId": "744c77e3-3b58-5d66-890a-10adf881151c",
+            "name": "Gabriel Gudmundsson - powyżej 1.5",
+            "odds": 2.7
+          },
+          {
+            "externalId": "aab1e245-361a-5cbb-93b7-40e506d57a45",
+            "name": "Gabriel Gudmundsson - powyżej 2.5",
+            "odds": 5.85
+          },
+          {
+            "externalId": "8bc5f9f5-0462-5b1a-880d-c64905fc475d",
+            "name": "Gabriel Gudmundsson - powyżej 3.5",
+            "odds": 14
+          },
+          {
+            "externalId": "bc0c1be8-78e1-54b9-b318-3335b1f9669d",
+            "name": "Gabriel Gudmundsson - powyżej 4.5",
+            "odds": 34
+          }
+        ]
+      }
+    },
+    {
+      "index": 841,
+      "raw": {
+        "bookmakerMarketId": "236218",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Zawodnik - liczba strzałów",
+        "selections": [
+          {
+            "externalId": "f3916634-7589-5812-b40b-dee664863b0b",
+            "name": "Ethan Ampadu - powyżej 0.5",
+            "odds": 1.66
+          },
+          {
+            "externalId": "e1afcd50-5d66-5ffe-9f1d-3f7ebf4070fc",
+            "name": "Ethan Ampadu - powyżej 1.5",
+            "odds": 4
+          },
+          {
+            "externalId": "d277b49f-3bb4-5d84-8200-ad256a079788",
+            "name": "Ethan Ampadu - powyżej 2.5",
+            "odds": 10
+          },
+          {
+            "externalId": "ebf4e805-551e-5c27-a138-a8ec40504e76",
+            "name": "Ethan Ampadu - powyżej 3.5",
+            "odds": 29
+          }
+        ]
+      }
+    },
+    {
+      "index": 881,
+      "raw": {
+        "bookmakerMarketId": "541",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "e130686d-182b-5848-a7f9-2cccfce43b18",
+            "name": "0",
+            "odds": 9.6
+          },
+          {
+            "externalId": "ab6554fe-5f9b-52a0-afc1-cd92f58ec921",
+            "name": "1",
+            "odds": 4.8
+          },
+          {
+            "externalId": "2c4679e1-503c-5936-bad7-b64a13552d05",
+            "name": "2",
+            "odds": 3.55
+          },
+          {
+            "externalId": "cde7f985-d988-50b3-82be-f657cfacb806",
+            "name": "3",
+            "odds": 4.15
+          },
+          {
+            "externalId": "4a51b20f-5199-5541-9c34-e529b7f80782",
+            "name": "4",
+            "odds": 5.65
+          },
+          {
+            "externalId": "529e90aa-449a-56b2-9634-f267fcb7e74a",
+            "name": "5",
+            "odds": 9.7
+          },
+          {
+            "externalId": "de30da36-e063-53ed-84dc-fb6fb0c81eab",
+            "name": "6+",
+            "odds": 13
+          }
+        ]
+      }
+    },
+    {
+      "index": 882,
+      "raw": {
+        "bookmakerMarketId": "540",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Leeds United - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "cc42fdd2-2cd8-55fc-962f-32c7418c8d76",
+            "name": "0",
+            "odds": 3.25
+          },
+          {
+            "externalId": "68c4f5bf-02b2-5224-8ae1-c296055e6c78",
+            "name": "1",
+            "odds": 2.52
+          },
+          {
+            "externalId": "0e8890c5-0cf2-5410-9387-a9f9a1a9e64b",
+            "name": "2",
+            "odds": 3.7
+          },
+          {
+            "externalId": "a96f4264-a1b8-571f-b0e0-16d1881e7c84",
+            "name": "3+",
+            "odds": 5.55
+          }
+        ]
+      }
+    },
+    {
+      "index": 883,
+      "raw": {
+        "bookmakerMarketId": "545",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Tottenham - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "976b2ea5-fb96-5964-ab88-8dc0de9b408c",
+            "name": "0",
+            "odds": 3.4
+          },
+          {
+            "externalId": "58ce9951-98e0-5e3e-9084-34766c9a4190",
+            "name": "1",
+            "odds": 2.55
+          },
+          {
+            "externalId": "3d75f066-d5e4-5718-909f-0b0f47a19197",
+            "name": "2",
+            "odds": 3.65
+          },
+          {
+            "externalId": "0ff40719-30cd-5dfe-ad0d-03427272dfd4",
+            "name": "3+",
+            "odds": 5.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 1007,
+      "raw": {
+        "bookmakerMarketId": "568",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1.połowa - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "f682cb19-47bb-53f6-9ab9-e1f7518d3261",
+            "name": "0",
+            "odds": 2.9
+          },
+          {
+            "externalId": "8953f74e-96b6-51cc-bb41-cc0270001ec2",
+            "name": "1",
+            "odds": 2.55
+          },
+          {
+            "externalId": "dc06a7b6-ae23-5bb3-a1f4-17595dc0508b",
+            "name": "2",
+            "odds": 4.1
+          },
+          {
+            "externalId": "7d600692-124e-597c-8faa-353d5509292f",
+            "name": "3+",
+            "odds": 6.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 1008,
+      "raw": {
+        "bookmakerMarketId": "558",
+        "groupId": "",
+        "groupName": "Gole",
+        "name": "1.połowa - Leeds United - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "73123227-e9eb-5e17-8ec4-407a8ac41b7c",
+            "name": "0",
+            "odds": 1.64
+          },
+          {
+            "externalId": "6e1742ea-c58d-5731-b9a1-681ffe33fcb2",
+            "name": "1",
+            "odds": 2.75
+          },
+          {
+            "externalId": "35efd39e-8eac-5360-9f41-cde5ab9eb0d2",
+            "name": "2",
+            "odds": 7.5
+          },
+          {
+            "externalId": "d1e51029-86ed-54ed-b3c6-d769e75c5d8b",
+            "name": "3+",
+            "odds": 22
+          }
+        ]
+      }
+    },
+    {
+      "index": 1009,
+      "raw": {
+        "bookmakerMarketId": "569",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "1.połowa - Tottenham - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "b23ed0ec-6ea2-5ecd-8b6f-ea79e5d7210d",
+            "name": "0",
+            "odds": 1.68
+          },
+          {
+            "externalId": "65a457c5-2094-59c1-93e4-421db56a61c6",
+            "name": "1",
+            "odds": 2.7
+          },
+          {
+            "externalId": "46061def-e097-5a76-8e39-15615338a2a6",
+            "name": "2",
+            "odds": 7.1
+          },
+          {
+            "externalId": "3a3838ab-ec46-5eca-af36-56e97dbf5a13",
+            "name": "3+",
+            "odds": 20
+          }
+        ]
+      }
+    },
+    {
+      "index": 2462,
+      "raw": {
+        "bookmakerMarketId": "233484",
+        "groupId": "",
+        "groupName": "Inne",
+        "name": "Którykolwiek z zawodników strzeli gola",
+        "selections": [
+          {
+            "externalId": "742ecf16-f808-5433-a31f-15d1fd569840",
+            "name": "Dominic Solanke lub Lukas Nmecha",
+            "odds": 1.88
+          },
+          {
+            "externalId": "f5a2d2a0-8341-530c-a276-f48c692aadf4",
+            "name": "Harry Wilson lub Lukas Nmecha",
+            "odds": 2
+          },
+          {
+            "externalId": "e7f3df38-715e-5bf4-ae37-a4119b713d56",
+            "name": "Harry Wilson lub Dominic Solanke",
+            "odds": 2.05
+          },
+          {
+            "externalId": "7433b335-fb68-5f13-bc98-80ce60b3062d",
+            "name": "Daniel James lub Lukas Nmecha",
+            "odds": 2.07
+          },
+          {
+            "externalId": "dc2b8920-87f4-5adf-9391-86fff6d87c11",
+            "name": "Mathys Tel lub Lukas Nmecha",
+            "odds": 2.1
+          },
+          {
+            "externalId": "60b1e550-e9c3-5509-80f1-f0ab92632485",
+            "name": "Daniel James lub Dominic Solanke",
+            "odds": 2.12
+          },
+          {
+            "externalId": "32c069cf-f64d-5c3c-ba1e-04022fde2428",
+            "name": "Mohammed Kudus lub Lukas Nmecha",
+            "odds": 2.12
+          },
+          {
+            "externalId": "7e4ccd47-8c66-5ff0-bde6-064545947546",
+            "name": "Mathys Tel lub Dominic Solanke",
+            "odds": 2.12
+          },
+          {
+            "externalId": "87b0c6b2-3bff-5b11-8528-a84effca47ba",
+            "name": "Mohammed Kudus lub Dominic Solanke",
+            "odds": 2.17
+          },
+          {
+            "externalId": "4792b65d-b22d-563b-bde5-ead82f8344f5",
+            "name": "Daniel James lub Harry Wilson",
+            "odds": 2.3
+          },
+          {
+            "externalId": "d8fc3f10-1fc0-5af0-870f-2e5839abb121",
+            "name": "Mathys Tel lub Harry Wilson",
+            "odds": 2.35
+          },
+          {
+            "externalId": "b3cef01e-6778-58a5-9fb4-94b47f80bef0",
+            "name": "Mohammed Kudus lub Harry Wilson",
+            "odds": 2.4
+          },
+          {
+            "externalId": "ed2aa814-3b73-529c-b5df-ae88797f933f",
+            "name": "Mathys Tel lub Daniel James",
+            "odds": 2.42
+          },
+          {
+            "externalId": "854b64e0-30c4-591e-a6ad-45d1bf5dcf36",
+            "name": "Mohammed Kudus lub Daniel James",
+            "odds": 2.5
+          },
+          {
+            "externalId": "c150c15e-bdbf-567e-a0c1-b1a368171d8e",
+            "name": "Mohammed Kudus lub Mathys Tel",
+            "odds": 2.55
+          }
+        ]
+      }
+    }
+  ],
+  "matchId": "14438722",
+  "matchIdSafe": "premier-league_leeds-united_tottenham-hotspur",
+  "sourceArchive": "premier-league_leeds-united_tottenham-hotspur__2026-11-07.json"
+}

@@ -4056,8 +4056,8 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "DRAW_NO_BET",
-        "marketKey": "DRAW_NO_BET",
+        "marketCode": "SECOND_HALF_DRAW_NO_BET",
+        "marketKey": "SECOND_HALF_DRAW_NO_BET",
         "matchedBy": "id",
         "paramValue": null,
         "parameters": null,
@@ -4075,7 +4075,7 @@
         ]
       },
       "index": 127,
-      "marketCode": "DRAW_NO_BET",
+      "marketCode": "SECOND_HALF_DRAW_NO_BET",
       "rawName": "Zakład bez remisu"
     },
     {

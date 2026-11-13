@@ -2360,66 +2360,66 @@
       "blessed": true,
       "expected": {
         "customLabel": null,
-        "marketCode": "PLAYER_GOAL_OR_ASSIST",
-        "marketKey": "PLAYER_GOAL_OR_ASSIST",
+        "marketCode": "TWO_PLAYERS_GOAL_OR_ASSIST",
+        "marketKey": "TWO_PLAYERS_GOAL_OR_ASSIST",
         "matchedBy": "pattern",
         "paramValue": null,
         "parameters": null,
         "selections": [
           {
-            "code": "Kylian Mbappe or Ousmane Dembele",
+            "code": "K. Mbappe & O. Dembele",
             "label": "Kylian Mbappe or Ousmane Dembele",
             "odds": 1.22
           },
           {
-            "code": "Kylian Mbappe or Michael Olise",
+            "code": "K. Mbappe & M. Olise",
             "label": "Kylian Mbappe or Michael Olise",
             "odds": 1.22
           },
           {
-            "code": "Kylian Mbappe or Bradley Barcola",
+            "code": "B. Barcola & K. Mbappe",
             "label": "Kylian Mbappe or Bradley Barcola",
             "odds": 1.25
           },
           {
-            "code": "Ousmane Dembele or Michael Olise",
+            "code": "M. Olise & O. Dembele",
             "label": "Ousmane Dembele or Michael Olise",
             "odds": 1.33
           },
           {
-            "code": "Bradley Barcola or Michael Olise",
+            "code": "B. Barcola & M. Olise",
             "label": "Bradley Barcola or Michael Olise",
             "odds": 1.4
           },
           {
-            "code": "Bradley Barcola or Ousmane Dembele",
+            "code": "B. Barcola & O. Dembele",
             "label": "Bradley Barcola or Ousmane Dembele",
             "odds": 1.4
           },
           {
-            "code": "Azz-Eddine Ounahi or Soufiane Rahimi",
+            "code": "A. Ounahi & S. Rahimi",
             "label": "Azz-Eddine Ounahi or Soufiane Rahimi",
             "odds": 2
           },
           {
-            "code": "Brahim Diaz or Soufiane Rahimi",
+            "code": "B. Diaz & S. Rahimi",
             "label": "Brahim Diaz or Soufiane Rahimi",
             "odds": 2
           },
           {
-            "code": "Soufiane Rahimi or Bilal El Khannous",
+            "code": "B. El Khannous & S. Rahimi",
             "label": "Soufiane Rahimi or Bilal El Khannous",
             "odds": 2.1
           },
           {
-            "code": "Brahim Diaz or Azz-Eddine Ounahi",
+            "code": "A. Ounahi & B. Diaz",
             "label": "Brahim Diaz or Azz-Eddine Ounahi",
             "odds": 2.2
           }
         ]
       },
       "index": 22,
-      "marketCode": "PLAYER_GOAL_OR_ASSIST",
+      "marketCode": "TWO_PLAYERS_GOAL_OR_ASSIST",
       "rawName": "Zawodnik strzeli gola lub zanotuje asystę - Podwójna szansa"
     },
     {
@@ -11820,21 +11820,7 @@
     },
     {
       "blessed": true,
-      "expected": {
-        "customLabel": null,
-        "marketCode": "EXACT_GOALS",
-        "marketKey": "EXACT_GOALS",
-        "matchedBy": "pattern",
-        "paramValue": null,
-        "parameters": null,
-        "selections": [
-          {
-            "code": "1",
-            "label": "Tak",
-            "odds": 4.05
-          }
-        ]
-      },
+      "expected": null,
       "index": 257,
       "marketCode": "EXACT_GOALS",
       "rawName": "Dokładnie 1 gol w meczu"

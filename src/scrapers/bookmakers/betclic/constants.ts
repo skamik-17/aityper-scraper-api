@@ -158,18 +158,18 @@ export const MARKET_TYPES = {
 export const REQUEST_TIMEOUT = 30000;
 
 /**
- * Read timeout for gRPC-web streams in milliseconds.
- * 
- * IMPORTANT: Betclic's gRPC-web streams don't close naturally - the server
- * keeps the connection open indefinitely. We must use a timeout to complete
- * the request. Data typically arrives within 200-500ms, so 1000ms provides
- * a safe margin while being much faster than the previous 5000ms timeout.
- * 
- * Performance impact:
- * - Old value (5000ms): ~37s for 7 tabs sequential
- * - New value (1000ms): ~1s for 7 tabs parallel (47x faster)
+ * Absolute per-attempt deadline for a gRPC-web response, in milliseconds,
+ * counted from the start of the request.
+ *
+ * Betclic's gRPC-web streams are never ended by the server - the connection
+ * stays open after the data - so the reader resolves as soon as the first
+ * frame is complete instead of waiting for the stream to end. This deadline
+ * only bounds a stream that keeps trickling bytes without completing the
+ * frame (the socket idle timeout never fires for such a stream); the attempt
+ * then fails and fetchGrpcStream retries. Unloaded, every first frame
+ * completed 190-923 ms after the request (measured 2026-11-06).
  */
-export const GRPC_READ_TIMEOUT = 1000;
+export const GRPC_FRAME_DEADLINE = 10000;
 
 /**
  * Maximum retry attempts for failed requests

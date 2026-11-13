@@ -1,0 +1,6928 @@
+{
+ "_note": "Betby market descriptions (pl) trimmed to the 161 market ids present in the 3 captured PL events. Full betters v3 and lebull v4 responses were byte-identical (sha256 betters=5a148923134dbc85374158fa68e418fefe11cf708cc24c6a2dac35e94486133d lebull=5a148923134dbc85374158fa68e418fefe11cf708cc24c6a2dac35e94486133d, 668505 bytes).",
+ "markets": {
+  "1": {
+   "id": "1",
+   "name": "1x2",
+   "order": {
+    "302": 99,
+    "12": 100,
+    "15": 100,
+    "138": 100,
+    "60": 100,
+    "322": 100,
+    "195": 100,
+    "125": 0,
+    "131": 100,
+    "324": 100,
+    "19": 99,
+    "135": 5,
+    "128": 101,
+    "4": 175,
+    "404": 100,
+    "110": 100,
+    "201": 99,
+    "33": 101,
+    "117": 95,
+    "26": 100,
+    "123": 100,
+    "61": 100,
+    "13": 99,
+    "325": 100,
+    "24": 100,
+    "155": 95,
+    "16": 99,
+    "10": 95,
+    "59": 99,
+    "317": 100,
+    "196": 100,
+    "21": 99,
+    "234": 100,
+    "137": 100,
+    "6": 102,
+    "1": 100,
+    "300": 1000,
+    "230": 102,
+    "309": 49,
+    "111": 102,
+    "109": 102,
+    "27": 99,
+    "2": 95,
+    "38": 100,
+    "194": 102,
+    "7": 100,
+    "29": 100,
+    "299": 100,
+    "3": 100,
+    "323": 100,
+    "305": 99,
+    "316": 100,
+    "301": 99,
+    "136": 1,
+    "176": 100
+   },
+   "main_order": {
+    "302": 84,
+    "12": 100,
+    "15": 100,
+    "138": 100,
+    "60": 100,
+    "322": 100,
+    "195": 100,
+    "125": 0,
+    "131": 100,
+    "324": 100,
+    "19": 99,
+    "135": 5,
+    "128": 101,
+    "4": 175,
+    "404": 100,
+    "110": 95,
+    "201": 99,
+    "33": 101,
+    "117": 95,
+    "26": 100,
+    "123": 100,
+    "61": 100,
+    "13": 99,
+    "325": 100,
+    "24": 100,
+    "155": 95,
+    "16": 0,
+    "10": 95,
+    "59": 99,
+    "317": 100,
+    "196": 100,
+    "21": 99,
+    "234": 100,
+    "137": 100,
+    "6": 100,
+    "1": 100,
+    "300": 1000,
+    "230": 102,
+    "309": 49,
+    "111": 99,
+    "109": 102,
+    "27": 99,
+    "2": 0,
+    "38": 100,
+    "194": 101,
+    "7": 100,
+    "29": 100,
+    "299": 100,
+    "3": 20,
+    "323": 100,
+    "305": 99,
+    "316": 100,
+    "301": 99,
+    "136": 1,
+    "176": 100
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}",
+        "early_payout": true
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}",
+        "early_payout": true
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "8": {
+   "id": "8",
+   "name": "{goalnr}. gol",
+   "order": {
+    "4": 80,
+    "1": 95,
+    "301": 87,
+    "29": 95,
+    "299": 60
+   },
+   "main_order": {
+    "4": 0,
+    "1": 0,
+    "301": 0,
+    "29": 0,
+    "299": 60
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "6",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "7",
+        "name": "żaden"
+       },
+       {
+        "id": "8",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "goalnr"
+   ],
+   "needs_translation": false,
+   "market_type": "Race"
+  },
+  "10": {
+   "id": "10",
+   "name": "Podwójna szansa",
+   "order": {
+    "302": 98,
+    "12": 99,
+    "324": 99,
+    "4": 99,
+    "33": 100,
+    "13": 98,
+    "138": 99,
+    "137": 95,
+    "60": 99,
+    "309": 48,
+    "322": 99,
+    "195": 90,
+    "2": 93,
+    "7": 99,
+    "323": 99,
+    "305": 98,
+    "301": 98,
+    "24": 95,
+    "16": 98,
+    "6": 101,
+    "1": 99,
+    "300": 999,
+    "29": 99,
+    "299": 50
+   },
+   "main_order": {
+    "302": 0,
+    "12": 0,
+    "324": 0,
+    "4": 0,
+    "33": 100,
+    "13": 98,
+    "138": 0,
+    "137": 95,
+    "60": 0,
+    "309": 0,
+    "195": 0,
+    "2": 0,
+    "7": 99,
+    "323": 0,
+    "305": 0,
+    "301": 0,
+    "24": 95,
+    "16": 0,
+    "6": 0,
+    "1": 95,
+    "29": 1,
+    "299": 50
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "10",
+        "name": "{$competitor1} lub {$competitor2}"
+       },
+       {
+        "id": "11",
+        "name": "remis lub {$competitor2}"
+       },
+       {
+        "id": "9",
+        "name": "{$competitor1} lub remis"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "11": {
+   "id": "11",
+   "name": "Zakład bez remisu",
+   "order": {
+    "153": 100,
+    "12": 98,
+    "33": 10,
+    "250": 100,
+    "13": 96,
+    "16": 97,
+    "59": 98,
+    "138": 98,
+    "309": 47,
+    "322": 98,
+    "238": 100,
+    "29": 97,
+    "323": 98,
+    "403": 100,
+    "21": 95,
+    "6": 99,
+    "1": 93,
+    "300": 998,
+    "305": 10,
+    "406": 101
+   },
+   "main_order": {
+    "153": 100,
+    "12": 95,
+    "33": 10,
+    "250": 100,
+    "13": 0,
+    "16": 0,
+    "59": 95,
+    "138": 95,
+    "309": 0,
+    "238": 100,
+    "29": 0,
+    "323": 98,
+    "403": 100,
+    "21": 95,
+    "6": 0,
+    "1": 0,
+    "305": 0,
+    "406": 101
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "4",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "5",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "12": {
+   "id": "12",
+   "name": "{$competitor1} bez zakładu",
+   "order": {
+    "1": 22
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "776",
+        "name": "remis"
+       },
+       {
+        "id": "778",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "13": {
+   "id": "13",
+   "name": "{$competitor2} bez zakładu",
+   "order": {
+    "1": 21
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "780",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "782",
+        "name": "remis"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "14": {
+   "id": "14",
+   "name": "Handicap europejski {hcp}",
+   "order": {
+    "12": 97,
+    "16": 0,
+    "29": 96,
+    "6": 98,
+    "1": 70
+   },
+   "main_order": {
+    "12": 0,
+    "16": 0,
+    "29": 0,
+    "6": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1711",
+        "name": "{$competitor1} ({hcp})"
+       },
+       {
+        "id": "1712",
+        "name": "remis ({hcp})"
+       },
+       {
+        "id": "1713",
+        "name": "{$competitor2} ({hcp})"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "hcp"
+   ],
+   "needs_translation": false,
+   "market_type": "HandicapCorrectScore"
+  },
+  "16": {
+   "id": "16",
+   "name": "Handicap",
+   "order": {
+    "12": 98,
+    "135": 4,
+    "4": 160,
+    "15": 96,
+    "33": 99,
+    "26": 96,
+    "59": 98,
+    "138": 97,
+    "60": 97,
+    "309": 46,
+    "322": 95,
+    "195": 95,
+    "27": 98,
+    "2": 98,
+    "7": 97,
+    "29": 96,
+    "61": 98,
+    "13": 95,
+    "24": 90,
+    "155": 90,
+    "35": 80,
+    "314": 98,
+    "6": 99,
+    "1": 89,
+    "300": 996,
+    "39": 99,
+    "3": 30,
+    "323": 97,
+    "28": 80,
+    "301": 86
+   },
+   "main_order": {
+    "12": 1,
+    "135": 4,
+    "4": 160,
+    "15": 96,
+    "33": 99,
+    "26": 96,
+    "59": 1,
+    "138": 97,
+    "60": 98,
+    "309": 0,
+    "195": 95,
+    "27": 98,
+    "2": 8,
+    "7": 97,
+    "29": 97,
+    "61": 98,
+    "13": 95,
+    "24": 90,
+    "155": 90,
+    "35": 80,
+    "314": 98,
+    "6": 99,
+    "1": 85,
+    "300": 0,
+    "39": 99,
+    "3": 8,
+    "323": 97,
+    "28": 80,
+    "301": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1714",
+        "name": "{$competitor1} ({+hcp})"
+       },
+       {
+        "id": "1715",
+        "name": "{$competitor2} ({-hcp})"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "hcp"
+   ],
+   "needs_translation": false,
+   "market_type": "Handicap"
+  },
+  "18": {
+   "id": "18",
+   "name": "Suma",
+   "order": {
+    "12": 90,
+    "4": 155,
+    "15": 95,
+    "117": 90,
+    "26": 95,
+    "138": 90,
+    "137": 90,
+    "60": 95,
+    "309": 45,
+    "322": 96,
+    "195": 99,
+    "27": 97,
+    "7": 98,
+    "29": 98,
+    "316": 0,
+    "302": 83,
+    "153": 99,
+    "324": 98,
+    "135": 3,
+    "61": 97,
+    "13": 90,
+    "24": 92,
+    "155": 85,
+    "35": 90,
+    "314": 99,
+    "10": 90,
+    "59": 90,
+    "6": 97,
+    "1": 98,
+    "300": 997,
+    "39": 98,
+    "2": 99,
+    "38": 99,
+    "3": 35,
+    "323": 96,
+    "28": 90,
+    "301": 97
+   },
+   "main_order": {
+    "12": 90,
+    "4": 155,
+    "15": 95,
+    "117": 90,
+    "26": 95,
+    "138": 90,
+    "137": 90,
+    "60": 95,
+    "309": 45,
+    "195": 99,
+    "27": 97,
+    "7": 98,
+    "29": 98,
+    "316": 99,
+    "302": 83,
+    "153": 99,
+    "324": 98,
+    "135": 3,
+    "61": 97,
+    "13": 90,
+    "24": 92,
+    "155": 85,
+    "35": 90,
+    "314": 99,
+    "10": 90,
+    "59": 90,
+    "6": 98,
+    "1": 90,
+    "300": 997,
+    "39": 98,
+    "2": 9,
+    "38": 99,
+    "3": 9,
+    "323": 96,
+    "28": 90,
+    "301": 97
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "19": {
+   "id": "19",
+   "name": "{$competitor1} - suma",
+   "order": {
+    "324": 97,
+    "4": 70,
+    "13": 85,
+    "21": 93,
+    "138": 0,
+    "309": 44,
+    "322": 94,
+    "316": 0,
+    "301": 85,
+    "6": 96,
+    "1": 88,
+    "300": 995
+   },
+   "main_order": {
+    "324": 97,
+    "4": 0,
+    "13": 0,
+    "21": 93,
+    "138": 0,
+    "309": 0,
+    "316": 98,
+    "301": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "20": {
+   "id": "20",
+   "name": "{$competitor2} - suma",
+   "order": {
+    "324": 96,
+    "4": 65,
+    "13": 84,
+    "21": 93,
+    "138": 0,
+    "309": 43,
+    "322": 93,
+    "316": 0,
+    "301": 80,
+    "6": 95,
+    "1": 87,
+    "300": 994
+   },
+   "main_order": {
+    "324": 96,
+    "4": 0,
+    "13": 0,
+    "21": 93,
+    "138": 0,
+    "309": 0,
+    "316": 97,
+    "301": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "25": {
+   "id": "25",
+   "name": "Przedział goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:goal_range:7+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:goal_range:7+:1342",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1343",
+        "name": "2-3 gole"
+       },
+       {
+        "id": "sr:goal_range:7+:1344",
+        "name": "4-6 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1345",
+        "name": "7+ goli"
+       }
+      ]
+     }
+    ],
+    "variant=sr:point_range:6+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:6+:1121",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "sr:point_range:6+:1122",
+        "name": "2-3 gole"
+       },
+       {
+        "id": "sr:point_range:6+:1123",
+        "name": "4-5 goli"
+       },
+       {
+        "id": "sr:point_range:6+:1124",
+        "name": "6+"
+       }
+      ]
+     }
+    ],
+    "variant=sr:point_range:62+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:62+:1125",
+        "name": "<47"
+       },
+       {
+        "id": "sr:point_range:62+:1126",
+        "name": "47-49"
+       },
+       {
+        "id": "sr:point_range:62+:1127",
+        "name": "50-52"
+       },
+       {
+        "id": "sr:point_range:62+:1128",
+        "name": "53-55"
+       },
+       {
+        "id": "sr:point_range:62+:1129",
+        "name": "56-58"
+       },
+       {
+        "id": "sr:point_range:62+:1130",
+        "name": "59-61"
+       },
+       {
+        "id": "sr:point_range:62+:1131",
+        "name": ">61"
+       }
+      ]
+     }
+    ],
+    "variant=bb:goal_range:11+": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:goal_range:11+:0-2",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "bb:goal_range:11+:3-4",
+        "name": "3-4 goli"
+       },
+       {
+        "id": "bb:goal_range:11+:5-6",
+        "name": "5-6 goli"
+       },
+       {
+        "id": "bb:goal_range:11+:7-8",
+        "name": "7-8 goli"
+       },
+       {
+        "id": "bb:goal_range:11+:9-10",
+        "name": "9-10 goli"
+       },
+       {
+        "id": "bb:goal_range:11+:11+",
+        "name": "11+ goli"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "26": {
+   "id": "26",
+   "name": "Parzyste/nieparzyste",
+   "order": {
+    "153": 98,
+    "12": 96,
+    "59": 96,
+    "138": 86,
+    "322": 90,
+    "6": 90,
+    "1": 0,
+    "300": 801
+   },
+   "main_order": {
+    "153": 98,
+    "12": 0,
+    "59": 0,
+    "138": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "27": {
+   "id": "27",
+   "name": "{$competitor1} - parzyste/nieparzyste",
+   "order": {
+    "138": 0,
+    "1": 0,
+    "322": 89
+   },
+   "main_order": {
+    "138": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "28": {
+   "id": "28",
+   "name": "{$competitor2} - parzyste/nieparzyste",
+   "order": {
+    "138": 0,
+    "1": 0,
+    "322": 88
+   },
+   "main_order": {
+    "138": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "29": {
+   "id": "29",
+   "name": "Obie drużyny strzelą gola",
+   "order": {
+    "300": 998,
+    "1": 94,
+    "29": 93
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0,
+    "29": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "31": {
+   "id": "31",
+   "name": "{$competitor1} - czyste konto",
+   "order": {
+    "1": 26
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "32": {
+   "id": "32",
+   "name": "{$competitor2} - czyste konto",
+   "order": {
+    "1": 25
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "33": {
+   "id": "33",
+   "name": "{$competitor1} - wygrana do zera",
+   "order": {
+    "1": 24
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "34": {
+   "id": "34",
+   "name": "{$competitor2} - wygrana do zera",
+   "order": {
+    "1": 23
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "35": {
+   "id": "35",
+   "name": "1x2 i obie drużyny strzelą gola",
+   "order": {
+    "300": 799,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "78",
+        "name": "{$competitor1} & tak"
+       },
+       {
+        "id": "80",
+        "name": "{$competitor1} & nie"
+       },
+       {
+        "id": "82",
+        "name": "remis & tak"
+       },
+       {
+        "id": "84",
+        "name": "remis & nie"
+       },
+       {
+        "id": "86",
+        "name": "{$competitor2} & tak"
+       },
+       {
+        "id": "88",
+        "name": "{$competitor2} & nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "36": {
+   "id": "36",
+   "name": "Suma i obie drużyny strzelą gola",
+   "order": {
+    "300": 798,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "90",
+        "name": "ponad {total} & tak"
+       },
+       {
+        "id": "92",
+        "name": "poniżej {total} & tak"
+       },
+       {
+        "id": "94",
+        "name": "ponad {total} & nie"
+       },
+       {
+        "id": "96",
+        "name": "poniżej {total} & nie"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "37": {
+   "id": "37",
+   "name": "1x2 i suma",
+   "order": {
+    "4": 0,
+    "138": 89,
+    "6": 92,
+    "1": 0,
+    "300": 800
+   },
+   "main_order": {
+    "4": 0,
+    "138": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "794",
+        "name": "{$competitor1} & poniżej {total}"
+       },
+       {
+        "id": "796",
+        "name": "{$competitor1} & ponad {total}"
+       },
+       {
+        "id": "798",
+        "name": "remis & poniżej {total}"
+       },
+       {
+        "id": "800",
+        "name": "remis & ponad {total}"
+       },
+       {
+        "id": "802",
+        "name": "{$competitor2} & poniżej {total}"
+       },
+       {
+        "id": "804",
+        "name": "{$competitor2} & ponad {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "38": {
+   "id": "38",
+   "name": "{goalnr}. strzelec gola",
+   "order": {
+    "13": 2,
+    "1": 70
+   },
+   "main_order": {
+    "13": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "goalnr",
+    "type"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "39": {
+   "id": "39",
+   "name": "Ostatni strzelec gola",
+   "order": {
+    "13": 0,
+    "1": 69
+   },
+   "main_order": {
+    "13": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "type"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "40": {
+   "id": "40",
+   "name": "Strzelec gola w dowolnym momencie",
+   "order": {
+    "13": 3,
+    "1": 71
+   },
+   "main_order": {
+    "13": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "type"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "45": {
+   "id": "45",
+   "name": "Dokładny wynik",
+   "order": {
+    "23": 0,
+    "4": 0,
+    "22": 95,
+    "1": 61,
+    "300": 900
+   },
+   "main_order": {
+    "23": 0,
+    "4": 0,
+    "22": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "274",
+        "name": "0:0"
+       },
+       {
+        "id": "276",
+        "name": "1:0"
+       },
+       {
+        "id": "278",
+        "name": "2:0"
+       },
+       {
+        "id": "280",
+        "name": "3:0"
+       },
+       {
+        "id": "282",
+        "name": "4:0"
+       },
+       {
+        "id": "284",
+        "name": "0:1"
+       },
+       {
+        "id": "286",
+        "name": "1:1"
+       },
+       {
+        "id": "288",
+        "name": "2:1"
+       },
+       {
+        "id": "290",
+        "name": "3:1"
+       },
+       {
+        "id": "292",
+        "name": "4:1"
+       },
+       {
+        "id": "294",
+        "name": "0:2"
+       },
+       {
+        "id": "296",
+        "name": "1:2"
+       },
+       {
+        "id": "298",
+        "name": "2:2"
+       },
+       {
+        "id": "300",
+        "name": "3:2"
+       },
+       {
+        "id": "302",
+        "name": "4:2"
+       },
+       {
+        "id": "304",
+        "name": "0:3"
+       },
+       {
+        "id": "306",
+        "name": "1:3"
+       },
+       {
+        "id": "308",
+        "name": "2:3"
+       },
+       {
+        "id": "310",
+        "name": "3:3"
+       },
+       {
+        "id": "312",
+        "name": "4:3"
+       },
+       {
+        "id": "314",
+        "name": "0:4"
+       },
+       {
+        "id": "316",
+        "name": "1:4"
+       },
+       {
+        "id": "318",
+        "name": "2:4"
+       },
+       {
+        "id": "320",
+        "name": "3:4"
+       },
+       {
+        "id": "322",
+        "name": "4:4"
+       },
+       {
+        "id": "326",
+        "name": "7:0"
+       },
+       {
+        "id": "328",
+        "name": "7:1"
+       },
+       {
+        "id": "330",
+        "name": "7:2"
+       },
+       {
+        "id": "332",
+        "name": "7:3"
+       },
+       {
+        "id": "334",
+        "name": "7:4"
+       },
+       {
+        "id": "336",
+        "name": "7:5"
+       },
+       {
+        "id": "338",
+        "name": "7:6"
+       },
+       {
+        "id": "340",
+        "name": "6:6"
+       },
+       {
+        "id": "342",
+        "name": "0:7"
+       },
+       {
+        "id": "344",
+        "name": "1:7"
+       },
+       {
+        "id": "346",
+        "name": "2:7"
+       },
+       {
+        "id": "348",
+        "name": "3:7"
+       },
+       {
+        "id": "350",
+        "name": "4:7"
+       },
+       {
+        "id": "352",
+        "name": "5:7"
+       },
+       {
+        "id": "354",
+        "name": "6:7"
+       },
+       {
+        "id": "356",
+        "name": "5:0"
+       },
+       {
+        "id": "358",
+        "name": "5:1"
+       },
+       {
+        "id": "360",
+        "name": "5:2"
+       },
+       {
+        "id": "362",
+        "name": "6:0"
+       },
+       {
+        "id": "364",
+        "name": "0:5"
+       },
+       {
+        "id": "366",
+        "name": "1:5"
+       },
+       {
+        "id": "368",
+        "name": "2:5"
+       },
+       {
+        "id": "370",
+        "name": "0:6"
+       },
+       {
+        "id": "372",
+        "name": "0:8"
+       },
+       {
+        "id": "374",
+        "name": "1:6"
+       },
+       {
+        "id": "376",
+        "name": "1:8"
+       },
+       {
+        "id": "378",
+        "name": "2:6"
+       },
+       {
+        "id": "380",
+        "name": "2:8"
+       },
+       {
+        "id": "382",
+        "name": "3:5"
+       },
+       {
+        "id": "384",
+        "name": "3:6"
+       },
+       {
+        "id": "386",
+        "name": "3:8"
+       },
+       {
+        "id": "388",
+        "name": "4:5"
+       },
+       {
+        "id": "390",
+        "name": "4:6"
+       },
+       {
+        "id": "392",
+        "name": "4:8"
+       },
+       {
+        "id": "394",
+        "name": "5:3"
+       },
+       {
+        "id": "396",
+        "name": "5:4"
+       },
+       {
+        "id": "398",
+        "name": "5:5"
+       },
+       {
+        "id": "400",
+        "name": "5:6"
+       },
+       {
+        "id": "402",
+        "name": "5:8"
+       },
+       {
+        "id": "404",
+        "name": "6:1"
+       },
+       {
+        "id": "406",
+        "name": "6:2"
+       },
+       {
+        "id": "408",
+        "name": "6:3"
+       },
+       {
+        "id": "410",
+        "name": "6:4"
+       },
+       {
+        "id": "412",
+        "name": "6:5"
+       },
+       {
+        "id": "414",
+        "name": "6:8"
+       },
+       {
+        "id": "416",
+        "name": "7:7"
+       },
+       {
+        "id": "418",
+        "name": "7:8"
+       },
+       {
+        "id": "420",
+        "name": "8:0"
+       },
+       {
+        "id": "422",
+        "name": "8:1"
+       },
+       {
+        "id": "424",
+        "name": "8:2"
+       },
+       {
+        "id": "426",
+        "name": "8:3"
+       },
+       {
+        "id": "428",
+        "name": "8:4"
+       },
+       {
+        "id": "430",
+        "name": "8:5"
+       },
+       {
+        "id": "432",
+        "name": "8:6"
+       },
+       {
+        "id": "434",
+        "name": "8:7"
+       },
+       {
+        "id": "436",
+        "name": "8:8"
+       },
+       {
+        "id": "438",
+        "name": "0:9"
+       },
+       {
+        "id": "440",
+        "name": "1:9"
+       },
+       {
+        "id": "442",
+        "name": "2:9"
+       },
+       {
+        "id": "444",
+        "name": "3:9"
+       },
+       {
+        "id": "446",
+        "name": "4:9"
+       },
+       {
+        "id": "448",
+        "name": "5:9"
+       },
+       {
+        "id": "450",
+        "name": "6:9"
+       },
+       {
+        "id": "452",
+        "name": "7:9"
+       },
+       {
+        "id": "454",
+        "name": "8:9"
+       },
+       {
+        "id": "456",
+        "name": "9:0"
+       },
+       {
+        "id": "458",
+        "name": "9:1"
+       },
+       {
+        "id": "460",
+        "name": "9:2"
+       },
+       {
+        "id": "462",
+        "name": "9:3"
+       },
+       {
+        "id": "464",
+        "name": "9:4"
+       },
+       {
+        "id": "466",
+        "name": "9:5"
+       },
+       {
+        "id": "468",
+        "name": "9:6"
+       },
+       {
+        "id": "470",
+        "name": "9:7"
+       },
+       {
+        "id": "472",
+        "name": "9:8"
+       },
+       {
+        "id": "474",
+        "name": "9:9"
+       },
+       {
+        "id": "476",
+        "name": "0:10"
+       },
+       {
+        "id": "478",
+        "name": "1:10"
+       },
+       {
+        "id": "480",
+        "name": "2:10"
+       },
+       {
+        "id": "482",
+        "name": "3:10"
+       },
+       {
+        "id": "484",
+        "name": "4:10"
+       },
+       {
+        "id": "486",
+        "name": "5:10"
+       },
+       {
+        "id": "488",
+        "name": "6:10"
+       },
+       {
+        "id": "490",
+        "name": "7:10"
+       },
+       {
+        "id": "492",
+        "name": "8:10"
+       },
+       {
+        "id": "494",
+        "name": "9:10"
+       },
+       {
+        "id": "496",
+        "name": "10:0"
+       },
+       {
+        "id": "498",
+        "name": "10:1"
+       },
+       {
+        "id": "500",
+        "name": "10:2"
+       },
+       {
+        "id": "502",
+        "name": "10:3"
+       },
+       {
+        "id": "504",
+        "name": "10:4"
+       },
+       {
+        "id": "506",
+        "name": "10:5"
+       },
+       {
+        "id": "508",
+        "name": "10:6"
+       },
+       {
+        "id": "510",
+        "name": "10:7"
+       },
+       {
+        "id": "512",
+        "name": "10:8"
+       },
+       {
+        "id": "514",
+        "name": "10:9"
+       },
+       {
+        "id": "516",
+        "name": "10:10"
+       },
+       {
+        "id": "324",
+        "name": "inny"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "CorrectScore"
+  },
+  "47": {
+   "id": "47",
+   "name": "Do przerwy / koniec meczu",
+   "order": {
+    "12": 95,
+    "16": 0,
+    "138": 87,
+    "6": 91,
+    "1": 33
+   },
+   "main_order": {
+    "12": 0,
+    "16": 0,
+    "138": 0,
+    "6": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "418",
+        "name": "{$competitor1}/{$competitor1}"
+       },
+       {
+        "id": "420",
+        "name": "{$competitor1}/remis"
+       },
+       {
+        "id": "422",
+        "name": "{$competitor1}/{$competitor2}"
+       },
+       {
+        "id": "424",
+        "name": "remis/{$competitor1}"
+       },
+       {
+        "id": "426",
+        "name": "remis/remis"
+       },
+       {
+        "id": "428",
+        "name": "remis/{$competitor2}"
+       },
+       {
+        "id": "430",
+        "name": "{$competitor2}/{$competitor1}"
+       },
+       {
+        "id": "432",
+        "name": "{$competitor2}/remis"
+       },
+       {
+        "id": "434",
+        "name": "{$competitor2}/{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false
+  },
+  "48": {
+   "id": "48",
+   "name": "{$competitor1} wygra obie połowy",
+   "order": {
+    "1": 30
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "49": {
+   "id": "49",
+   "name": "{$competitor2} wygra obie połowy",
+   "order": {
+    "1": 29
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50": {
+   "id": "50",
+   "name": "{$competitor1} wygra przynajmniej jedną połowę",
+   "order": {
+    "1": 32
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "51": {
+   "id": "51",
+   "name": "{$competitor2} wygra przynajmniej jedną połowę",
+   "order": {
+    "1": 31
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "52": {
+   "id": "52",
+   "name": "Połowa z większą liczbą goli",
+   "order": {
+    "12": 94,
+    "13": 0,
+    "16": 0,
+    "138": 86,
+    "6": 89,
+    "1": 0
+   },
+   "main_order": {
+    "12": 0,
+    "13": 0,
+    "16": 0,
+    "138": 0,
+    "6": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "436",
+        "name": "1. Połowa"
+       },
+       {
+        "id": "438",
+        "name": "2. Połowa"
+       },
+       {
+        "id": "440",
+        "name": "równo"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false
+  },
+  "56": {
+   "id": "56",
+   "name": "{$competitor1} strzeli gola w obu połowach",
+   "order": {
+    "1": 28
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "57": {
+   "id": "57",
+   "name": "{$competitor2} strzeli gola w obu połowach",
+   "order": {
+    "1": 27
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "60": {
+   "id": "60",
+   "name": "1. połowa - 1x2",
+   "order": {
+    "12": 85,
+    "138": 85,
+    "2": 130,
+    "29": 90,
+    "24": 80,
+    "16": 150,
+    "6": 88,
+    "1": 75,
+    "300": 899
+   },
+   "main_order": {
+    "12": 0,
+    "138": 50,
+    "2": 0,
+    "29": 0,
+    "24": 0,
+    "16": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "62": {
+   "id": "62",
+   "name": "1. połowa - {goalnr}. gol",
+   "order": {
+    "1": 70,
+    "29": 86
+   },
+   "main_order": {
+    "1": 0,
+    "29": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "6",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "7",
+        "name": "żaden"
+       },
+       {
+        "id": "8",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "goalnr"
+   ],
+   "needs_translation": false,
+   "market_type": "Race"
+  },
+  "63": {
+   "id": "63",
+   "name": "1. połowa - podwójna szansa",
+   "order": {
+    "138": 84,
+    "2": 58,
+    "6": 87,
+    "1": 74,
+    "300": 888
+   },
+   "main_order": {
+    "138": 0,
+    "2": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "10",
+        "name": "{$competitor1} lub {$competitor2}"
+       },
+       {
+        "id": "11",
+        "name": "remis lub {$competitor2}"
+       },
+       {
+        "id": "9",
+        "name": "{$competitor1} lub remis"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "64": {
+   "id": "64",
+   "name": "1. połowa - zakład bez remisu",
+   "order": {
+    "16": 0,
+    "138": 83,
+    "2": 57,
+    "6": 86,
+    "1": 70
+   },
+   "main_order": {
+    "16": 0,
+    "138": 49,
+    "2": 0,
+    "6": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "4",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "5",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "65": {
+   "id": "65",
+   "name": "1. połowa – handicap europejski {hcp}",
+   "order": {
+    "16": 0,
+    "1": 0
+   },
+   "main_order": {
+    "16": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1711",
+        "name": "{$competitor1} ({hcp})"
+       },
+       {
+        "id": "1712",
+        "name": "remis ({hcp})"
+       },
+       {
+        "id": "1713",
+        "name": "{$competitor2} ({hcp})"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "hcp"
+   ],
+   "needs_translation": false,
+   "market_type": "HandicapCorrectScore"
+  },
+  "66": {
+   "id": "66",
+   "name": "1. połowa - handicap",
+   "order": {
+    "16": 140,
+    "138": 79,
+    "2": 120,
+    "29": 88,
+    "6": 85,
+    "1": 68,
+    "300": 886
+   },
+   "main_order": {
+    "16": 0,
+    "138": 0,
+    "2": 0,
+    "29": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1714",
+        "name": "{$competitor1} ({+hcp})"
+       },
+       {
+        "id": "1715",
+        "name": "{$competitor2} ({-hcp})"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "hcp"
+   ],
+   "needs_translation": false,
+   "market_type": "Handicap"
+  },
+  "68": {
+   "id": "68",
+   "name": "1. połowa - suma",
+   "order": {
+    "12": 80,
+    "138": 80,
+    "2": 125,
+    "29": 87,
+    "24": 75,
+    "16": 135,
+    "6": 84,
+    "1": 73,
+    "300": 887
+   },
+   "main_order": {
+    "12": 0,
+    "138": 0,
+    "2": 0,
+    "29": 0,
+    "24": 0,
+    "16": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "69": {
+   "id": "69",
+   "name": "1. połowa - {$competitor1} - suma",
+   "order": {
+    "16": 76,
+    "138": 0,
+    "2": 54,
+    "6": 83,
+    "1": 72,
+    "300": 885
+   },
+   "main_order": {
+    "16": 0,
+    "138": 0,
+    "2": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "70": {
+   "id": "70",
+   "name": "1. połowa - {$competitor2} - suma",
+   "order": {
+    "16": 75,
+    "138": 0,
+    "2": 53,
+    "6": 82,
+    "1": 71,
+    "300": 884
+   },
+   "main_order": {
+    "16": 0,
+    "138": 0,
+    "2": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "74": {
+   "id": "74",
+   "name": "1. połowa - parzyste/nieparzyste",
+   "order": {
+    "16": 0,
+    "138": 0,
+    "2": 51,
+    "6": 81,
+    "1": 1,
+    "300": 881
+   },
+   "main_order": {
+    "16": 0,
+    "138": 0,
+    "2": 0,
+    "6": 0,
+    "1": 0,
+    "300": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "75": {
+   "id": "75",
+   "name": "1. połowa - obie drużyny strzelą gola",
+   "order": {
+    "300": 882,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "76": {
+   "id": "76",
+   "name": "1. połowa - {$competitor1} - czyste konto",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "77": {
+   "id": "77",
+   "name": "1. połowa - {$competitor2} - czyste konto",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "78": {
+   "id": "78",
+   "name": "1. połowa - 1x2 i obie drużyny strzelą gola",
+   "order": {
+    "300": 880,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "78",
+        "name": "{$competitor1} & tak"
+       },
+       {
+        "id": "80",
+        "name": "{$competitor1} & nie"
+       },
+       {
+        "id": "82",
+        "name": "remis & tak"
+       },
+       {
+        "id": "84",
+        "name": "remis & nie"
+       },
+       {
+        "id": "86",
+        "name": "{$competitor2} & tak"
+       },
+       {
+        "id": "88",
+        "name": "{$competitor2} & nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "79": {
+   "id": "79",
+   "name": "1. połowa - 1x2 i suma",
+   "order": {
+    "300": 879,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "794",
+        "name": "{$competitor1} & poniżej {total}"
+       },
+       {
+        "id": "796",
+        "name": "{$competitor1} & ponad {total}"
+       },
+       {
+        "id": "798",
+        "name": "remis & poniżej {total}"
+       },
+       {
+        "id": "800",
+        "name": "remis & ponad {total}"
+       },
+       {
+        "id": "802",
+        "name": "{$competitor2} & poniżej {total}"
+       },
+       {
+        "id": "804",
+        "name": "{$competitor2} & ponad {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "81": {
+   "id": "81",
+   "name": "1. połowa - dokładny wynik",
+   "order": {
+    "300": 883,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "462",
+        "name": "0:0"
+       },
+       {
+        "id": "474",
+        "name": "0:1"
+       },
+       {
+        "id": "476",
+        "name": "0:2"
+       },
+       {
+        "id": "482",
+        "name": "0:3"
+       },
+       {
+        "id": "484",
+        "name": "0:4"
+       },
+       {
+        "id": "514",
+        "name": "0:5"
+       },
+       {
+        "id": "526",
+        "name": "0:6"
+       },
+       {
+        "id": "468",
+        "name": "1:0"
+       },
+       {
+        "id": "464",
+        "name": "1:1"
+       },
+       {
+        "id": "478",
+        "name": "1:2"
+       },
+       {
+        "id": "486",
+        "name": "1:3"
+       },
+       {
+        "id": "488",
+        "name": "1:4"
+       },
+       {
+        "id": "516",
+        "name": "1:5"
+       },
+       {
+        "id": "528",
+        "name": "1:6"
+       },
+       {
+        "id": "470",
+        "name": "2:0"
+       },
+       {
+        "id": "472",
+        "name": "2:1"
+       },
+       {
+        "id": "466",
+        "name": "2:2"
+       },
+       {
+        "id": "490",
+        "name": "2:3"
+       },
+       {
+        "id": "492",
+        "name": "2:4"
+       },
+       {
+        "id": "518",
+        "name": "2:5"
+       },
+       {
+        "id": "530",
+        "name": "2:6"
+       },
+       {
+        "id": "494",
+        "name": "3:0"
+       },
+       {
+        "id": "496",
+        "name": "3:1"
+       },
+       {
+        "id": "498",
+        "name": "3:2"
+       },
+       {
+        "id": "500",
+        "name": "3:3"
+       },
+       {
+        "id": "502",
+        "name": "3:4"
+       },
+       {
+        "id": "520",
+        "name": "3:5"
+       },
+       {
+        "id": "532",
+        "name": "3:6"
+       },
+       {
+        "id": "504",
+        "name": "4:0"
+       },
+       {
+        "id": "506",
+        "name": "4:1"
+       },
+       {
+        "id": "508",
+        "name": "4:2"
+       },
+       {
+        "id": "510",
+        "name": "4:3"
+       },
+       {
+        "id": "512",
+        "name": "4:4"
+       },
+       {
+        "id": "522",
+        "name": "4:5"
+       },
+       {
+        "id": "534",
+        "name": "4:6"
+       },
+       {
+        "id": "540",
+        "name": "5:0"
+       },
+       {
+        "id": "542",
+        "name": "5:1"
+       },
+       {
+        "id": "544",
+        "name": "5:2"
+       },
+       {
+        "id": "546",
+        "name": "5:3"
+       },
+       {
+        "id": "548",
+        "name": "5:4"
+       },
+       {
+        "id": "524",
+        "name": "5:5"
+       },
+       {
+        "id": "536",
+        "name": "5:6"
+       },
+       {
+        "id": "550",
+        "name": "6:0"
+       },
+       {
+        "id": "552",
+        "name": "6:1"
+       },
+       {
+        "id": "554",
+        "name": "6:2"
+       },
+       {
+        "id": "556",
+        "name": "6:3"
+       },
+       {
+        "id": "558",
+        "name": "6:4"
+       },
+       {
+        "id": "560",
+        "name": "6:5"
+       },
+       {
+        "id": "538",
+        "name": "6:6"
+       },
+       {
+        "id": "480",
+        "name": "inny"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "CorrectScore"
+  },
+  "83": {
+   "id": "83",
+   "name": "2. połowa - 1x2",
+   "order": {
+    "16": 0,
+    "1": 10,
+    "6": 80
+   },
+   "main_order": {
+    "16": 0,
+    "1": 0,
+    "6": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "85": {
+   "id": "85",
+   "name": "2. połowa - podwójna szansa",
+   "order": {
+    "1": 8,
+    "6": 79
+   },
+   "main_order": {
+    "1": 0,
+    "6": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "10",
+        "name": "{$competitor1} lub {$competitor2}"
+       },
+       {
+        "id": "11",
+        "name": "remis lub {$competitor2}"
+       },
+       {
+        "id": "9",
+        "name": "{$competitor1} lub remis"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "86": {
+   "id": "86",
+   "name": "2. połowa - zakład bez remisu",
+   "order": {
+    "16": 0,
+    "1": 7,
+    "6": 78
+   },
+   "main_order": {
+    "16": 0,
+    "1": 0,
+    "6": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "4",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "5",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "90": {
+   "id": "90",
+   "name": "2. połowa - suma",
+   "order": {
+    "1": 9
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "95": {
+   "id": "95",
+   "name": "2. połowa - obie drużyny strzelą gola",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "101": {
+   "id": "101",
+   "name": "Kiedy padnie {goalnr}. gol (interwał 10 min)",
+   "order": {
+    "1": 16
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "598",
+        "name": "1-10"
+       },
+       {
+        "id": "600",
+        "name": "11-20"
+       },
+       {
+        "id": "602",
+        "name": "21-30"
+       },
+       {
+        "id": "604",
+        "name": "31-40"
+       },
+       {
+        "id": "606",
+        "name": "41-50"
+       },
+       {
+        "id": "608",
+        "name": "51-60"
+       },
+       {
+        "id": "610",
+        "name": "61-70"
+       },
+       {
+        "id": "612",
+        "name": "71-80"
+       },
+       {
+        "id": "614",
+        "name": "81-90"
+       },
+       {
+        "id": "616",
+        "name": "żaden"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "goalnr"
+   ],
+   "needs_translation": false
+  },
+  "136": {
+   "id": "136",
+   "name": "Kartki 1x2",
+   "order": {
+    "1": 26
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "137": {
+   "id": "137",
+   "name": "{bookingnr}. kartka",
+   "order": {
+    "1": 22
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "6",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "7",
+        "name": "żaden"
+       },
+       {
+        "id": "8",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "bookingnr"
+   ],
+   "needs_translation": false,
+   "market_type": "Race"
+  },
+  "139": {
+   "id": "139",
+   "name": "Suma kartek",
+   "order": {
+    "1": 25
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "140": {
+   "id": "140",
+   "name": "{$competitor1} - suma kartek",
+   "order": {
+    "1": 24
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "141": {
+   "id": "141",
+   "name": "{$competitor2} - suma kartek",
+   "order": {
+    "1": 23
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "142": {
+   "id": "142",
+   "name": "Dokładna liczba kartek",
+   "order": {
+    "1": 5
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "710",
+        "name": "0-3"
+       },
+       {
+        "id": "712",
+        "name": "4"
+       },
+       {
+        "id": "714",
+        "name": "5"
+       },
+       {
+        "id": "716",
+        "name": "6"
+       },
+       {
+        "id": "718",
+        "name": "7"
+       },
+       {
+        "id": "720",
+        "name": "8"
+       },
+       {
+        "id": "722",
+        "name": "9"
+       },
+       {
+        "id": "724",
+        "name": "10"
+       },
+       {
+        "id": "726",
+        "name": "11"
+       },
+       {
+        "id": "728",
+        "name": "12+"
+       },
+       {
+        "id": "bb:exact_booking:0",
+        "name": "0"
+       },
+       {
+        "id": "bb:exact_booking:1",
+        "name": "1"
+       },
+       {
+        "id": "bb:exact_booking:2",
+        "name": "2"
+       },
+       {
+        "id": "bb:exact_booking:3",
+        "name": "3"
+       },
+       {
+        "id": "bb:exact_booking:7+",
+        "name": "7+"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "146": {
+   "id": "146",
+   "name": "Czerwona kartka",
+   "order": {
+    "1": 15
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "147": {
+   "id": "147",
+   "name": "{$competitor1} - czerwona kartka",
+   "order": {
+    "1": 13
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "148": {
+   "id": "148",
+   "name": "{$competitor2} - czerwona kartka",
+   "order": {
+    "1": 12
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "152": {
+   "id": "152",
+   "name": "1. połowa - suma kartek",
+   "order": {
+    "1": 20
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "155": {
+   "id": "155",
+   "name": "1. połowa - dokładna liczba kartek",
+   "order": {
+    "1": 7
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1760",
+        "name": "0"
+       },
+       {
+        "id": "1761",
+        "name": "1"
+       },
+       {
+        "id": "1762",
+        "name": "2"
+       },
+       {
+        "id": "1763",
+        "name": "3"
+       },
+       {
+        "id": "1764",
+        "name": "4"
+       },
+       {
+        "id": "1765",
+        "name": "5"
+       },
+       {
+        "id": "1766",
+        "name": "6+"
+       },
+       {
+        "id": "bb:exact_booking:4+",
+        "name": "4+"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "162": {
+   "id": "162",
+   "name": "Rzuty rożne 1x2",
+   "order": {
+    "300": 100,
+    "1": 21
+   },
+   "main_order": {
+    "300": 100,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "165": {
+   "id": "165",
+   "name": "Handicap rzutów rożnych",
+   "order": {
+    "1": 18
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1714",
+        "name": "{$competitor1} ({+hcp})"
+       },
+       {
+        "id": "1715",
+        "name": "{$competitor2} ({-hcp})"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "hcp"
+   ],
+   "needs_translation": false,
+   "market_type": "Handicap"
+  },
+  "166": {
+   "id": "166",
+   "name": "Suma rzutów rożnych",
+   "order": {
+    "300": 99,
+    "1": 19
+   },
+   "main_order": {
+    "300": 99,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "167": {
+   "id": "167",
+   "name": "{$competitor1} - suma rzutów rożnych",
+   "order": {
+    "1": 17
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "168": {
+   "id": "168",
+   "name": "{$competitor2} - suma rzutów rożnych",
+   "order": {
+    "1": 16
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "170": {
+   "id": "170",
+   "name": "{$competitor1} - przedział rzutów rożnych",
+   "order": {
+    "1": 8
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:point_range:7+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:7+:1144",
+        "name": "0-2"
+       },
+       {
+        "id": "sr:point_range:7+:1145",
+        "name": "3-4"
+       },
+       {
+        "id": "sr:point_range:7+:1146",
+        "name": "5-6"
+       },
+       {
+        "id": "sr:point_range:7+:1147",
+        "name": "7+"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "171": {
+   "id": "171",
+   "name": "{$competitor2} - przedział rzutów rożnych",
+   "order": {
+    "1": 7
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:point_range:7+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:7+:1144",
+        "name": "0-2"
+       },
+       {
+        "id": "sr:point_range:7+:1145",
+        "name": "3-4"
+       },
+       {
+        "id": "sr:point_range:7+:1146",
+        "name": "5-6"
+       },
+       {
+        "id": "sr:point_range:7+:1147",
+        "name": "7+"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "172": {
+   "id": "172",
+   "name": "Suma rzutów rożnych - parzyste/nieparzyste",
+   "order": {
+    "1": 6
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "173": {
+   "id": "173",
+   "name": "1. połowa - rzuty rożne 1x2",
+   "order": {
+    "1": 15
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "176": {
+   "id": "176",
+   "name": "1. połowa - handicap rzutów rożnych",
+   "order": {
+    "1": 12
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1714",
+        "name": "{$competitor1} ({+hcp})"
+       },
+       {
+        "id": "1715",
+        "name": "{$competitor2} ({-hcp})"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "hcp"
+   ],
+   "needs_translation": false,
+   "market_type": "Handicap"
+  },
+  "177": {
+   "id": "177",
+   "name": "1. połowa - suma rzutów rożnych",
+   "order": {
+    "1": 14
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "178": {
+   "id": "178",
+   "name": "1. połowa - {$competitor1} - suma rzutów rożnych",
+   "order": {
+    "1": 13
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "179": {
+   "id": "179",
+   "name": "1. połowa - {$competitor2} - suma rzutów rożnych",
+   "order": {
+    "1": 12
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "183": {
+   "id": "183",
+   "name": "1. połowa - rzuty rożne parzyste/nieparzyste",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "399": {
+   "id": "399",
+   "name": "{$competitor1} - przedział goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:goal_range:7+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:goal_range:7+:1342",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1343",
+        "name": "2-3 gole"
+       },
+       {
+        "id": "sr:goal_range:7+:1344",
+        "name": "4-6 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1345",
+        "name": "7+ goli"
+       }
+      ]
+     }
+    ],
+    "variant=sr:point_range:35+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:35+:1107",
+        "name": "<20"
+       },
+       {
+        "id": "sr:point_range:35+:1108",
+        "name": "20-22"
+       },
+       {
+        "id": "sr:point_range:35+:1109",
+        "name": "23-25"
+       },
+       {
+        "id": "sr:point_range:35+:1110",
+        "name": "26-28"
+       },
+       {
+        "id": "sr:point_range:35+:1111",
+        "name": "29-31"
+       },
+       {
+        "id": "sr:point_range:35+:1112",
+        "name": "32-34"
+       },
+       {
+        "id": "sr:point_range:35+:1113",
+        "name": ">34"
+       }
+      ]
+     }
+    ],
+    "variant=sr:point_range:6+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:6+:1121",
+        "name": "0-1"
+       },
+       {
+        "id": "sr:point_range:6+:1122",
+        "name": "2-3"
+       },
+       {
+        "id": "sr:point_range:6+:1123",
+        "name": "4-5"
+       },
+       {
+        "id": "sr:point_range:6+:1124",
+        "name": "6+"
+       }
+      ]
+     }
+    ],
+    "variant=bb:goal_range:4+": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:goal_range:4+:0-1",
+        "name": "0-1"
+       },
+       {
+        "id": "bb:goal_range:4+:2-3",
+        "name": "2-3"
+       },
+       {
+        "id": "bb:goal_range:4+:4+",
+        "name": "4+"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "400": {
+   "id": "400",
+   "name": "{$competitor2} - przedział goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:goal_range:7+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:goal_range:7+:1342",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1343",
+        "name": "2-3 gole"
+       },
+       {
+        "id": "sr:goal_range:7+:1344",
+        "name": "4-6 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1345",
+        "name": "7+ goli"
+       }
+      ]
+     }
+    ],
+    "variant=sr:point_range:35+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:35+:1107",
+        "name": "<20"
+       },
+       {
+        "id": "sr:point_range:35+:1108",
+        "name": "20-22"
+       },
+       {
+        "id": "sr:point_range:35+:1109",
+        "name": "23-25"
+       },
+       {
+        "id": "sr:point_range:35+:1110",
+        "name": "26-28"
+       },
+       {
+        "id": "sr:point_range:35+:1111",
+        "name": "29-31"
+       },
+       {
+        "id": "sr:point_range:35+:1112",
+        "name": "32-34"
+       },
+       {
+        "id": "sr:point_range:35+:1113",
+        "name": ">34"
+       }
+      ]
+     }
+    ],
+    "variant=sr:point_range:6+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:6+:1121",
+        "name": "0-1"
+       },
+       {
+        "id": "sr:point_range:6+:1122",
+        "name": "2-3"
+       },
+       {
+        "id": "sr:point_range:6+:1123",
+        "name": "4-5"
+       },
+       {
+        "id": "sr:point_range:6+:1124",
+        "name": "6+"
+       }
+      ]
+     }
+    ],
+    "variant=bb:goal_range:4+": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:goal_range:4+:0-1",
+        "name": "0-1"
+       },
+       {
+        "id": "bb:goal_range:4+:2-3",
+        "name": "2-3"
+       },
+       {
+        "id": "bb:goal_range:4+:4+",
+        "name": "4+"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "542": {
+   "id": "542",
+   "name": "1. połowa - podwójna szansa i obie drużyny strzelą gola",
+   "order": {
+    "300": 878,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1718",
+        "name": "{$competitor1}/remis & tak"
+       },
+       {
+        "id": "1719",
+        "name": "{$competitor1}/remis & nie"
+       },
+       {
+        "id": "1720",
+        "name": "{$competitor1}/{$competitor2} & tak"
+       },
+       {
+        "id": "1721",
+        "name": "{$competitor1}/{$competitor2} & nie"
+       },
+       {
+        "id": "1722",
+        "name": "remis/{$competitor2} & tak"
+       },
+       {
+        "id": "1723",
+        "name": "remis/{$competitor2} & nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "543": {
+   "id": "543",
+   "name": "2. połowa - 1x2 i obie drużyny strzelą gola",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "78",
+        "name": "{$competitor1} & tak"
+       },
+       {
+        "id": "80",
+        "name": "{$competitor1} & nie"
+       },
+       {
+        "id": "82",
+        "name": "remis & tak"
+       },
+       {
+        "id": "84",
+        "name": "remis & nie"
+       },
+       {
+        "id": "86",
+        "name": "{$competitor2} & tak"
+       },
+       {
+        "id": "88",
+        "name": "{$competitor2} & nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "546": {
+   "id": "546",
+   "name": "Podwójna szansa i obie drużyny strzelą gola",
+   "order": {
+    "300": 796,
+    "1": 13
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1718",
+        "name": "{$competitor1}/remis & tak"
+       },
+       {
+        "id": "1719",
+        "name": "{$competitor1}/remis & nie"
+       },
+       {
+        "id": "1720",
+        "name": "{$competitor1}/{$competitor2} & tak"
+       },
+       {
+        "id": "1721",
+        "name": "{$competitor1}/{$competitor2} & nie"
+       },
+       {
+        "id": "1722",
+        "name": "remis/{$competitor2} & tak"
+       },
+       {
+        "id": "1723",
+        "name": "remis/{$competitor2} & nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "547": {
+   "id": "547",
+   "name": "Podwójna szansa i suma",
+   "order": {
+    "300": 795,
+    "138": 88,
+    "1": 14
+   },
+   "main_order": {
+    "300": 0,
+    "138": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1724",
+        "name": "{$competitor1}/remis & poniżej {total}"
+       },
+       {
+        "id": "1725",
+        "name": "{$competitor1}/{$competitor2} & poniżej {total}"
+       },
+       {
+        "id": "1726",
+        "name": "remis/{$competitor2} & poniżej {total}"
+       },
+       {
+        "id": "1727",
+        "name": "{$competitor1}/remis & ponad {total}"
+       },
+       {
+        "id": "1728",
+        "name": "{$competitor1}/{$competitor2} & ponad {total}"
+       },
+       {
+        "id": "1729",
+        "name": "remis/{$competitor2} & ponad {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "560": {
+   "id": "560",
+   "name": "{$competitor1} strzeli gola",
+   "order": {
+    "1": 20
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "561": {
+   "id": "561",
+   "name": "{$competitor2} strzeli gola",
+   "order": {
+    "1": 19
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "562": {
+   "id": "562",
+   "name": "Obie drużyny strzelą gola w obu połowach",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "618": {
+   "id": "618",
+   "name": "1. połowa - {$competitor1} parzyste/nieparzyste",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "619": {
+   "id": "619",
+   "name": "1. połowa - {$competitor2} parzyste/nieparzyste",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "635": {
+   "id": "635",
+   "name": "1. połowa - przedział goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:goal_range:7+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:goal_range:7+:1342",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1343",
+        "name": "2-3 gole"
+       },
+       {
+        "id": "sr:goal_range:7+:1344",
+        "name": "4-6 goli"
+       },
+       {
+        "id": "sr:goal_range:7+:1345",
+        "name": "7+ goli"
+       }
+      ]
+     }
+    ],
+    "variant=sr:point_range:35+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:35+:1107",
+        "name": "<20"
+       },
+       {
+        "id": "sr:point_range:35+:1108",
+        "name": "20-22"
+       },
+       {
+        "id": "sr:point_range:35+:1109",
+        "name": "23-25"
+       },
+       {
+        "id": "sr:point_range:35+:1110",
+        "name": "26-28"
+       },
+       {
+        "id": "sr:point_range:35+:1111",
+        "name": "29-31"
+       },
+       {
+        "id": "sr:point_range:35+:1112",
+        "name": "32-34"
+       },
+       {
+        "id": "sr:point_range:35+:1113",
+        "name": ">34"
+       }
+      ]
+     }
+    ],
+    "variant=bb:goal_range:4+": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:goal_range:4+:0-1",
+        "name": "0-1"
+       },
+       {
+        "id": "bb:goal_range:4+:2-3",
+        "name": "2-3"
+       },
+       {
+        "id": "bb:goal_range:4+:4+",
+        "name": "4+"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "636": {
+   "id": "636",
+   "name": "1. połowa - {$competitor1} przedział goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:point_range:19+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:19+:1114",
+        "name": "<9"
+       },
+       {
+        "id": "sr:point_range:19+:1115",
+        "name": "9-10"
+       },
+       {
+        "id": "sr:point_range:19+:1116",
+        "name": "11-12"
+       },
+       {
+        "id": "sr:point_range:19+:1117",
+        "name": "13-14"
+       },
+       {
+        "id": "sr:point_range:19+:1118",
+        "name": "15-16"
+       },
+       {
+        "id": "sr:point_range:19+:1119",
+        "name": "17-18"
+       },
+       {
+        "id": "sr:point_range:19+:1120",
+        "name": ">18"
+       }
+      ]
+     }
+    ],
+    "variant=bb:goal_range:4+": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:goal_range:4+:0-1",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "bb:goal_range:4+:2-3",
+        "name": "2-3 gole"
+       },
+       {
+        "id": "bb:goal_range:4+:4+",
+        "name": "4+ goli"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "637": {
+   "id": "637",
+   "name": "1. połowa - {$competitor2} przedział goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=sr:point_range:19+": [
+     {
+      "outcomes": [
+       {
+        "id": "sr:point_range:19+:1114",
+        "name": "<9"
+       },
+       {
+        "id": "sr:point_range:19+:1115",
+        "name": "9-10"
+       },
+       {
+        "id": "sr:point_range:19+:1116",
+        "name": "11-12"
+       },
+       {
+        "id": "sr:point_range:19+:1117",
+        "name": "13-14"
+       },
+       {
+        "id": "sr:point_range:19+:1118",
+        "name": "15-16"
+       },
+       {
+        "id": "sr:point_range:19+:1119",
+        "name": "17-18"
+       },
+       {
+        "id": "sr:point_range:19+:1120",
+        "name": ">18"
+       }
+      ]
+     }
+    ],
+    "variant=bb:goal_range:4+": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:goal_range:4+:0-1",
+        "name": "0-1 goli"
+       },
+       {
+        "id": "bb:goal_range:4+:2-3",
+        "name": "2-3 gole"
+       },
+       {
+        "id": "bb:goal_range:4+:4+",
+        "name": "4+ goli"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Range"
+  },
+  "770": {
+   "id": "770",
+   "name": "Asysty zawodnika (z dogrywką)",
+   "order": {
+    "4": 8,
+    "1": 9,
+    "2": 18
+   },
+   "main_order": {
+    "4": 0,
+    "1": 0,
+    "2": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "881": {
+   "id": "881",
+   "name": "Dowolna drużyna wygra",
+   "order": {
+    "1": 12
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "898": {
+   "id": "898",
+   "name": "Zawodnik strzeli 2+ goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "899": {
+   "id": "899",
+   "name": "Zawodnik strzeli 3+ goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "bez gola"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "13611": {
+   "id": "13611",
+   "name": "{$competitor1} wygra mecz, mimo że przegrywała",
+   "order": {
+    "1": 18
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "13612": {
+   "id": "13612",
+   "name": "{$competitor2} wygra mecz, mimo że przegrywała",
+   "order": {
+    "1": 17
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "13667": {
+   "id": "13667",
+   "name": "Gol w obu połowach",
+   "order": {
+    "1": 9
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "4",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "5",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "13668": {
+   "id": "13668",
+   "name": "Wygrana w obu połowach",
+   "order": {
+    "1": 10
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "4",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "5",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "13669": {
+   "id": "13669",
+   "name": "Wygrana w przynajmniej jednej połowie",
+   "order": {
+    "1": 11
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "4",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "5",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "13670": {
+   "id": "13670",
+   "name": "Ostatnia drużyna, która strzeli gola",
+   "order": {
+    "1": 5
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "6",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "7",
+        "name": "bez gola"
+       },
+       {
+        "id": "8",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "13672": {
+   "id": "13672",
+   "name": "1. połowa - różnica bramek dowolnej drużyny",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "variant=bb:winnig_margin:3+": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:winnig_margin:3+:1-0",
+        "name": "{$competitor1} 1-ym"
+       },
+       {
+        "id": "bb:winnig_margin:3+:2-0",
+        "name": "{$competitor1} 2-a"
+       },
+       {
+        "id": "bb:winnig_margin:3+:3-0",
+        "name": "{$competitor1} 3+"
+       },
+       {
+        "id": "bb:winnig_margin:3+:0-0",
+        "name": "bramkowy remis"
+       },
+       {
+        "id": "bb:winnig_margin:3+:0",
+        "name": "bez gola"
+       },
+       {
+        "id": "bb:winnig_margin:3+:0-1",
+        "name": "{$competitor2} 1-ym"
+       },
+       {
+        "id": "bb:winnig_margin:3+:0-2",
+        "name": "{$competitor2} 2-a"
+       },
+       {
+        "id": "bb:winnig_margin:3+:0-3",
+        "name": "{$competitor2} 3+"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "Extra"
+  },
+  "18300": {
+   "id": "18300",
+   "name": "{$competitor1} - rzuty rożne parzyste/nieparzyste",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "18301": {
+   "id": "18301",
+   "name": "{$competitor2} - rzuty rożne parzyste/nieparzyste",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "70",
+        "name": "nieparzysty"
+       },
+       {
+        "id": "72",
+        "name": "parzysty"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "OddEven"
+  },
+  "18302": {
+   "id": "18302",
+   "name": "Która drużyna nie strzeli gola",
+   "order": {
+    "1": 3
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "788",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "790",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "18303": {
+   "id": "18303",
+   "name": "Obie drużyny strzelą 2 lub więcej goli",
+   "order": {
+    "1": 6
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "18304": {
+   "id": "18304",
+   "name": "Wygrana do zera",
+   "order": {
+    "1": 7
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "3",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "4",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "18307": {
+   "id": "18307",
+   "name": "Kiedy padnie {goalnr}. gol (interwał 30 min)",
+   "order": {
+    "1": 66
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "584",
+        "name": "1-30"
+       },
+       {
+        "id": "586",
+        "name": "31-60"
+       },
+       {
+        "id": "588",
+        "name": "61+"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "goalnr"
+   ],
+   "needs_translation": false
+  },
+  "50001": {
+   "id": "50001",
+   "name": "1x2 w przedziale czasowym {from}-{to}",
+   "order": {
+    "1": 63
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "from",
+    "to"
+   ],
+   "needs_translation": false,
+   "market_type": "ResultFast"
+  },
+  "50002": {
+   "id": "50002",
+   "name": "Handicap w przedziale czasowym {from}-{to}",
+   "order": {
+    "1": 63
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1714",
+        "name": "{$competitor1} ({+hcp})"
+       },
+       {
+        "id": "1715",
+        "name": "{$competitor2} ({-hcp})"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "from",
+    "to",
+    "hcp"
+   ],
+   "needs_translation": false,
+   "market_type": "HandicapFast"
+  },
+  "50003": {
+   "id": "50003",
+   "name": "Suma w przedziale czasowym {from}-{to}",
+   "order": {
+    "1": 63
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "from",
+    "to",
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "TotalFast"
+  },
+  "50007": {
+   "id": "50007",
+   "name": "Bez remisu - obie drużyny strzelą gola",
+   "order": {
+    "1": 4
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50031": {
+   "id": "50031",
+   "name": "Gole zawodnika (z dogrywką)",
+   "order": {
+    "4": 145,
+    "1": 10
+   },
+   "main_order": {
+    "4": 0,
+    "1": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "50032": {
+   "id": "50032",
+   "name": "Strzały zawodnika (z dogrywką)",
+   "order": {
+    "1": 6
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "50033": {
+   "id": "50033",
+   "name": "Strzały celne zawodnika (z dogrywką)",
+   "order": {
+    "4": 140,
+    "1": 6
+   },
+   "main_order": {
+    "4": 0,
+    "1": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "50034": {
+   "id": "50034",
+   "name": "Podania zawodnika (z dogrywką)",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "50035": {
+   "id": "50035",
+   "name": "Odbiory zawodnika (z dogrywką)",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "50036": {
+   "id": "50036",
+   "name": "Kartki zawodnika (z dogrywką)",
+   "order": {
+    "1": 8
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "50059": {
+   "id": "50059",
+   "name": "Czyste konto",
+   "order": {
+    "1": 8
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "3",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "4",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "50060": {
+   "id": "50060",
+   "name": "1x2 i pierwszy gol",
+   "order": {
+    "1": 15
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1482",
+        "name": "{$competitor1} & {$competitor1}"
+       },
+       {
+        "id": "1483",
+        "name": "remis & {$competitor1}"
+       },
+       {
+        "id": "1484",
+        "name": "{$competitor2} & {$competitor1}"
+       },
+       {
+        "id": "1485",
+        "name": "{$competitor1} & {$competitor2}"
+       },
+       {
+        "id": "1486",
+        "name": "remis & {$competitor2}"
+       },
+       {
+        "id": "1487",
+        "name": "{$competitor2} & {$competitor2}"
+       },
+       {
+        "id": "1716",
+        "name": "remis & żaden"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "50063": {
+   "id": "50063",
+   "name": "Dokładna liczba goli",
+   "order": {
+    "300": 805,
+    "1": 64
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:exact_goals:0",
+        "name": "0"
+       },
+       {
+        "id": "bb:exact_goals:1",
+        "name": "1"
+       },
+       {
+        "id": "bb:exact_goals:10",
+        "name": "10"
+       },
+       {
+        "id": "bb:exact_goals:11",
+        "name": "11"
+       },
+       {
+        "id": "bb:exact_goals:12",
+        "name": "12"
+       },
+       {
+        "id": "bb:exact_goals:13",
+        "name": "13"
+       },
+       {
+        "id": "bb:exact_goals:14",
+        "name": "14"
+       },
+       {
+        "id": "bb:exact_goals:15",
+        "name": "15"
+       },
+       {
+        "id": "bb:exact_goals:2",
+        "name": "2"
+       },
+       {
+        "id": "bb:exact_goals:3",
+        "name": "3"
+       },
+       {
+        "id": "bb:exact_goals:4",
+        "name": "4"
+       },
+       {
+        "id": "bb:exact_goals:5",
+        "name": "5"
+       },
+       {
+        "id": "bb:exact_goals:6",
+        "name": "6"
+       },
+       {
+        "id": "bb:exact_goals:7",
+        "name": "7"
+       },
+       {
+        "id": "bb:exact_goals:8",
+        "name": "8"
+       },
+       {
+        "id": "bb:exact_goals:9",
+        "name": "9"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "50064": {
+   "id": "50064",
+   "name": "{$competitor1} - dokładna liczba goli",
+   "order": {
+    "300": 804,
+    "1": 0
+   },
+   "main_order": {
+    "309": 0,
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:exact_goals:0",
+        "name": "0"
+       },
+       {
+        "id": "bb:exact_goals:1",
+        "name": "1"
+       },
+       {
+        "id": "bb:exact_goals:10",
+        "name": "10"
+       },
+       {
+        "id": "bb:exact_goals:11",
+        "name": "11"
+       },
+       {
+        "id": "bb:exact_goals:12",
+        "name": "12"
+       },
+       {
+        "id": "bb:exact_goals:13",
+        "name": "13"
+       },
+       {
+        "id": "bb:exact_goals:14",
+        "name": "14"
+       },
+       {
+        "id": "bb:exact_goals:15",
+        "name": "15"
+       },
+       {
+        "id": "bb:exact_goals:2",
+        "name": "2"
+       },
+       {
+        "id": "bb:exact_goals:3",
+        "name": "3"
+       },
+       {
+        "id": "bb:exact_goals:4",
+        "name": "4"
+       },
+       {
+        "id": "bb:exact_goals:5",
+        "name": "5"
+       },
+       {
+        "id": "bb:exact_goals:6",
+        "name": "6"
+       },
+       {
+        "id": "bb:exact_goals:7",
+        "name": "7"
+       },
+       {
+        "id": "bb:exact_goals:8",
+        "name": "8"
+       },
+       {
+        "id": "bb:exact_goals:9",
+        "name": "9"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "50065": {
+   "id": "50065",
+   "name": "{$competitor2} - dokładna liczba goli",
+   "order": {
+    "300": 803,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:exact_goals:0",
+        "name": "0"
+       },
+       {
+        "id": "bb:exact_goals:1",
+        "name": "1"
+       },
+       {
+        "id": "bb:exact_goals:10",
+        "name": "10"
+       },
+       {
+        "id": "bb:exact_goals:11",
+        "name": "11"
+       },
+       {
+        "id": "bb:exact_goals:12",
+        "name": "12"
+       },
+       {
+        "id": "bb:exact_goals:13",
+        "name": "13"
+       },
+       {
+        "id": "bb:exact_goals:14",
+        "name": "14"
+       },
+       {
+        "id": "bb:exact_goals:15",
+        "name": "15"
+       },
+       {
+        "id": "bb:exact_goals:2",
+        "name": "2"
+       },
+       {
+        "id": "bb:exact_goals:3",
+        "name": "3"
+       },
+       {
+        "id": "bb:exact_goals:4",
+        "name": "4"
+       },
+       {
+        "id": "bb:exact_goals:5",
+        "name": "5"
+       },
+       {
+        "id": "bb:exact_goals:6",
+        "name": "6"
+       },
+       {
+        "id": "bb:exact_goals:7",
+        "name": "7"
+       },
+       {
+        "id": "bb:exact_goals:8",
+        "name": "8"
+       },
+       {
+        "id": "bb:exact_goals:9",
+        "name": "9"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "50066": {
+   "id": "50066",
+   "name": "1. połowa - dokładna liczba goli",
+   "order": {
+    "300": 875,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:exact_goals:0",
+        "name": "0"
+       },
+       {
+        "id": "bb:exact_goals:1",
+        "name": "1"
+       },
+       {
+        "id": "bb:exact_goals:10",
+        "name": "10"
+       },
+       {
+        "id": "bb:exact_goals:11",
+        "name": "11"
+       },
+       {
+        "id": "bb:exact_goals:12",
+        "name": "12"
+       },
+       {
+        "id": "bb:exact_goals:13",
+        "name": "13"
+       },
+       {
+        "id": "bb:exact_goals:14",
+        "name": "14"
+       },
+       {
+        "id": "bb:exact_goals:15",
+        "name": "15"
+       },
+       {
+        "id": "bb:exact_goals:2",
+        "name": "2"
+       },
+       {
+        "id": "bb:exact_goals:3",
+        "name": "3"
+       },
+       {
+        "id": "bb:exact_goals:4",
+        "name": "4"
+       },
+       {
+        "id": "bb:exact_goals:5",
+        "name": "5"
+       },
+       {
+        "id": "bb:exact_goals:6",
+        "name": "6"
+       },
+       {
+        "id": "bb:exact_goals:7",
+        "name": "7"
+       },
+       {
+        "id": "bb:exact_goals:8",
+        "name": "8"
+       },
+       {
+        "id": "bb:exact_goals:9",
+        "name": "9"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "50067": {
+   "id": "50067",
+   "name": "1. połowa - {$competitor1} - dokładna liczba goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:exact_goals:0",
+        "name": "0"
+       },
+       {
+        "id": "bb:exact_goals:1",
+        "name": "1"
+       },
+       {
+        "id": "bb:exact_goals:10",
+        "name": "10"
+       },
+       {
+        "id": "bb:exact_goals:11",
+        "name": "11"
+       },
+       {
+        "id": "bb:exact_goals:12",
+        "name": "12"
+       },
+       {
+        "id": "bb:exact_goals:13",
+        "name": "13"
+       },
+       {
+        "id": "bb:exact_goals:14",
+        "name": "14"
+       },
+       {
+        "id": "bb:exact_goals:15",
+        "name": "15"
+       },
+       {
+        "id": "bb:exact_goals:2",
+        "name": "2"
+       },
+       {
+        "id": "bb:exact_goals:3",
+        "name": "3"
+       },
+       {
+        "id": "bb:exact_goals:4",
+        "name": "4"
+       },
+       {
+        "id": "bb:exact_goals:5",
+        "name": "5"
+       },
+       {
+        "id": "bb:exact_goals:6",
+        "name": "6"
+       },
+       {
+        "id": "bb:exact_goals:7",
+        "name": "7"
+       },
+       {
+        "id": "bb:exact_goals:8",
+        "name": "8"
+       },
+       {
+        "id": "bb:exact_goals:9",
+        "name": "9"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "50068": {
+   "id": "50068",
+   "name": "1. połowa - {$competitor2} - dokładna liczba goli",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "bb:exact_goals:0",
+        "name": "0"
+       },
+       {
+        "id": "bb:exact_goals:1",
+        "name": "1"
+       },
+       {
+        "id": "bb:exact_goals:10",
+        "name": "10"
+       },
+       {
+        "id": "bb:exact_goals:11",
+        "name": "11"
+       },
+       {
+        "id": "bb:exact_goals:12",
+        "name": "12"
+       },
+       {
+        "id": "bb:exact_goals:13",
+        "name": "13"
+       },
+       {
+        "id": "bb:exact_goals:14",
+        "name": "14"
+       },
+       {
+        "id": "bb:exact_goals:15",
+        "name": "15"
+       },
+       {
+        "id": "bb:exact_goals:2",
+        "name": "2"
+       },
+       {
+        "id": "bb:exact_goals:3",
+        "name": "3"
+       },
+       {
+        "id": "bb:exact_goals:4",
+        "name": "4"
+       },
+       {
+        "id": "bb:exact_goals:5",
+        "name": "5"
+       },
+       {
+        "id": "bb:exact_goals:6",
+        "name": "6"
+       },
+       {
+        "id": "bb:exact_goals:7",
+        "name": "7"
+       },
+       {
+        "id": "bb:exact_goals:8",
+        "name": "8"
+       },
+       {
+        "id": "bb:exact_goals:9",
+        "name": "9"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Range"
+  },
+  "50165": {
+   "id": "50165",
+   "name": "1. połowa - czyste konto",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "3",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "4",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "50166": {
+   "id": "50166",
+   "name": "1. połowa - {$competitor1} strzeli gola",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50167": {
+   "id": "50167",
+   "name": "1. połowa - {$competitor2} strzeli gola",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50168": {
+   "id": "50168",
+   "name": "1. połowa - podwójna szansa i suma",
+   "order": {
+    "300": 874,
+    "1": 0
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1724",
+        "name": "{$competitor1}/remis & poniżej {total}"
+       },
+       {
+        "id": "1725",
+        "name": "{$competitor1}/{$competitor2} & poniżej {total}"
+       },
+       {
+        "id": "1726",
+        "name": "remis/{$competitor2} & poniżej {total}"
+       },
+       {
+        "id": "1727",
+        "name": "{$competitor1}/remis & ponad {total}"
+       },
+       {
+        "id": "1728",
+        "name": "{$competitor1}/{$competitor2} & ponad {total}"
+       },
+       {
+        "id": "1729",
+        "name": "remis/{$competitor2} & ponad {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Combo"
+  },
+  "50169": {
+   "id": "50169",
+   "name": "1. połowa - {$competitor1} wygrana do zera",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50170": {
+   "id": "50170",
+   "name": "1. połowa - {$competitor2} wygrana do zera",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50212": {
+   "id": "50212",
+   "name": "Zakłady łączone (z dogrywką)",
+   "order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "main_order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPrebuilt"
+  },
+  "50213": {
+   "id": "50213",
+   "name": "Zakłady łączone między drużynami (z dogrywką)",
+   "order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "main_order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPrebuilt"
+  },
+  "50236": {
+   "id": "50236",
+   "name": "Strzały celne 1x2",
+   "order": {
+    "4": 7,
+    "300": 700,
+    "1": 8
+   },
+   "main_order": {
+    "4": 0,
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1",
+        "name": "{$competitor1}"
+       },
+       {
+        "id": "2",
+        "name": "remis"
+       },
+       {
+        "id": "3",
+        "name": "{$competitor2}"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "Result"
+  },
+  "50237": {
+   "id": "50237",
+   "name": "Suma strzałów celnych",
+   "order": {
+    "4": 6,
+    "300": 698,
+    "1": 6
+   },
+   "main_order": {
+    "4": 0,
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50238": {
+   "id": "50238",
+   "name": "{$competitor1} - strzały celne",
+   "order": {
+    "4": 4,
+    "300": 696,
+    "1": 5
+   },
+   "main_order": {
+    "4": 0,
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50239": {
+   "id": "50239",
+   "name": "{$competitor2} - strzały celne",
+   "order": {
+    "4": 3,
+    "300": 695,
+    "1": 4
+   },
+   "main_order": {
+    "4": 0,
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50242": {
+   "id": "50242",
+   "name": "Suma strzałów",
+   "order": {
+    "300": 498,
+    "1": 6
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50243": {
+   "id": "50243",
+   "name": "{$competitor1} - suma strzałów",
+   "order": {
+    "300": 496,
+    "1": 4
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50244": {
+   "id": "50244",
+   "name": "{$competitor2} - suma strzałów",
+   "order": {
+    "300": 495,
+    "1": 3
+   },
+   "main_order": {
+    "300": 0,
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50256": {
+   "id": "50256",
+   "name": "Suma spalonych",
+   "order": {
+    "1": 6
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50258": {
+   "id": "50258",
+   "name": "{$competitor1} - suma spalonych",
+   "order": {
+    "1": 5
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "12",
+        "name": "ponad {total}"
+       },
+       {
+        "id": "13",
+        "name": "poniżej {total}"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "total"
+   ],
+   "needs_translation": false,
+   "market_type": "Total"
+  },
+  "50266": {
+   "id": "50266",
+   "name": "Podwójne statystyki zawodnika (z dogrywką)",
+   "order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "main_order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsCombo"
+  },
+  "50267": {
+   "id": "50267",
+   "name": "Podwójne statystyki zawodnika (z dogrywką)",
+   "order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "main_order": {
+    "16": 0,
+    "3": 0,
+    "1": 0,
+    "2": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsCombo"
+  },
+  "50268": {
+   "id": "50268",
+   "name": "Potrójne statystyki zawodnika (z dogrywką)",
+   "order": {
+    "16": 0,
+    "1": 0,
+    "2": 0
+   },
+   "main_order": {
+    "16": 0,
+    "1": 0,
+    "2": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsCombo"
+  },
+  "50296": {
+   "id": "50296",
+   "name": "Zawodnik strzeli gola lub zaliczy asystę (z dogrywką)",
+   "order": {
+    "1": 7
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {},
+   "specifiers": [
+    "variant"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerPropsPlus"
+  },
+  "50305": {
+   "id": "50305",
+   "name": "Będzie rzut karny",
+   "order": {
+    "1": 10
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50306": {
+   "id": "50306",
+   "name": "Czy padnie gol samobójczy",
+   "order": {
+    "1": 2
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "74",
+        "name": "tak"
+       },
+       {
+        "id": "76",
+        "name": "nie"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": false,
+   "market_type": "YesNo"
+  },
+  "50804": {
+   "id": "50804",
+   "name": "{$competitor1} - {goalnr}. strzelec gola",
+   "order": {
+    "1": 67
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "{$competitor1} bez gola"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "goalnr"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "50805": {
+   "id": "50805",
+   "name": "{$competitor2} - {goalnr}. strzelec gola",
+   "order": {
+    "1": 66
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "{$competitor2} bez gola"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "goalnr"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "50806": {
+   "id": "50806",
+   "name": "Zawodnik otrzyma {!cardnr} kartkę",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "brak kartki"
+       }
+      ]
+     }
+    ]
+   },
+   "specifiers": [
+    "cardnr"
+   ],
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "50807": {
+   "id": "50807",
+   "name": "Zawodnik strzeli gola i drużyna wygra",
+   "order": {
+    "1": 65
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {},
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "50808": {
+   "id": "50808",
+   "name": "Zawodnik strzeli gola w obu połowach",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {},
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "150122": {
+   "id": "150122",
+   "name": "Zawodnik otrzyma kartkę",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "brak kartki"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  },
+  "150123": {
+   "id": "150123",
+   "name": "Zawodnik otrzyma czerwoną kartkę",
+   "order": {
+    "1": 0
+   },
+   "main_order": {
+    "1": 0
+   },
+   "variants": {
+    "": [
+     {
+      "outcomes": [
+       {
+        "id": "1716",
+        "name": "brak czerwonej kartki"
+       }
+      ]
+     }
+    ]
+   },
+   "needs_translation": true,
+   "market_type": "PlayerProps"
+  }
+ }
+}

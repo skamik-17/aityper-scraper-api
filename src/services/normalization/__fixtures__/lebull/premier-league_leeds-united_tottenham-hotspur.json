@@ -1,0 +1,6330 @@
+{
+  "bookmaker": "lebull",
+  "ctx": {
+    "awayTeam": "Tottenham Hotspur",
+    "homeTeam": "Leeds United",
+    "league": "premier-league",
+    "leagueName": "premier-league"
+  },
+  "entries": [
+    {
+      "index": 0,
+      "raw": {
+        "bookmakerMarketId": "1",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.76
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 3.3
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.56
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "raw": {
+        "bookmakerMarketId": "8",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. gol",
+        "paramValue": "goalnr=1",
+        "selections": [
+          {
+            "externalId": "6",
+            "name": "Leeds United",
+            "odds": 2
+          },
+          {
+            "externalId": "7",
+            "name": "żaden",
+            "odds": 9.5
+          },
+          {
+            "externalId": "8",
+            "name": "Tottenham Hotspur",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "raw": {
+        "bookmakerMarketId": "10",
+        "groupId": "",
+        "groupName": "",
+        "name": "Podwójna szansa",
+        "selections": [
+          {
+            "externalId": "10",
+            "name": "Leeds United lub Tottenham Hotspur",
+            "odds": 1.31
+          },
+          {
+            "externalId": "11",
+            "name": "remis lub Tottenham Hotspur",
+            "odds": 1.42
+          },
+          {
+            "externalId": "9",
+            "name": "Leeds United lub remis",
+            "odds": 1.48
+          }
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "raw": {
+        "bookmakerMarketId": "11",
+        "groupId": "",
+        "groupName": "",
+        "name": "Zakład bez remisu",
+        "selections": [
+          {
+            "externalId": "4",
+            "name": "Leeds United",
+            "odds": 1.96
+          },
+          {
+            "externalId": "5",
+            "name": "Tottenham Hotspur",
+            "odds": 1.83
+          }
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "raw": {
+        "bookmakerMarketId": "12",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United bez zakładu",
+        "selections": [
+          {
+            "externalId": "776",
+            "name": "remis",
+            "odds": 2.2
+          },
+          {
+            "externalId": "778",
+            "name": "Tottenham Hotspur",
+            "odds": 1.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "raw": {
+        "bookmakerMarketId": "13",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur bez zakładu",
+        "selections": [
+          {
+            "externalId": "780",
+            "name": "Leeds United",
+            "odds": 1.65
+          },
+          {
+            "externalId": "782",
+            "name": "remis",
+            "odds": 2.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "raw": {
+        "bookmakerMarketId": "14",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap europejski 0:1",
+        "paramValue": "hcp=0:1",
+        "selections": [
+          {
+            "externalId": "1711",
+            "name": "Leeds United (0:1)",
+            "odds": 5.5
+          },
+          {
+            "externalId": "1712",
+            "name": "remis (0:1)",
+            "odds": 4
+          },
+          {
+            "externalId": "1713",
+            "name": "Tottenham Hotspur (0:1)",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "raw": {
+        "bookmakerMarketId": "14",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap europejski 1:0",
+        "paramValue": "hcp=1:0",
+        "selections": [
+          {
+            "externalId": "1711",
+            "name": "Leeds United (1:0)",
+            "odds": 1.5
+          },
+          {
+            "externalId": "1712",
+            "name": "remis (1:0)",
+            "odds": 3.9
+          },
+          {
+            "externalId": "1713",
+            "name": "Tottenham Hotspur (1:0)",
+            "odds": 4.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "raw": {
+        "bookmakerMarketId": "14",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap europejski 2:0",
+        "paramValue": "hcp=2:0",
+        "selections": [
+          {
+            "externalId": "1711",
+            "name": "Leeds United (2:0)",
+            "odds": 1.14
+          },
+          {
+            "externalId": "1712",
+            "name": "remis (2:0)",
+            "odds": 6.5
+          },
+          {
+            "externalId": "1713",
+            "name": "Tottenham Hotspur (2:0)",
+            "odds": 10.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "raw": {
+        "bookmakerMarketId": "16",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap -1.0",
+        "paramValue": "hcp=-1.0",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-1)",
+            "odds": 4.7
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+1)",
+            "odds": 1.18
+          }
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "raw": {
+        "bookmakerMarketId": "16",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap -1.5",
+        "paramValue": "hcp=-1.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-1.5)",
+            "odds": 5.8
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+1.5)",
+            "odds": 1.13
+          }
+        ]
+      }
+    },
+    {
+      "index": 11,
+      "raw": {
+        "bookmakerMarketId": "16",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap 0",
+        "paramValue": "hcp=0",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (0)",
+            "odds": 1.97
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (0)",
+            "odds": 1.82
+          }
+        ]
+      }
+    },
+    {
+      "index": 12,
+      "raw": {
+        "bookmakerMarketId": "16",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap 1",
+        "paramValue": "hcp=1",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (+1)",
+            "odds": 1.21
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (-1)",
+            "odds": 4.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "raw": {
+        "bookmakerMarketId": "16",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap 1.5",
+        "paramValue": "hcp=1.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (+1.5)",
+            "odds": 1.14
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (-1.5)",
+            "odds": 5.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 14,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 0.5",
+        "paramValue": "total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.04
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 10
+          }
+        ]
+      }
+    },
+    {
+      "index": 15,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 1",
+        "paramValue": "total=1",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1",
+            "odds": 1.06
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1",
+            "odds": 8.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.29
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 3.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 17,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 2",
+        "paramValue": "total=2",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2",
+            "odds": 1.47
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2",
+            "odds": 2.66
+          }
+        ]
+      }
+    },
+    {
+      "index": 18,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 1.93
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.85
+          }
+        ]
+      }
+    },
+    {
+      "index": 19,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 3",
+        "paramValue": "total=3",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3",
+            "odds": 2.66
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3",
+            "odds": 1.47
+          }
+        ]
+      }
+    },
+    {
+      "index": 20,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 3.4
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 1.31
+          }
+        ]
+      }
+    },
+    {
+      "index": 21,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 4",
+        "paramValue": "total=4",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 4",
+            "odds": 5.6
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 4",
+            "odds": 1.14
+          }
+        ]
+      }
+    },
+    {
+      "index": 22,
+      "raw": {
+        "bookmakerMarketId": "18",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma 4.5",
+        "paramValue": "total=4.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 4.5",
+            "odds": 6.8
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 4.5",
+            "odds": 1.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 23,
+      "raw": {
+        "bookmakerMarketId": "19",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma 0.5",
+        "paramValue": "total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.3
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 3.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 24,
+      "raw": {
+        "bookmakerMarketId": "19",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma 1",
+        "paramValue": "total=1",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1",
+            "odds": 1.65
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1",
+            "odds": 2.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 25,
+      "raw": {
+        "bookmakerMarketId": "19",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 2.5
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.49
+          }
+        ]
+      }
+    },
+    {
+      "index": 26,
+      "raw": {
+        "bookmakerMarketId": "19",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma 2",
+        "paramValue": "total=2",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2",
+            "odds": 4.7
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2",
+            "odds": 1.17
+          }
+        ]
+      }
+    },
+    {
+      "index": 27,
+      "raw": {
+        "bookmakerMarketId": "19",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 5.8
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "index": 28,
+      "raw": {
+        "bookmakerMarketId": "20",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma 0.5",
+        "paramValue": "total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.28
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 3.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 29,
+      "raw": {
+        "bookmakerMarketId": "20",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma 1",
+        "paramValue": "total=1",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1",
+            "odds": 1.56
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1",
+            "odds": 2.34
+          }
+        ]
+      }
+    },
+    {
+      "index": 30,
+      "raw": {
+        "bookmakerMarketId": "20",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 2.36
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.54
+          }
+        ]
+      }
+    },
+    {
+      "index": 31,
+      "raw": {
+        "bookmakerMarketId": "20",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma 2",
+        "paramValue": "total=2",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2",
+            "odds": 4.5
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2",
+            "odds": 1.18
+          }
+        ]
+      }
+    },
+    {
+      "index": 32,
+      "raw": {
+        "bookmakerMarketId": "20",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 5.6
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.12
+          }
+        ]
+      }
+    },
+    {
+      "index": 33,
+      "raw": {
+        "bookmakerMarketId": "25",
+        "groupId": "",
+        "groupName": "",
+        "name": "Przedział goli",
+        "paramValue": "variant=sr:goal_range:7+",
+        "selections": [
+          {
+            "externalId": "sr:goal_range:7+:1342",
+            "name": "0-1 goli",
+            "odds": 3.1
+          },
+          {
+            "externalId": "sr:goal_range:7+:1343",
+            "name": "2-3 gole",
+            "odds": 1.9
+          },
+          {
+            "externalId": "sr:goal_range:7+:1344",
+            "name": "4-6 goli",
+            "odds": 3.4
+          },
+          {
+            "externalId": "sr:goal_range:7+:1345",
+            "name": "7+ goli",
+            "odds": 30
+          }
+        ]
+      }
+    },
+    {
+      "index": 34,
+      "raw": {
+        "bookmakerMarketId": "26",
+        "groupId": "",
+        "groupName": "",
+        "name": "Parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 1.94
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.86
+          }
+        ]
+      }
+    },
+    {
+      "index": 35,
+      "raw": {
+        "bookmakerMarketId": "27",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 2.04
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.78
+          }
+        ]
+      }
+    },
+    {
+      "index": 36,
+      "raw": {
+        "bookmakerMarketId": "28",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 2.03
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.78
+          }
+        ]
+      }
+    },
+    {
+      "index": 37,
+      "raw": {
+        "bookmakerMarketId": "29",
+        "groupId": "",
+        "groupName": "",
+        "name": "Obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.7
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 2.08
+          }
+        ]
+      }
+    },
+    {
+      "index": 38,
+      "raw": {
+        "bookmakerMarketId": "31",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - czyste konto",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.45
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.27
+          }
+        ]
+      }
+    },
+    {
+      "index": 39,
+      "raw": {
+        "bookmakerMarketId": "32",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - czyste konto",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.3
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 40,
+      "raw": {
+        "bookmakerMarketId": "33",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - wygrana do zera",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 4.3
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.18
+          }
+        ]
+      }
+    },
+    {
+      "index": 41,
+      "raw": {
+        "bookmakerMarketId": "34",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - wygrana do zera",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 4
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 42,
+      "raw": {
+        "bookmakerMarketId": "35",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 i obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "78",
+            "name": "Leeds United & tak",
+            "odds": 5.25
+          },
+          {
+            "externalId": "80",
+            "name": "Leeds United & nie",
+            "odds": 4.7
+          },
+          {
+            "externalId": "82",
+            "name": "remis & tak",
+            "odds": 4.6
+          },
+          {
+            "externalId": "84",
+            "name": "remis & nie",
+            "odds": 10
+          },
+          {
+            "externalId": "86",
+            "name": "Tottenham Hotspur & tak",
+            "odds": 4.9
+          },
+          {
+            "externalId": "88",
+            "name": "Tottenham Hotspur & nie",
+            "odds": 4.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 43,
+      "raw": {
+        "bookmakerMarketId": "36",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma i obie drużyny strzelą gola 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "90",
+            "name": "ponad 2.5 & tak",
+            "odds": 2.1
+          },
+          {
+            "externalId": "92",
+            "name": "poniżej 2.5 & tak",
+            "odds": 5.75
+          },
+          {
+            "externalId": "94",
+            "name": "ponad 2.5 & nie",
+            "odds": 8.5
+          },
+          {
+            "externalId": "96",
+            "name": "poniżej 2.5 & nie",
+            "odds": 2.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 44,
+      "raw": {
+        "bookmakerMarketId": "36",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma i obie drużyny strzelą gola 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "90",
+            "name": "ponad 3.5 & tak",
+            "odds": 3.3
+          },
+          {
+            "externalId": "92",
+            "name": "poniżej 3.5 & tak",
+            "odds": 2.7
+          },
+          {
+            "externalId": "94",
+            "name": "ponad 3.5 & nie",
+            "odds": 19
+          },
+          {
+            "externalId": "96",
+            "name": "poniżej 3.5 & nie",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 45,
+      "raw": {
+        "bookmakerMarketId": "36",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma i obie drużyny strzelą gola 4.5",
+        "paramValue": "total=4.5",
+        "selections": [
+          {
+            "externalId": "90",
+            "name": "ponad 4.5 & tak",
+            "odds": 6.25
+          },
+          {
+            "externalId": "92",
+            "name": "poniżej 4.5 & tak",
+            "odds": 2.05
+          },
+          {
+            "externalId": "94",
+            "name": "ponad 4.5 & nie",
+            "odds": 45
+          },
+          {
+            "externalId": "96",
+            "name": "poniżej 4.5 & nie",
+            "odds": 1.88
+          }
+        ]
+      }
+    },
+    {
+      "index": 46,
+      "raw": {
+        "bookmakerMarketId": "37",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 i suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "794",
+            "name": "Leeds United & poniżej 1.5",
+            "odds": 8.75
+          },
+          {
+            "externalId": "796",
+            "name": "Leeds United & ponad 1.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "798",
+            "name": "remis & poniżej 1.5",
+            "odds": 10
+          },
+          {
+            "externalId": "800",
+            "name": "remis & ponad 1.5",
+            "odds": 4.6
+          },
+          {
+            "externalId": "802",
+            "name": "Tottenham Hotspur & poniżej 1.5",
+            "odds": 8.5
+          },
+          {
+            "externalId": "804",
+            "name": "Tottenham Hotspur & ponad 1.5",
+            "odds": 3.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 47,
+      "raw": {
+        "bookmakerMarketId": "37",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 i suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "794",
+            "name": "Leeds United & poniżej 2.5",
+            "odds": 5.75
+          },
+          {
+            "externalId": "796",
+            "name": "Leeds United & ponad 2.5",
+            "odds": 4.4
+          },
+          {
+            "externalId": "798",
+            "name": "remis & poniżej 2.5",
+            "odds": 4.3
+          },
+          {
+            "externalId": "800",
+            "name": "remis & ponad 2.5",
+            "odds": 12
+          },
+          {
+            "externalId": "802",
+            "name": "Tottenham Hotspur & poniżej 2.5",
+            "odds": 5.5
+          },
+          {
+            "externalId": "804",
+            "name": "Tottenham Hotspur & ponad 2.5",
+            "odds": 4
+          }
+        ]
+      }
+    },
+    {
+      "index": 48,
+      "raw": {
+        "bookmakerMarketId": "37",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 i suma 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "794",
+            "name": "Leeds United & poniżej 3.5",
+            "odds": 3.5
+          },
+          {
+            "externalId": "796",
+            "name": "Leeds United & ponad 3.5",
+            "odds": 9
+          },
+          {
+            "externalId": "798",
+            "name": "remis & poniżej 3.5",
+            "odds": 4.3
+          },
+          {
+            "externalId": "800",
+            "name": "remis & ponad 3.5",
+            "odds": 12
+          },
+          {
+            "externalId": "802",
+            "name": "Tottenham Hotspur & poniżej 3.5",
+            "odds": 3.2
+          },
+          {
+            "externalId": "804",
+            "name": "Tottenham Hotspur & ponad 3.5",
+            "odds": 8.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 49,
+      "raw": {
+        "bookmakerMarketId": "45",
+        "groupId": "",
+        "groupName": "",
+        "name": "Dokładny wynik",
+        "selections": [
+          {
+            "externalId": "274",
+            "name": "0:0",
+            "odds": 9.75
+          },
+          {
+            "externalId": "276",
+            "name": "1:0",
+            "odds": 8.5
+          },
+          {
+            "externalId": "278",
+            "name": "2:0",
+            "odds": 13
+          },
+          {
+            "externalId": "280",
+            "name": "3:0",
+            "odds": 27
+          },
+          {
+            "externalId": "282",
+            "name": "4:0",
+            "odds": 55
+          },
+          {
+            "externalId": "284",
+            "name": "0:1",
+            "odds": 8.25
+          },
+          {
+            "externalId": "286",
+            "name": "1:1",
+            "odds": 6.75
+          },
+          {
+            "externalId": "288",
+            "name": "2:1",
+            "odds": 9.5
+          },
+          {
+            "externalId": "290",
+            "name": "3:1",
+            "odds": 21
+          },
+          {
+            "externalId": "292",
+            "name": "4:1",
+            "odds": 50
+          },
+          {
+            "externalId": "294",
+            "name": "0:2",
+            "odds": 12
+          },
+          {
+            "externalId": "296",
+            "name": "1:2",
+            "odds": 9
+          },
+          {
+            "externalId": "298",
+            "name": "2:2",
+            "odds": 14
+          },
+          {
+            "externalId": "300",
+            "name": "3:2",
+            "odds": 27
+          },
+          {
+            "externalId": "302",
+            "name": "4:2",
+            "odds": 65
+          },
+          {
+            "externalId": "304",
+            "name": "0:3",
+            "odds": 23
+          },
+          {
+            "externalId": "306",
+            "name": "1:3",
+            "odds": 19
+          },
+          {
+            "externalId": "308",
+            "name": "2:3",
+            "odds": 26
+          },
+          {
+            "externalId": "310",
+            "name": "3:3",
+            "odds": 55
+          },
+          {
+            "externalId": "312",
+            "name": "4:3",
+            "odds": 100
+          },
+          {
+            "externalId": "314",
+            "name": "0:4",
+            "odds": 50
+          },
+          {
+            "externalId": "316",
+            "name": "1:4",
+            "odds": 45
+          },
+          {
+            "externalId": "318",
+            "name": "2:4",
+            "odds": 60
+          },
+          {
+            "externalId": "320",
+            "name": "3:4",
+            "odds": 100
+          },
+          {
+            "externalId": "356",
+            "name": "5:0",
+            "odds": 100
+          },
+          {
+            "externalId": "358",
+            "name": "5:1",
+            "odds": 100
+          },
+          {
+            "externalId": "360",
+            "name": "5:2",
+            "odds": 100
+          },
+          {
+            "externalId": "364",
+            "name": "0:5",
+            "odds": 100
+          },
+          {
+            "externalId": "366",
+            "name": "1:5",
+            "odds": 100
+          },
+          {
+            "externalId": "368",
+            "name": "2:5",
+            "odds": 100
+          }
+        ]
+      }
+    },
+    {
+      "index": 50,
+      "raw": {
+        "bookmakerMarketId": "47",
+        "groupId": "",
+        "groupName": "",
+        "name": "Do przerwy / koniec meczu",
+        "selections": [
+          {
+            "externalId": "418",
+            "name": "Leeds United/Leeds United",
+            "odds": 4.25
+          },
+          {
+            "externalId": "420",
+            "name": "Leeds United/remis",
+            "odds": 14
+          },
+          {
+            "externalId": "422",
+            "name": "Leeds United/Tottenham Hotspur",
+            "odds": 29
+          },
+          {
+            "externalId": "424",
+            "name": "remis/Leeds United",
+            "odds": 6.75
+          },
+          {
+            "externalId": "426",
+            "name": "remis/remis",
+            "odds": 5.25
+          },
+          {
+            "externalId": "428",
+            "name": "remis/Tottenham Hotspur",
+            "odds": 6.25
+          },
+          {
+            "externalId": "430",
+            "name": "Tottenham Hotspur/Leeds United",
+            "odds": 30
+          },
+          {
+            "externalId": "432",
+            "name": "Tottenham Hotspur/remis",
+            "odds": 14
+          },
+          {
+            "externalId": "434",
+            "name": "Tottenham Hotspur/Tottenham Hotspur",
+            "odds": 3.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 51,
+      "raw": {
+        "bookmakerMarketId": "48",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United wygra obie połowy",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 7.75
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 52,
+      "raw": {
+        "bookmakerMarketId": "49",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur wygra obie połowy",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 7.25
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.06
+          }
+        ]
+      }
+    },
+    {
+      "index": 53,
+      "raw": {
+        "bookmakerMarketId": "50",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United wygra przynajmniej jedną połowę",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.9
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 54,
+      "raw": {
+        "bookmakerMarketId": "51",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur wygra przynajmniej jedną połowę",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.8
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 55,
+      "raw": {
+        "bookmakerMarketId": "52",
+        "groupId": "",
+        "groupName": "",
+        "name": "Połowa z większą liczbą goli",
+        "selections": [
+          {
+            "externalId": "436",
+            "name": "1. Połowa",
+            "odds": 3.05
+          },
+          {
+            "externalId": "438",
+            "name": "2. Połowa",
+            "odds": 2.02
+          },
+          {
+            "externalId": "440",
+            "name": "równo",
+            "odds": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 56,
+      "raw": {
+        "bookmakerMarketId": "56",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United strzeli gola w obu połowach",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.85
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.23
+          }
+        ]
+      }
+    },
+    {
+      "index": 57,
+      "raw": {
+        "bookmakerMarketId": "57",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur strzeli gola w obu połowach",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.65
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 58,
+      "raw": {
+        "bookmakerMarketId": "60",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - 1x2",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 3.3
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.16
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 3.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 59,
+      "raw": {
+        "bookmakerMarketId": "62",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - 1. gol",
+        "paramValue": "goalnr=1",
+        "selections": [
+          {
+            "externalId": "6",
+            "name": "Leeds United",
+            "odds": 2.75
+          },
+          {
+            "externalId": "7",
+            "name": "żaden",
+            "odds": 3.05
+          },
+          {
+            "externalId": "8",
+            "name": "Tottenham Hotspur",
+            "odds": 2.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 60,
+      "raw": {
+        "bookmakerMarketId": "63",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - podwójna szansa",
+        "selections": [
+          {
+            "externalId": "10",
+            "name": "Leeds United lub Tottenham Hotspur",
+            "odds": 1.62
+          },
+          {
+            "externalId": "11",
+            "name": "remis lub Tottenham Hotspur",
+            "odds": 1.29
+          },
+          {
+            "externalId": "9",
+            "name": "Leeds United lub remis",
+            "odds": 1.29
+          }
+        ]
+      }
+    },
+    {
+      "index": 61,
+      "raw": {
+        "bookmakerMarketId": "64",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - zakład bez remisu",
+        "selections": [
+          {
+            "externalId": "4",
+            "name": "Leeds United",
+            "odds": 1.87
+          },
+          {
+            "externalId": "5",
+            "name": "Tottenham Hotspur",
+            "odds": 1.86
+          }
+        ]
+      }
+    },
+    {
+      "index": 62,
+      "raw": {
+        "bookmakerMarketId": "65",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa – handicap europejski 0:1",
+        "paramValue": "hcp=0:1",
+        "selections": [
+          {
+            "externalId": "1711",
+            "name": "Leeds United (0:1)",
+            "odds": 10.5
+          },
+          {
+            "externalId": "1712",
+            "name": "remis (0:1)",
+            "odds": 4
+          },
+          {
+            "externalId": "1713",
+            "name": "Tottenham Hotspur (0:1)",
+            "odds": 1.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 63,
+      "raw": {
+        "bookmakerMarketId": "65",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa – handicap europejski 1:0",
+        "paramValue": "hcp=1:0",
+        "selections": [
+          {
+            "externalId": "1711",
+            "name": "Leeds United (1:0)",
+            "odds": 1.35
+          },
+          {
+            "externalId": "1712",
+            "name": "remis (1:0)",
+            "odds": 3.8
+          },
+          {
+            "externalId": "1713",
+            "name": "Tottenham Hotspur (1:0)",
+            "odds": 9.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 64,
+      "raw": {
+        "bookmakerMarketId": "65",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa – handicap europejski 2:0",
+        "paramValue": "hcp=2:0",
+        "selections": [
+          {
+            "externalId": "1711",
+            "name": "Leeds United (2:0)",
+            "odds": 1.04
+          },
+          {
+            "externalId": "1712",
+            "name": "remis (2:0)",
+            "odds": 9.25
+          },
+          {
+            "externalId": "1713",
+            "name": "Tottenham Hotspur (2:0)",
+            "odds": 24
+          }
+        ]
+      }
+    },
+    {
+      "index": 65,
+      "raw": {
+        "bookmakerMarketId": "66",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - handicap 0",
+        "paramValue": "hcp=0",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (0)",
+            "odds": 1.91
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (0)",
+            "odds": 1.84
+          }
+        ]
+      }
+    },
+    {
+      "index": 66,
+      "raw": {
+        "bookmakerMarketId": "68",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma 0.5",
+        "paramValue": "total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.39
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 2.88
+          }
+        ]
+      }
+    },
+    {
+      "index": 67,
+      "raw": {
+        "bookmakerMarketId": "68",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma 1",
+        "paramValue": "total=1",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1",
+            "odds": 1.84
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1",
+            "odds": 1.91
+          }
+        ]
+      }
+    },
+    {
+      "index": 68,
+      "raw": {
+        "bookmakerMarketId": "68",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 2.8
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 69,
+      "raw": {
+        "bookmakerMarketId": "68",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma 2",
+        "paramValue": "total=2",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2",
+            "odds": 5.8
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2",
+            "odds": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "index": 70,
+      "raw": {
+        "bookmakerMarketId": "68",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 7
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.08
+          }
+        ]
+      }
+    },
+    {
+      "index": 71,
+      "raw": {
+        "bookmakerMarketId": "69",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United - suma 0.5",
+        "paramValue": "total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 2.12
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 1.66
+          }
+        ]
+      }
+    },
+    {
+      "index": 72,
+      "raw": {
+        "bookmakerMarketId": "69",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United - suma 1",
+        "paramValue": "total=1",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1",
+            "odds": 5
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1",
+            "odds": 1.14
+          }
+        ]
+      }
+    },
+    {
+      "index": 73,
+      "raw": {
+        "bookmakerMarketId": "69",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United - suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 6.8
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.08
+          }
+        ]
+      }
+    },
+    {
+      "index": 74,
+      "raw": {
+        "bookmakerMarketId": "70",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur - suma 0.5",
+        "paramValue": "total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 2.04
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 1.71
+          }
+        ]
+      }
+    },
+    {
+      "index": 75,
+      "raw": {
+        "bookmakerMarketId": "70",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur - suma 1",
+        "paramValue": "total=1",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1",
+            "odds": 4.7
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1",
+            "odds": 1.16
+          }
+        ]
+      }
+    },
+    {
+      "index": 76,
+      "raw": {
+        "bookmakerMarketId": "70",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur - suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 6.4
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.09
+          }
+        ]
+      }
+    },
+    {
+      "index": 77,
+      "raw": {
+        "bookmakerMarketId": "74",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 2.06
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 78,
+      "raw": {
+        "bookmakerMarketId": "75",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 4.3
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.19
+          }
+        ]
+      }
+    },
+    {
+      "index": 79,
+      "raw": {
+        "bookmakerMarketId": "76",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United - czyste konto",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.7
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 2.05
+          }
+        ]
+      }
+    },
+    {
+      "index": 80,
+      "raw": {
+        "bookmakerMarketId": "77",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur - czyste konto",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.65
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 2.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 81,
+      "raw": {
+        "bookmakerMarketId": "78",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - 1x2 i obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "78",
+            "name": "Leeds United & tak",
+            "odds": 18
+          },
+          {
+            "externalId": "80",
+            "name": "Leeds United & nie",
+            "odds": 3.7
+          },
+          {
+            "externalId": "82",
+            "name": "remis & tak",
+            "odds": 7.5
+          },
+          {
+            "externalId": "84",
+            "name": "remis & nie",
+            "odds": 2.95
+          },
+          {
+            "externalId": "86",
+            "name": "Tottenham Hotspur & tak",
+            "odds": 17
+          },
+          {
+            "externalId": "88",
+            "name": "Tottenham Hotspur & nie",
+            "odds": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 82,
+      "raw": {
+        "bookmakerMarketId": "79",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - 1x2 i suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "794",
+            "name": "Leeds United & poniżej 1.5",
+            "odds": 4.6
+          },
+          {
+            "externalId": "796",
+            "name": "Leeds United & ponad 1.5",
+            "odds": 7.5
+          },
+          {
+            "externalId": "798",
+            "name": "remis & poniżej 1.5",
+            "odds": 2.8
+          },
+          {
+            "externalId": "800",
+            "name": "remis & ponad 1.5",
+            "odds": 6.75
+          },
+          {
+            "externalId": "802",
+            "name": "Tottenham Hotspur & poniżej 1.5",
+            "odds": 4.3
+          },
+          {
+            "externalId": "804",
+            "name": "Tottenham Hotspur & ponad 1.5",
+            "odds": 6.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 83,
+      "raw": {
+        "bookmakerMarketId": "81",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - dokładny wynik",
+        "selections": [
+          {
+            "externalId": "462",
+            "name": "0:0",
+            "odds": 2.75
+          },
+          {
+            "externalId": "474",
+            "name": "0:1",
+            "odds": 4.25
+          },
+          {
+            "externalId": "476",
+            "name": "0:2",
+            "odds": 11.5
+          },
+          {
+            "externalId": "482",
+            "name": "0:3",
+            "odds": 35
+          },
+          {
+            "externalId": "484",
+            "name": "0:4",
+            "odds": 100
+          },
+          {
+            "externalId": "468",
+            "name": "1:0",
+            "odds": 4.5
+          },
+          {
+            "externalId": "464",
+            "name": "1:1",
+            "odds": 7.25
+          },
+          {
+            "externalId": "478",
+            "name": "1:2",
+            "odds": 18
+          },
+          {
+            "externalId": "486",
+            "name": "1:3",
+            "odds": 50
+          },
+          {
+            "externalId": "470",
+            "name": "2:0",
+            "odds": 13
+          },
+          {
+            "externalId": "472",
+            "name": "2:1",
+            "odds": 18
+          },
+          {
+            "externalId": "466",
+            "name": "2:2",
+            "odds": 45
+          },
+          {
+            "externalId": "490",
+            "name": "2:3",
+            "odds": 100
+          },
+          {
+            "externalId": "494",
+            "name": "3:0",
+            "odds": 40
+          },
+          {
+            "externalId": "496",
+            "name": "3:1",
+            "odds": 55
+          },
+          {
+            "externalId": "498",
+            "name": "3:2",
+            "odds": 90
+          },
+          {
+            "externalId": "504",
+            "name": "4:0",
+            "odds": 100
+          }
+        ]
+      }
+    },
+    {
+      "index": 84,
+      "raw": {
+        "bookmakerMarketId": "83",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - 1x2",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 3.05
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.42
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.84
+          }
+        ]
+      }
+    },
+    {
+      "index": 85,
+      "raw": {
+        "bookmakerMarketId": "85",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - podwójna szansa",
+        "selections": [
+          {
+            "externalId": "10",
+            "name": "Leeds United lub Tottenham Hotspur",
+            "odds": 1.47
+          },
+          {
+            "externalId": "11",
+            "name": "remis lub Tottenham Hotspur",
+            "odds": 1.3
+          },
+          {
+            "externalId": "9",
+            "name": "Leeds United lub remis",
+            "odds": 1.35
+          }
+        ]
+      }
+    },
+    {
+      "index": 86,
+      "raw": {
+        "bookmakerMarketId": "86",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - zakład bez remisu",
+        "selections": [
+          {
+            "externalId": "4",
+            "name": "Leeds United",
+            "odds": 1.9
+          },
+          {
+            "externalId": "5",
+            "name": "Tottenham Hotspur",
+            "odds": 1.76
+          }
+        ]
+      }
+    },
+    {
+      "index": 87,
+      "raw": {
+        "bookmakerMarketId": "90",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - suma 0.5",
+        "paramValue": "total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.27
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 3.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 88,
+      "raw": {
+        "bookmakerMarketId": "90",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 2.14
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 89,
+      "raw": {
+        "bookmakerMarketId": "90",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 4.7
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.14
+          }
+        ]
+      }
+    },
+    {
+      "index": 90,
+      "raw": {
+        "bookmakerMarketId": "95",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.25
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.27
+          }
+        ]
+      }
+    },
+    {
+      "index": 91,
+      "raw": {
+        "bookmakerMarketId": "101",
+        "groupId": "",
+        "groupName": "",
+        "name": "Kiedy padnie 1. gol (interwał 10 min)",
+        "paramValue": "goalnr=1",
+        "selections": [
+          {
+            "externalId": "598",
+            "name": "1-10",
+            "odds": 4.5
+          },
+          {
+            "externalId": "600",
+            "name": "11-20",
+            "odds": 5.5
+          },
+          {
+            "externalId": "602",
+            "name": "21-30",
+            "odds": 6.25
+          },
+          {
+            "externalId": "604",
+            "name": "31-40",
+            "odds": 8.5
+          },
+          {
+            "externalId": "606",
+            "name": "41-50",
+            "odds": 8
+          },
+          {
+            "externalId": "608",
+            "name": "51-60",
+            "odds": 13
+          },
+          {
+            "externalId": "610",
+            "name": "61-70",
+            "odds": 20
+          },
+          {
+            "externalId": "612",
+            "name": "71-80",
+            "odds": 20
+          },
+          {
+            "externalId": "614",
+            "name": "81-90",
+            "odds": 20
+          },
+          {
+            "externalId": "616",
+            "name": "żaden",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 92,
+      "raw": {
+        "bookmakerMarketId": "136",
+        "groupId": "",
+        "groupName": "",
+        "name": "Kartki 1x2",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.86
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 4
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 1.91
+          }
+        ]
+      }
+    },
+    {
+      "index": 93,
+      "raw": {
+        "bookmakerMarketId": "137",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. kartka",
+        "paramValue": "bookingnr=1",
+        "selections": [
+          {
+            "externalId": "6",
+            "name": "Leeds United",
+            "odds": 2.06
+          },
+          {
+            "externalId": "7",
+            "name": "żaden",
+            "odds": 20
+          },
+          {
+            "externalId": "8",
+            "name": "Tottenham Hotspur",
+            "odds": 1.62
+          }
+        ]
+      }
+    },
+    {
+      "index": 94,
+      "raw": {
+        "bookmakerMarketId": "139",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma kartek 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 1.35
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 2.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 95,
+      "raw": {
+        "bookmakerMarketId": "139",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma kartek 4.5",
+        "paramValue": "total=4.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 4.5",
+            "odds": 1.72
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 4.5",
+            "odds": 1.94
+          }
+        ]
+      }
+    },
+    {
+      "index": 96,
+      "raw": {
+        "bookmakerMarketId": "139",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma kartek 5.5",
+        "paramValue": "total=5.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 5.5",
+            "odds": 2.34
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 5.5",
+            "odds": 1.48
+          }
+        ]
+      }
+    },
+    {
+      "index": 97,
+      "raw": {
+        "bookmakerMarketId": "140",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma kartek 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.46
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 2.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 98,
+      "raw": {
+        "bookmakerMarketId": "140",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma kartek 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 2.32
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 99,
+      "raw": {
+        "bookmakerMarketId": "141",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma kartek 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.26
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 3.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 100,
+      "raw": {
+        "bookmakerMarketId": "141",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma kartek 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 1.8
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.84
+          }
+        ]
+      }
+    },
+    {
+      "index": 101,
+      "raw": {
+        "bookmakerMarketId": "141",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma kartek 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 2.88
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 1.33
+          }
+        ]
+      }
+    },
+    {
+      "index": 102,
+      "raw": {
+        "bookmakerMarketId": "142",
+        "groupId": "",
+        "groupName": "",
+        "name": "Dokładna liczba kartek",
+        "selections": [
+          {
+            "externalId": "712",
+            "name": "4",
+            "odds": 4.3
+          },
+          {
+            "externalId": "714",
+            "name": "5",
+            "odds": 4.5
+          },
+          {
+            "externalId": "716",
+            "name": "6",
+            "odds": 5.7
+          },
+          {
+            "externalId": "bb:exact_booking:0",
+            "name": "0",
+            "odds": 30
+          },
+          {
+            "externalId": "bb:exact_booking:1",
+            "name": "1",
+            "odds": 12
+          },
+          {
+            "externalId": "bb:exact_booking:2",
+            "name": "2",
+            "odds": 6.25
+          },
+          {
+            "externalId": "bb:exact_booking:3",
+            "name": "3",
+            "odds": 4.85
+          },
+          {
+            "externalId": "bb:exact_booking:7+",
+            "name": "7+",
+            "odds": 3.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 103,
+      "raw": {
+        "bookmakerMarketId": "146",
+        "groupId": "",
+        "groupName": "",
+        "name": "Czerwona kartka",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.85
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.21
+          }
+        ]
+      }
+    },
+    {
+      "index": 104,
+      "raw": {
+        "bookmakerMarketId": "147",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - czerwona kartka",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 6.6
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.07
+          }
+        ]
+      }
+    },
+    {
+      "index": 105,
+      "raw": {
+        "bookmakerMarketId": "148",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - czerwona kartka",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 5.2
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "index": 106,
+      "raw": {
+        "bookmakerMarketId": "152",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma kartek 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.82
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.82
+          }
+        ]
+      }
+    },
+    {
+      "index": 107,
+      "raw": {
+        "bookmakerMarketId": "155",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - dokładna liczba kartek",
+        "selections": [
+          {
+            "externalId": "1760",
+            "name": "0",
+            "odds": 4.3
+          },
+          {
+            "externalId": "1761",
+            "name": "1",
+            "odds": 2.75
+          },
+          {
+            "externalId": "1762",
+            "name": "2",
+            "odds": 2.85
+          },
+          {
+            "externalId": "1763",
+            "name": "3",
+            "odds": 4.3
+          },
+          {
+            "externalId": "bb:exact_booking:4+",
+            "name": "4+",
+            "odds": 4.85
+          }
+        ]
+      }
+    },
+    {
+      "index": 108,
+      "raw": {
+        "bookmakerMarketId": "162",
+        "groupId": "",
+        "groupName": "",
+        "name": "Rzuty rożne 1x2",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.04
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 7.2
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 1.97
+          }
+        ]
+      }
+    },
+    {
+      "index": 109,
+      "raw": {
+        "bookmakerMarketId": "165",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap rzutów rożnych -1.5",
+        "paramValue": "hcp=-1.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-1.5)",
+            "odds": 2.44
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+1.5)",
+            "odds": 1.45
+          }
+        ]
+      }
+    },
+    {
+      "index": 110,
+      "raw": {
+        "bookmakerMarketId": "166",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma rzutów rożnych 7.5",
+        "paramValue": "total=7.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 7.5",
+            "odds": 1.24
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 7.5",
+            "odds": 3.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 111,
+      "raw": {
+        "bookmakerMarketId": "166",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma rzutów rożnych 8.5",
+        "paramValue": "total=8.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 8.5",
+            "odds": 1.43
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 8.5",
+            "odds": 2.52
+          }
+        ]
+      }
+    },
+    {
+      "index": 112,
+      "raw": {
+        "bookmakerMarketId": "166",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma rzutów rożnych 9.5",
+        "paramValue": "total=9.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 9.5",
+            "odds": 1.72
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 9.5",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 113,
+      "raw": {
+        "bookmakerMarketId": "166",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma rzutów rożnych 10.5",
+        "paramValue": "total=10.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 10.5",
+            "odds": 2.16
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 10.5",
+            "odds": 1.59
+          }
+        ]
+      }
+    },
+    {
+      "index": 114,
+      "raw": {
+        "bookmakerMarketId": "166",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma rzutów rożnych 11.5",
+        "paramValue": "total=11.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 11.5",
+            "odds": 2.78
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 11.5",
+            "odds": 1.36
+          }
+        ]
+      }
+    },
+    {
+      "index": 115,
+      "raw": {
+        "bookmakerMarketId": "167",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma rzutów rożnych 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 1.32
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 2.94
+          }
+        ]
+      }
+    },
+    {
+      "index": 116,
+      "raw": {
+        "bookmakerMarketId": "167",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma rzutów rożnych 4.5",
+        "paramValue": "total=4.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 4.5",
+            "odds": 1.7
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 4.5",
+            "odds": 1.96
+          }
+        ]
+      }
+    },
+    {
+      "index": 117,
+      "raw": {
+        "bookmakerMarketId": "167",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma rzutów rożnych 5.5",
+        "paramValue": "total=5.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 5.5",
+            "odds": 2.28
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 5.5",
+            "odds": 1.51
+          }
+        ]
+      }
+    },
+    {
+      "index": 118,
+      "raw": {
+        "bookmakerMarketId": "168",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma rzutów rożnych 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 1.31
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 2.96
+          }
+        ]
+      }
+    },
+    {
+      "index": 119,
+      "raw": {
+        "bookmakerMarketId": "168",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma rzutów rożnych 4.5",
+        "paramValue": "total=4.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 4.5",
+            "odds": 1.67
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 4.5",
+            "odds": 2
+          }
+        ]
+      }
+    },
+    {
+      "index": 120,
+      "raw": {
+        "bookmakerMarketId": "168",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma rzutów rożnych 5.5",
+        "paramValue": "total=5.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 5.5",
+            "odds": 2.24
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 5.5",
+            "odds": 1.53
+          }
+        ]
+      }
+    },
+    {
+      "index": 121,
+      "raw": {
+        "bookmakerMarketId": "170",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - przedział rzutów rożnych",
+        "paramValue": "variant=sr:point_range:7+",
+        "selections": [
+          {
+            "externalId": "sr:point_range:7+:1144",
+            "name": "0-2",
+            "odds": 3.8
+          },
+          {
+            "externalId": "sr:point_range:7+:1145",
+            "name": "3-4",
+            "odds": 2.55
+          },
+          {
+            "externalId": "sr:point_range:7+:1146",
+            "name": "5-6",
+            "odds": 2.7
+          },
+          {
+            "externalId": "sr:point_range:7+:1147",
+            "name": "7+",
+            "odds": 2.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 122,
+      "raw": {
+        "bookmakerMarketId": "171",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - przedział rzutów rożnych",
+        "paramValue": "variant=sr:point_range:7+",
+        "selections": [
+          {
+            "externalId": "sr:point_range:7+:1144",
+            "name": "0-2",
+            "odds": 3.95
+          },
+          {
+            "externalId": "sr:point_range:7+:1145",
+            "name": "3-4",
+            "odds": 2.55
+          },
+          {
+            "externalId": "sr:point_range:7+:1146",
+            "name": "5-6",
+            "odds": 2.6
+          },
+          {
+            "externalId": "sr:point_range:7+:1147",
+            "name": "7+",
+            "odds": 2.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 123,
+      "raw": {
+        "bookmakerMarketId": "172",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma rzutów rożnych - parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 1.83
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.83
+          }
+        ]
+      }
+    },
+    {
+      "index": 124,
+      "raw": {
+        "bookmakerMarketId": "173",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - rzuty rożne 1x2",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.14
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 4.5
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.12
+          }
+        ]
+      }
+    },
+    {
+      "index": 125,
+      "raw": {
+        "bookmakerMarketId": "176",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - handicap rzutów rożnych 0",
+        "paramValue": "hcp=0",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (0)",
+            "odds": 1.82
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (0)",
+            "odds": 1.82
+          }
+        ]
+      }
+    },
+    {
+      "index": 126,
+      "raw": {
+        "bookmakerMarketId": "177",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma rzutów rożnych 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 1.36
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 2.72
+          }
+        ]
+      }
+    },
+    {
+      "index": 127,
+      "raw": {
+        "bookmakerMarketId": "177",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma rzutów rożnych 4.5",
+        "paramValue": "total=4.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 4.5",
+            "odds": 1.79
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 4.5",
+            "odds": 1.85
+          }
+        ]
+      }
+    },
+    {
+      "index": 128,
+      "raw": {
+        "bookmakerMarketId": "177",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - suma rzutów rożnych 5.5",
+        "paramValue": "total=5.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 5.5",
+            "odds": 2.54
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 5.5",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 129,
+      "raw": {
+        "bookmakerMarketId": "178",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United - suma rzutów rożnych 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 2.14
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.58
+          }
+        ]
+      }
+    },
+    {
+      "index": 130,
+      "raw": {
+        "bookmakerMarketId": "179",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur - suma rzutów rożnych 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 2.12
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.59
+          }
+        ]
+      }
+    },
+    {
+      "index": 131,
+      "raw": {
+        "bookmakerMarketId": "183",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - rzuty rożne parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 1.87
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.87
+          }
+        ]
+      }
+    },
+    {
+      "index": 132,
+      "raw": {
+        "bookmakerMarketId": "399",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - przedział goli",
+        "paramValue": "variant=bb:goal_range:4+",
+        "selections": [
+          {
+            "externalId": "bb:goal_range:4+:0-1",
+            "name": "0-1",
+            "odds": 1.45
+          },
+          {
+            "externalId": "bb:goal_range:4+:2-3",
+            "name": "2-3",
+            "odds": 2.7
+          },
+          {
+            "externalId": "bb:goal_range:4+:4+",
+            "name": "4+",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 133,
+      "raw": {
+        "bookmakerMarketId": "400",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - przedział goli",
+        "paramValue": "variant=bb:goal_range:4+",
+        "selections": [
+          {
+            "externalId": "bb:goal_range:4+:0-1",
+            "name": "0-1",
+            "odds": 1.52
+          },
+          {
+            "externalId": "bb:goal_range:4+:2-3",
+            "name": "2-3",
+            "odds": 2.55
+          },
+          {
+            "externalId": "bb:goal_range:4+:4+",
+            "name": "4+",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 134,
+      "raw": {
+        "bookmakerMarketId": "542",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - podwójna szansa i obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "1718",
+            "name": "Leeds United/remis & tak",
+            "odds": 5.25
+          },
+          {
+            "externalId": "1719",
+            "name": "Leeds United/remis & nie",
+            "odds": 1.68
+          },
+          {
+            "externalId": "1720",
+            "name": "Leeds United/Tottenham Hotspur & tak",
+            "odds": 9
+          },
+          {
+            "externalId": "1721",
+            "name": "Leeds United/Tottenham Hotspur & nie",
+            "odds": 1.82
+          },
+          {
+            "externalId": "1722",
+            "name": "remis/Tottenham Hotspur & tak",
+            "odds": 5.25
+          },
+          {
+            "externalId": "1723",
+            "name": "remis/Tottenham Hotspur & nie",
+            "odds": 1.62
+          }
+        ]
+      }
+    },
+    {
+      "index": 135,
+      "raw": {
+        "bookmakerMarketId": "543",
+        "groupId": "",
+        "groupName": "",
+        "name": "2. połowa - 1x2 i obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "78",
+            "name": "Leeds United & tak",
+            "odds": 13
+          },
+          {
+            "externalId": "80",
+            "name": "Leeds United & nie",
+            "odds": 3.6
+          },
+          {
+            "externalId": "82",
+            "name": "remis & tak",
+            "odds": 6
+          },
+          {
+            "externalId": "84",
+            "name": "remis & nie",
+            "odds": 3.6
+          },
+          {
+            "externalId": "86",
+            "name": "Tottenham Hotspur & tak",
+            "odds": 12
+          },
+          {
+            "externalId": "88",
+            "name": "Tottenham Hotspur & nie",
+            "odds": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 136,
+      "raw": {
+        "bookmakerMarketId": "546",
+        "groupId": "",
+        "groupName": "",
+        "name": "Podwójna szansa i obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "1718",
+            "name": "Leeds United/remis & tak",
+            "odds": 2.6
+          },
+          {
+            "externalId": "1719",
+            "name": "Leeds United/remis & nie",
+            "odds": 3.4
+          },
+          {
+            "externalId": "1720",
+            "name": "Leeds United/Tottenham Hotspur & tak",
+            "odds": 2.65
+          },
+          {
+            "externalId": "1721",
+            "name": "Leeds United/Tottenham Hotspur & nie",
+            "odds": 2.35
+          },
+          {
+            "externalId": "1722",
+            "name": "remis/Tottenham Hotspur & tak",
+            "odds": 2.5
+          },
+          {
+            "externalId": "1723",
+            "name": "remis/Tottenham Hotspur & nie",
+            "odds": 3.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 137,
+      "raw": {
+        "bookmakerMarketId": "547",
+        "groupId": "",
+        "groupName": "",
+        "name": "Podwójna szansa i suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "1724",
+            "name": "Leeds United/remis & poniżej 1.5",
+            "odds": 4.8
+          },
+          {
+            "externalId": "1725",
+            "name": "Leeds United/Tottenham Hotspur & poniżej 1.5",
+            "odds": 4.4
+          },
+          {
+            "externalId": "1726",
+            "name": "remis/Tottenham Hotspur & poniżej 1.5",
+            "odds": 4.8
+          },
+          {
+            "externalId": "1727",
+            "name": "Leeds United/remis & ponad 1.5",
+            "odds": 2.1
+          },
+          {
+            "externalId": "1728",
+            "name": "Leeds United/Tottenham Hotspur & ponad 1.5",
+            "odds": 1.75
+          },
+          {
+            "externalId": "1729",
+            "name": "remis/Tottenham Hotspur & ponad 1.5",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 138,
+      "raw": {
+        "bookmakerMarketId": "547",
+        "groupId": "",
+        "groupName": "",
+        "name": "Podwójna szansa i suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "1724",
+            "name": "Leeds United/remis & poniżej 2.5",
+            "odds": 2.55
+          },
+          {
+            "externalId": "1725",
+            "name": "Leeds United/Tottenham Hotspur & poniżej 2.5",
+            "odds": 2.9
+          },
+          {
+            "externalId": "1726",
+            "name": "remis/Tottenham Hotspur & poniżej 2.5",
+            "odds": 2.5
+          },
+          {
+            "externalId": "1727",
+            "name": "Leeds United/remis & ponad 2.5",
+            "odds": 3.4
+          },
+          {
+            "externalId": "1728",
+            "name": "Leeds United/Tottenham Hotspur & ponad 2.5",
+            "odds": 2.2
+          },
+          {
+            "externalId": "1729",
+            "name": "remis/Tottenham Hotspur & ponad 2.5",
+            "odds": 3.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 139,
+      "raw": {
+        "bookmakerMarketId": "547",
+        "groupId": "",
+        "groupName": "",
+        "name": "Podwójna szansa i suma 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "1724",
+            "name": "Leeds United/remis & poniżej 3.5",
+            "odds": 2
+          },
+          {
+            "externalId": "1725",
+            "name": "Leeds United/Tottenham Hotspur & poniżej 3.5",
+            "odds": 1.75
+          },
+          {
+            "externalId": "1726",
+            "name": "remis/Tottenham Hotspur & poniżej 3.5",
+            "odds": 1.9
+          },
+          {
+            "externalId": "1727",
+            "name": "Leeds United/remis & ponad 3.5",
+            "odds": 5.5
+          },
+          {
+            "externalId": "1728",
+            "name": "Leeds United/Tottenham Hotspur & ponad 3.5",
+            "odds": 4.5
+          },
+          {
+            "externalId": "1729",
+            "name": "remis/Tottenham Hotspur & ponad 3.5",
+            "odds": 5
+          }
+        ]
+      }
+    },
+    {
+      "index": 140,
+      "raw": {
+        "bookmakerMarketId": "560",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United strzeli gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.29
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 3.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 141,
+      "raw": {
+        "bookmakerMarketId": "561",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur strzeli gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.28
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 3.45
+          }
+        ]
+      }
+    },
+    {
+      "index": 142,
+      "raw": {
+        "bookmakerMarketId": "562",
+        "groupId": "",
+        "groupName": "",
+        "name": "Obie drużyny strzelą gola w obu połowach",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 12
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 143,
+      "raw": {
+        "bookmakerMarketId": "618",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 2.7
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 144,
+      "raw": {
+        "bookmakerMarketId": "619",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 2.6
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.45
+          }
+        ]
+      }
+    },
+    {
+      "index": 145,
+      "raw": {
+        "bookmakerMarketId": "635",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - przedział goli",
+        "paramValue": "variant=bb:goal_range:4+",
+        "selections": [
+          {
+            "externalId": "bb:goal_range:4+:0-1",
+            "name": "0-1",
+            "odds": 1.35
+          },
+          {
+            "externalId": "bb:goal_range:4+:2-3",
+            "name": "2-3",
+            "odds": 2.7
+          },
+          {
+            "externalId": "bb:goal_range:4+:4+",
+            "name": "4+",
+            "odds": 15
+          }
+        ]
+      }
+    },
+    {
+      "index": 146,
+      "raw": {
+        "bookmakerMarketId": "636",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United przedział goli",
+        "paramValue": "variant=bb:goal_range:4+",
+        "selections": [
+          {
+            "externalId": "bb:goal_range:4+:0-1",
+            "name": "0-1 goli",
+            "odds": 1.08
+          },
+          {
+            "externalId": "bb:goal_range:4+:2-3",
+            "name": "2-3 gole",
+            "odds": 5.7
+          },
+          {
+            "externalId": "bb:goal_range:4+:4+",
+            "name": "4+ goli",
+            "odds": 50
+          }
+        ]
+      }
+    },
+    {
+      "index": 147,
+      "raw": {
+        "bookmakerMarketId": "637",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur przedział goli",
+        "paramValue": "variant=bb:goal_range:4+",
+        "selections": [
+          {
+            "externalId": "bb:goal_range:4+:0-1",
+            "name": "0-1 goli",
+            "odds": 1.08
+          },
+          {
+            "externalId": "bb:goal_range:4+:2-3",
+            "name": "2-3 gole",
+            "odds": 5.7
+          },
+          {
+            "externalId": "bb:goal_range:4+:4+",
+            "name": "4+ goli",
+            "odds": 50
+          }
+        ]
+      }
+    },
+    {
+      "index": 148,
+      "raw": {
+        "bookmakerMarketId": "881",
+        "groupId": "",
+        "groupName": "",
+        "name": "Dowolna drużyna wygra",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 1.3
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 3.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 149,
+      "raw": {
+        "bookmakerMarketId": "13611",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United wygra mecz, mimo że przegrywała",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 8.8
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 150,
+      "raw": {
+        "bookmakerMarketId": "13612",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur wygra mecz, mimo że przegrywała",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 8.6
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.03
+          }
+        ]
+      }
+    },
+    {
+      "index": 151,
+      "raw": {
+        "bookmakerMarketId": "13667",
+        "groupId": "",
+        "groupName": "",
+        "name": "Gol w obu połowach",
+        "selections": [
+          {
+            "externalId": "4",
+            "name": "Leeds United",
+            "odds": 3.8
+          },
+          {
+            "externalId": "5",
+            "name": "Tottenham Hotspur",
+            "odds": 3.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 152,
+      "raw": {
+        "bookmakerMarketId": "13668",
+        "groupId": "",
+        "groupName": "",
+        "name": "Wygrana w obu połowach",
+        "selections": [
+          {
+            "externalId": "4",
+            "name": "Leeds United",
+            "odds": 7.25
+          },
+          {
+            "externalId": "5",
+            "name": "Tottenham Hotspur",
+            "odds": 7
+          }
+        ]
+      }
+    },
+    {
+      "index": 153,
+      "raw": {
+        "bookmakerMarketId": "13669",
+        "groupId": "",
+        "groupName": "",
+        "name": "Wygrana w przynajmniej jednej połowie",
+        "selections": [
+          {
+            "externalId": "4",
+            "name": "Leeds United",
+            "odds": 1.75
+          },
+          {
+            "externalId": "5",
+            "name": "Tottenham Hotspur",
+            "odds": 1.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 154,
+      "raw": {
+        "bookmakerMarketId": "13670",
+        "groupId": "",
+        "groupName": "",
+        "name": "Ostatnia drużyna, która strzeli gola",
+        "selections": [
+          {
+            "externalId": "6",
+            "name": "Leeds United",
+            "odds": 2.1
+          },
+          {
+            "externalId": "7",
+            "name": "bez gola",
+            "odds": 10
+          },
+          {
+            "externalId": "8",
+            "name": "Tottenham Hotspur",
+            "odds": 2
+          }
+        ]
+      }
+    },
+    {
+      "index": 155,
+      "raw": {
+        "bookmakerMarketId": "13672",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - różnica bramek dowolnej drużyny",
+        "paramValue": "variant=bb:winnig_margin:3+",
+        "selections": [
+          {
+            "externalId": "bb:winnig_margin:3+:1-0",
+            "name": "Leeds United 1-ym",
+            "odds": 3.5
+          },
+          {
+            "externalId": "bb:winnig_margin:3+:2-0",
+            "name": "Leeds United 2-a",
+            "odds": 11
+          },
+          {
+            "externalId": "bb:winnig_margin:3+:3-0",
+            "name": "Leeds United 3+",
+            "odds": 30
+          },
+          {
+            "externalId": "bb:winnig_margin:3+:0-0",
+            "name": "bramkowy remis",
+            "odds": 6.25
+          },
+          {
+            "externalId": "bb:winnig_margin:3+:0",
+            "name": "bez gola",
+            "odds": 2.6
+          },
+          {
+            "externalId": "bb:winnig_margin:3+:0-1",
+            "name": "Tottenham Hotspur 1-ym",
+            "odds": 3.4
+          },
+          {
+            "externalId": "bb:winnig_margin:3+:0-2",
+            "name": "Tottenham Hotspur 2-a",
+            "odds": 9.5
+          },
+          {
+            "externalId": "bb:winnig_margin:3+:0-3",
+            "name": "Tottenham Hotspur 3+",
+            "odds": 30
+          }
+        ]
+      }
+    },
+    {
+      "index": 156,
+      "raw": {
+        "bookmakerMarketId": "18300",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - rzuty rożne parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 1.83
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.83
+          }
+        ]
+      }
+    },
+    {
+      "index": 157,
+      "raw": {
+        "bookmakerMarketId": "18301",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - rzuty rożne parzyste/nieparzyste",
+        "selections": [
+          {
+            "externalId": "70",
+            "name": "nieparzysty",
+            "odds": 1.83
+          },
+          {
+            "externalId": "72",
+            "name": "parzysty",
+            "odds": 1.83
+          }
+        ]
+      }
+    },
+    {
+      "index": 158,
+      "raw": {
+        "bookmakerMarketId": "18302",
+        "groupId": "",
+        "groupName": "",
+        "name": "Która drużyna nie strzeli gola",
+        "selections": [
+          {
+            "externalId": "788",
+            "name": "Leeds United",
+            "odds": 2.75
+          },
+          {
+            "externalId": "790",
+            "name": "Tottenham Hotspur",
+            "odds": 2.85
+          }
+        ]
+      }
+    },
+    {
+      "index": 159,
+      "raw": {
+        "bookmakerMarketId": "18303",
+        "groupId": "",
+        "groupName": "",
+        "name": "Obie drużyny strzelą 2 lub więcej goli",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 5.3
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.12
+          }
+        ]
+      }
+    },
+    {
+      "index": 160,
+      "raw": {
+        "bookmakerMarketId": "18304",
+        "groupId": "",
+        "groupName": "",
+        "name": "Wygrana do zera",
+        "selections": [
+          {
+            "externalId": "3",
+            "name": "Leeds United",
+            "odds": 3.95
+          },
+          {
+            "externalId": "4",
+            "name": "Tottenham Hotspur",
+            "odds": 3.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 161,
+      "raw": {
+        "bookmakerMarketId": "18307",
+        "groupId": "",
+        "groupName": "",
+        "name": "Kiedy padnie 1. gol (interwał 30 min)",
+        "paramValue": "goalnr=1",
+        "selections": [
+          {
+            "externalId": "584",
+            "name": "1-30",
+            "odds": 1.7
+          },
+          {
+            "externalId": "586",
+            "name": "31-60",
+            "odds": 2.8
+          },
+          {
+            "externalId": "588",
+            "name": "61+",
+            "odds": 5.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 162,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-10:00",
+        "paramValue": "from=0:00|to=10:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 8.75
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 1.23
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 8.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 163,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-15:00",
+        "paramValue": "from=0:00|to=15:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 6.5
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 1.35
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 6.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 164,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-20:00",
+        "paramValue": "from=0:00|to=20:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 5
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 1.48
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 4.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 165,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-25:00",
+        "paramValue": "from=0:00|to=25:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 4.4
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 1.6
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 4.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 166,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-30:00",
+        "paramValue": "from=0:00|to=30:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 4
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 1.75
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 3.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 167,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-35:00",
+        "paramValue": "from=0:00|to=35:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 3.7
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 1.88
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 3.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 168,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-40:00",
+        "paramValue": "from=0:00|to=40:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 3.5
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 3.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 169,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-50:00",
+        "paramValue": "from=0:00|to=50:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 3.15
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.35
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.9
+          }
+        ]
+      }
+    },
+    {
+      "index": 170,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-55:00",
+        "paramValue": "from=0:00|to=55:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 3.05
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.45
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 171,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-60:00",
+        "paramValue": "from=0:00|to=60:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.95
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.6
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 172,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-65:00",
+        "paramValue": "from=0:00|to=65:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.9
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.7
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 173,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-70:00",
+        "paramValue": "from=0:00|to=70:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.85
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.8
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 174,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-75:00",
+        "paramValue": "from=0:00|to=75:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.75
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 2.95
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 175,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-80:00",
+        "paramValue": "from=0:00|to=80:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.7
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 3.1
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 176,
+      "raw": {
+        "bookmakerMarketId": "50001",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 w przedziale czasowym 0:00-85:00",
+        "paramValue": "from=0:00|to=85:00",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 2.7
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 3.15
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 177,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-10:00 -0.5",
+        "paramValue": "from=0:00|to=10:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 6.75
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.06
+          }
+        ]
+      }
+    },
+    {
+      "index": 178,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-15:00 -0.5",
+        "paramValue": "from=0:00|to=15:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 5.4
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 179,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-20:00 -0.5",
+        "paramValue": "from=0:00|to=20:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 4.5
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.15
+          }
+        ]
+      }
+    },
+    {
+      "index": 180,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-25:00 -0.5",
+        "paramValue": "from=0:00|to=25:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 4
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.18
+          }
+        ]
+      }
+    },
+    {
+      "index": 181,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-30:00 -0.5",
+        "paramValue": "from=0:00|to=30:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 3.6
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.22
+          }
+        ]
+      }
+    },
+    {
+      "index": 182,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-35:00 -0.5",
+        "paramValue": "from=0:00|to=35:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 3.45
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 183,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-40:00 -0.5",
+        "paramValue": "from=0:00|to=40:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 3.3
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.27
+          }
+        ]
+      }
+    },
+    {
+      "index": 184,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-50:00 -0.5",
+        "paramValue": "from=0:00|to=50:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 3
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.32
+          }
+        ]
+      }
+    },
+    {
+      "index": 185,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-55:00 -0.5",
+        "paramValue": "from=0:00|to=55:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 2.85
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.35
+          }
+        ]
+      }
+    },
+    {
+      "index": 186,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-60:00 -0.5",
+        "paramValue": "from=0:00|to=60:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 2.85
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.35
+          }
+        ]
+      }
+    },
+    {
+      "index": 187,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-65:00 -0.5",
+        "paramValue": "from=0:00|to=65:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 2.75
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.37
+          }
+        ]
+      }
+    },
+    {
+      "index": 188,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-70:00 -0.5",
+        "paramValue": "from=0:00|to=70:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 2.75
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.37
+          }
+        ]
+      }
+    },
+    {
+      "index": 189,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-75:00 -0.5",
+        "paramValue": "from=0:00|to=75:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 2.65
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 190,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-80:00 -0.5",
+        "paramValue": "from=0:00|to=80:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 2.55
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 191,
+      "raw": {
+        "bookmakerMarketId": "50002",
+        "groupId": "",
+        "groupName": "",
+        "name": "Handicap w przedziale czasowym 0:00-85:00 -0.5",
+        "paramValue": "from=0:00|to=85:00|hcp=-0.5",
+        "selections": [
+          {
+            "externalId": "1714",
+            "name": "Leeds United (-0.5)",
+            "odds": 2.55
+          },
+          {
+            "externalId": "1715",
+            "name": "Tottenham Hotspur (+0.5)",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 192,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-10:00 0.5",
+        "paramValue": "from=0:00|to=10:00|total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 3.8
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 1.22
+          }
+        ]
+      }
+    },
+    {
+      "index": 193,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-15:00 0.5",
+        "paramValue": "from=0:00|to=15:00|total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 2.85
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 1.37
+          }
+        ]
+      }
+    },
+    {
+      "index": 194,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-20:00 0.5",
+        "paramValue": "from=0:00|to=20:00|total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 2.35
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 1.52
+          }
+        ]
+      }
+    },
+    {
+      "index": 195,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-25:00 0.5",
+        "paramValue": "from=0:00|to=25:00|total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 2
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 1.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 196,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-30:00 0.5",
+        "paramValue": "from=0:00|to=30:00|total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.75
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 197,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-35:00 0.5",
+        "paramValue": "from=0:00|to=35:00|total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.6
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 2.2
+          }
+        ]
+      }
+    },
+    {
+      "index": 198,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-40:00 0.5",
+        "paramValue": "from=0:00|to=40:00|total=0.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 0.5",
+            "odds": 1.5
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 0.5",
+            "odds": 2.4
+          }
+        ]
+      }
+    },
+    {
+      "index": 199,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-50:00 1.5",
+        "paramValue": "from=0:00|to=50:00|total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 2.35
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.52
+          }
+        ]
+      }
+    },
+    {
+      "index": 200,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-55:00 1.5",
+        "paramValue": "from=0:00|to=55:00|total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 2.1
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 201,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-60:00 1.5",
+        "paramValue": "from=0:00|to=60:00|total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.9
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.8
+          }
+        ]
+      }
+    },
+    {
+      "index": 202,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-65:00 1.5",
+        "paramValue": "from=0:00|to=65:00|total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.75
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.95
+          }
+        ]
+      }
+    },
+    {
+      "index": 203,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-70:00 1.5",
+        "paramValue": "from=0:00|to=70:00|total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.65
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 2.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 204,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-75:00 1.5",
+        "paramValue": "from=0:00|to=75:00|total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.55
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 2.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 205,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-80:00 2.5",
+        "paramValue": "from=0:00|to=80:00|total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 2.4
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 206,
+      "raw": {
+        "bookmakerMarketId": "50003",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma w przedziale czasowym 0:00-85:00 2.5",
+        "paramValue": "from=0:00|to=85:00|total=2.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 2.5",
+            "odds": 2.2
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 2.5",
+            "odds": 1.6
+          }
+        ]
+      }
+    },
+    {
+      "index": 207,
+      "raw": {
+        "bookmakerMarketId": "50007",
+        "groupId": "",
+        "groupName": "",
+        "name": "Bez remisu - obie drużyny strzelą gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 2.65
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 208,
+      "raw": {
+        "bookmakerMarketId": "50059",
+        "groupId": "",
+        "groupName": "",
+        "name": "Czyste konto",
+        "selections": [
+          {
+            "externalId": "3",
+            "name": "Leeds United",
+            "odds": 3.3
+          },
+          {
+            "externalId": "4",
+            "name": "Tottenham Hotspur",
+            "odds": 3.1
+          }
+        ]
+      }
+    },
+    {
+      "index": 209,
+      "raw": {
+        "bookmakerMarketId": "50060",
+        "groupId": "",
+        "groupName": "",
+        "name": "1x2 i pierwszy gol",
+        "selections": [
+          {
+            "externalId": "1482",
+            "name": "Leeds United & Leeds United",
+            "odds": 2.95
+          },
+          {
+            "externalId": "1483",
+            "name": "remis & Leeds United",
+            "odds": 8.5
+          },
+          {
+            "externalId": "1484",
+            "name": "Tottenham Hotspur & Leeds United",
+            "odds": 13
+          },
+          {
+            "externalId": "1485",
+            "name": "Leeds United & Tottenham Hotspur",
+            "odds": 14
+          },
+          {
+            "externalId": "1486",
+            "name": "remis & Tottenham Hotspur",
+            "odds": 8.5
+          },
+          {
+            "externalId": "1487",
+            "name": "Tottenham Hotspur & Tottenham Hotspur",
+            "odds": 2.7
+          },
+          {
+            "externalId": "1716",
+            "name": "remis & żaden",
+            "odds": 9.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 210,
+      "raw": {
+        "bookmakerMarketId": "50063",
+        "groupId": "",
+        "groupName": "",
+        "name": "Dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bb:exact_goals:0",
+            "name": "0",
+            "odds": 10
+          },
+          {
+            "externalId": "bb:exact_goals:1",
+            "name": "1",
+            "odds": 4.5
+          },
+          {
+            "externalId": "bb:exact_goals:2",
+            "name": "2",
+            "odds": 3.7
+          },
+          {
+            "externalId": "bb:exact_goals:3",
+            "name": "3",
+            "odds": 3.9
+          },
+          {
+            "externalId": "bb:exact_goals:4",
+            "name": "4",
+            "odds": 6
+          },
+          {
+            "externalId": "bb:exact_goals:5",
+            "name": "5",
+            "odds": 11
+          },
+          {
+            "externalId": "bb:exact_goals:6",
+            "name": "6",
+            "odds": 23
+          },
+          {
+            "externalId": "bb:exact_goals:7",
+            "name": "7",
+            "odds": 55
+          },
+          {
+            "externalId": "bb:exact_goals:8",
+            "name": "8",
+            "odds": 100
+          }
+        ]
+      }
+    },
+    {
+      "index": 211,
+      "raw": {
+        "bookmakerMarketId": "50064",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bb:exact_goals:0",
+            "name": "0",
+            "odds": 3.1
+          },
+          {
+            "externalId": "bb:exact_goals:1",
+            "name": "1",
+            "odds": 2.55
+          },
+          {
+            "externalId": "bb:exact_goals:2",
+            "name": "2",
+            "odds": 3.8
+          },
+          {
+            "externalId": "bb:exact_goals:3",
+            "name": "3",
+            "odds": 8.5
+          },
+          {
+            "externalId": "bb:exact_goals:4",
+            "name": "4",
+            "odds": 20
+          },
+          {
+            "externalId": "bb:exact_goals:5",
+            "name": "5",
+            "odds": 50
+          },
+          {
+            "externalId": "bb:exact_goals:6",
+            "name": "6",
+            "odds": 50
+          }
+        ]
+      }
+    },
+    {
+      "index": 212,
+      "raw": {
+        "bookmakerMarketId": "50065",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bb:exact_goals:0",
+            "name": "0",
+            "odds": 3.2
+          },
+          {
+            "externalId": "bb:exact_goals:1",
+            "name": "1",
+            "odds": 2.55
+          },
+          {
+            "externalId": "bb:exact_goals:2",
+            "name": "2",
+            "odds": 3.8
+          },
+          {
+            "externalId": "bb:exact_goals:3",
+            "name": "3",
+            "odds": 8
+          },
+          {
+            "externalId": "bb:exact_goals:4",
+            "name": "4",
+            "odds": 20
+          },
+          {
+            "externalId": "bb:exact_goals:5",
+            "name": "5",
+            "odds": 50
+          },
+          {
+            "externalId": "bb:exact_goals:6",
+            "name": "6",
+            "odds": 50
+          }
+        ]
+      }
+    },
+    {
+      "index": 213,
+      "raw": {
+        "bookmakerMarketId": "50066",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bb:exact_goals:0",
+            "name": "0",
+            "odds": 2.85
+          },
+          {
+            "externalId": "bb:exact_goals:1",
+            "name": "1",
+            "odds": 2.45
+          },
+          {
+            "externalId": "bb:exact_goals:2",
+            "name": "2",
+            "odds": 3.95
+          },
+          {
+            "externalId": "bb:exact_goals:3",
+            "name": "3",
+            "odds": 9
+          },
+          {
+            "externalId": "bb:exact_goals:4",
+            "name": "4",
+            "odds": 30
+          },
+          {
+            "externalId": "bb:exact_goals:5",
+            "name": "5",
+            "odds": 50
+          }
+        ]
+      }
+    },
+    {
+      "index": 214,
+      "raw": {
+        "bookmakerMarketId": "50067",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bb:exact_goals:0",
+            "name": "0",
+            "odds": 1.6
+          },
+          {
+            "externalId": "bb:exact_goals:1",
+            "name": "1",
+            "odds": 2.6
+          },
+          {
+            "externalId": "bb:exact_goals:2",
+            "name": "2",
+            "odds": 8
+          },
+          {
+            "externalId": "bb:exact_goals:3",
+            "name": "3",
+            "odds": 30
+          },
+          {
+            "externalId": "bb:exact_goals:4",
+            "name": "4",
+            "odds": 50
+          }
+        ]
+      }
+    },
+    {
+      "index": 215,
+      "raw": {
+        "bookmakerMarketId": "50068",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur - dokładna liczba goli",
+        "selections": [
+          {
+            "externalId": "bb:exact_goals:0",
+            "name": "0",
+            "odds": 1.65
+          },
+          {
+            "externalId": "bb:exact_goals:1",
+            "name": "1",
+            "odds": 2.6
+          },
+          {
+            "externalId": "bb:exact_goals:2",
+            "name": "2",
+            "odds": 7.25
+          },
+          {
+            "externalId": "bb:exact_goals:3",
+            "name": "3",
+            "odds": 30
+          },
+          {
+            "externalId": "bb:exact_goals:4",
+            "name": "4",
+            "odds": 50
+          }
+        ]
+      }
+    },
+    {
+      "index": 216,
+      "raw": {
+        "bookmakerMarketId": "50165",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - czyste konto",
+        "selections": [
+          {
+            "externalId": "3",
+            "name": "Leeds United",
+            "odds": 1.7
+          },
+          {
+            "externalId": "4",
+            "name": "Tottenham Hotspur",
+            "odds": 1.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 217,
+      "raw": {
+        "bookmakerMarketId": "50166",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United strzeli gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 2.15
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.65
+          }
+        ]
+      }
+    },
+    {
+      "index": 218,
+      "raw": {
+        "bookmakerMarketId": "50167",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur strzeli gola",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 2.05
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.75
+          }
+        ]
+      }
+    },
+    {
+      "index": 219,
+      "raw": {
+        "bookmakerMarketId": "50168",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - podwójna szansa i suma 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "1724",
+            "name": "Leeds United/remis & poniżej 1.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "1725",
+            "name": "Leeds United/Tottenham Hotspur & poniżej 1.5",
+            "odds": 2.4
+          },
+          {
+            "externalId": "1726",
+            "name": "remis/Tottenham Hotspur & poniżej 1.5",
+            "odds": 1.85
+          },
+          {
+            "externalId": "1727",
+            "name": "Leeds United/remis & ponad 1.5",
+            "odds": 3.8
+          },
+          {
+            "externalId": "1728",
+            "name": "Leeds United/Tottenham Hotspur & ponad 1.5",
+            "odds": 3.8
+          },
+          {
+            "externalId": "1729",
+            "name": "remis/Tottenham Hotspur & ponad 1.5",
+            "odds": 3.7
+          }
+        ]
+      }
+    },
+    {
+      "index": 220,
+      "raw": {
+        "bookmakerMarketId": "50168",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - podwójna szansa i suma 2.5",
+        "paramValue": "total=2.5",
+        "selections": [
+          {
+            "externalId": "1724",
+            "name": "Leeds United/remis & poniżej 2.5",
+            "odds": 1.45
+          },
+          {
+            "externalId": "1725",
+            "name": "Leeds United/Tottenham Hotspur & poniżej 2.5",
+            "odds": 1.9
+          },
+          {
+            "externalId": "1726",
+            "name": "remis/Tottenham Hotspur & poniżej 2.5",
+            "odds": 1.42
+          },
+          {
+            "externalId": "1727",
+            "name": "Leeds United/remis & ponad 2.5",
+            "odds": 11.5
+          },
+          {
+            "externalId": "1728",
+            "name": "Leeds United/Tottenham Hotspur & ponad 2.5",
+            "odds": 7.25
+          },
+          {
+            "externalId": "1729",
+            "name": "remis/Tottenham Hotspur & ponad 2.5",
+            "odds": 11
+          }
+        ]
+      }
+    },
+    {
+      "index": 221,
+      "raw": {
+        "bookmakerMarketId": "50169",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Leeds United wygrana do zera",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.65
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 222,
+      "raw": {
+        "bookmakerMarketId": "50170",
+        "groupId": "",
+        "groupName": "",
+        "name": "1. połowa - Tottenham Hotspur wygrana do zera",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.3
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.3
+          }
+        ]
+      }
+    },
+    {
+      "index": 223,
+      "raw": {
+        "bookmakerMarketId": "50236",
+        "groupId": "",
+        "groupName": "",
+        "name": "Strzały celne 1x2",
+        "selections": [
+          {
+            "externalId": "1",
+            "name": "Leeds United",
+            "odds": 1.74
+          },
+          {
+            "externalId": "2",
+            "name": "remis",
+            "odds": 6.8
+          },
+          {
+            "externalId": "3",
+            "name": "Tottenham Hotspur",
+            "odds": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 224,
+      "raw": {
+        "bookmakerMarketId": "50237",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma strzałów celnych 7.5",
+        "paramValue": "total=7.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 7.5",
+            "odds": 1.54
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 7.5",
+            "odds": 2.22
+          }
+        ]
+      }
+    },
+    {
+      "index": 225,
+      "raw": {
+        "bookmakerMarketId": "50237",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma strzałów celnych 8.5",
+        "paramValue": "total=8.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 8.5",
+            "odds": 1.93
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 8.5",
+            "odds": 1.72
+          }
+        ]
+      }
+    },
+    {
+      "index": 226,
+      "raw": {
+        "bookmakerMarketId": "50237",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma strzałów celnych 9.5",
+        "paramValue": "total=9.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 9.5",
+            "odds": 2.54
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 9.5",
+            "odds": 1.42
+          }
+        ]
+      }
+    },
+    {
+      "index": 227,
+      "raw": {
+        "bookmakerMarketId": "50238",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - strzały celne 4.5",
+        "paramValue": "total=4.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 4.5",
+            "odds": 1.88
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 4.5",
+            "odds": 1.76
+          }
+        ]
+      }
+    },
+    {
+      "index": 228,
+      "raw": {
+        "bookmakerMarketId": "50239",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - strzały celne 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 1.69
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 1.96
+          }
+        ]
+      }
+    },
+    {
+      "index": 229,
+      "raw": {
+        "bookmakerMarketId": "50242",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma strzałów 25.5",
+        "paramValue": "total=25.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 25.5",
+            "odds": 1.66
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 25.5",
+            "odds": 2.02
+          }
+        ]
+      }
+    },
+    {
+      "index": 230,
+      "raw": {
+        "bookmakerMarketId": "50242",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma strzałów 26.5",
+        "paramValue": "total=26.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 26.5",
+            "odds": 1.85
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 26.5",
+            "odds": 1.79
+          }
+        ]
+      }
+    },
+    {
+      "index": 231,
+      "raw": {
+        "bookmakerMarketId": "50242",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma strzałów 27.5",
+        "paramValue": "total=27.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 27.5",
+            "odds": 2.18
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 27.5",
+            "odds": 1.57
+          }
+        ]
+      }
+    },
+    {
+      "index": 232,
+      "raw": {
+        "bookmakerMarketId": "50243",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma strzałów 12.5",
+        "paramValue": "total=12.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 12.5",
+            "odds": 1.69
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 12.5",
+            "odds": 1.97
+          }
+        ]
+      }
+    },
+    {
+      "index": 233,
+      "raw": {
+        "bookmakerMarketId": "50243",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma strzałów 13.5",
+        "paramValue": "total=13.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 13.5",
+            "odds": 1.92
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 13.5",
+            "odds": 1.73
+          }
+        ]
+      }
+    },
+    {
+      "index": 234,
+      "raw": {
+        "bookmakerMarketId": "50243",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma strzałów 14.5",
+        "paramValue": "total=14.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 14.5",
+            "odds": 2.32
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 14.5",
+            "odds": 1.5
+          }
+        ]
+      }
+    },
+    {
+      "index": 235,
+      "raw": {
+        "bookmakerMarketId": "50244",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma strzałów 11.5",
+        "paramValue": "total=11.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 11.5",
+            "odds": 1.52
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 11.5",
+            "odds": 2.28
+          }
+        ]
+      }
+    },
+    {
+      "index": 236,
+      "raw": {
+        "bookmakerMarketId": "50244",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma strzałów 12.5",
+        "paramValue": "total=12.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 12.5",
+            "odds": 1.77
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 12.5",
+            "odds": 1.87
+          }
+        ]
+      }
+    },
+    {
+      "index": 237,
+      "raw": {
+        "bookmakerMarketId": "50244",
+        "groupId": "",
+        "groupName": "",
+        "name": "Tottenham Hotspur - suma strzałów 13.5",
+        "paramValue": "total=13.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 13.5",
+            "odds": 2
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 13.5",
+            "odds": 1.67
+          }
+        ]
+      }
+    },
+    {
+      "index": 238,
+      "raw": {
+        "bookmakerMarketId": "50256",
+        "groupId": "",
+        "groupName": "",
+        "name": "Suma spalonych 3.5",
+        "paramValue": "total=3.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 3.5",
+            "odds": 1.67
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 3.5",
+            "odds": 2
+          }
+        ]
+      }
+    },
+    {
+      "index": 239,
+      "raw": {
+        "bookmakerMarketId": "50258",
+        "groupId": "",
+        "groupName": "",
+        "name": "Leeds United - suma spalonych 1.5",
+        "paramValue": "total=1.5",
+        "selections": [
+          {
+            "externalId": "12",
+            "name": "ponad 1.5",
+            "odds": 1.86
+          },
+          {
+            "externalId": "13",
+            "name": "poniżej 1.5",
+            "odds": 1.78
+          }
+        ]
+      }
+    },
+    {
+      "index": 240,
+      "raw": {
+        "bookmakerMarketId": "50305",
+        "groupId": "",
+        "groupName": "",
+        "name": "Będzie rzut karny",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 3.5
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.25
+          }
+        ]
+      }
+    },
+    {
+      "index": 241,
+      "raw": {
+        "bookmakerMarketId": "50306",
+        "groupId": "",
+        "groupName": "",
+        "name": "Czy padnie gol samobójczy",
+        "selections": [
+          {
+            "externalId": "74",
+            "name": "tak",
+            "odds": 8.2
+          },
+          {
+            "externalId": "76",
+            "name": "nie",
+            "odds": 1.04
+          }
+        ]
+      }
+    }
+  ],
+  "matchId": "2725816334213586962",
+  "matchIdSafe": "premier-league_leeds-united_tottenham-hotspur",
+  "sourceArchive": "premier-league_leeds-united_tottenham-hotspur__2026-11-06.json"
+}

@@ -133,16 +133,18 @@ Event page 4408475, 10 groups, 242 group markets (232 unique): 1 Popularne 28, 2
 
 ### Risks & unknowns
 
-- Chunk reassembly copies the site bundle but has never been observed live; it is tested synthetically only.
+- Chunk reassembly copies the site bundle but has never been observed live; it is tested synthetically only (Task 1 assembler tests, Task 5 test "counts chunked frames and the largest reassembled frame"). It stays **unverified live** until a smoke run reports `chunkedFrames` > 0 with `invalidFrames` = 0 (A11). The largest live frame so far is 451,513 B against a chunkSize of 1,048,576 B, so a premier-league run will most likely report `chunkedFrames: 0`. A bad reassembly fails closed: the frame decodes as `invalid`, its market group goes missing, and A7 warns.
 - Only premier-league was live-verified. Other leagues use the same transport (same page app), but their WS data was not checked.
 - Under a full parallel run (13 browsers), group answers may arrive after `STREAM_SILENCE_MS` (2.5 s). Task 5's per-event `groups seen/declared` log line and its "never answered" warning make that visible.
 - **Collapse race.** Today the first header click collapses the default-open "Popularne" group and sends `CLOSE` for its stream. Under load, if Popularne answers more than about 1 s late, that click cancels it and the event loses 1X2/DC/DNB/O/U/BTTS. A7 would tolerate that on 2 of 20 events. Task 5 therefore skips headers whose group is already subscribed or answered. The rule is data-driven (sent `SUBSCRIBE` frames plus `event.marketGroups` names) because the headers carry no `aria-expanded`.
-- **Ordinal templates on live events.** Ids 8, 36, 57, 77, 91, 92 and 140 are `{SpecialIntValue1}` templates. After the first goal or booking of a live event they read `2. …` and mean a different bet. Task 4's ordinal gate parks any `N.` with N ≥ 2 before `gol`/`strzelec`/`kartk` in OTHER. Only the `1.` forms were captured; the `2.` rows in the tests are synthetic.
+- **Ordinal templates on live events.** Ids 8, 36, 57, 77, 91, 92 and 140 are `{SpecialIntValue1}` templates. After the first goal or booking of a live event they read `2. …` and mean a different bet. Task 4's ordinal gate parks any `N.` with N ≥ 2 before `gol`/`strzelec`/`kartk` in OTHER. Only the `1.` forms were captured; the `2.` rows in the tests are synthetic. The gate stays **unverified live** until a smoke run reports `ordinalMarkets` > 0 with `gatedNonOther` = 0 (A12). A pre-match premier-league run only sees the `1.` forms, so A3-A6 pass with or without the gate; only an in-play event that has had a goal or booking can verify it.
+- **Unrendered ordinal templates.** The gate needs the rendered market name. When `market.name` is blank, the parser falls back to `marketType.name` (parser.ts `apiName`), which still holds the template (`1. Połowa - {SpecialIntValue1}. gol`). Task 4 parks any `{SpecialIntValue…}` name in OTHER. When there is no market object at all, the parser uses its id label (`Pierwszy gol 1. połowy`, `Czas pierwszego gola (10 min)`), which names no live ordinal, so ids 57/77/91/92 still route by id to their first-goal codes. The capture has 0 blank names, so this needs a payload never seen so far. Closing it needs an owner decision (open question 9).
 - **Deltas ignored.** `SELECTION_DELTA` / `EVENT_DELTA` messages are decoded but not applied, so odds are the INITIAL_STATE snapshot (at most about 17 s old per event). Deltas also do not reset the stream-silence timer, so a busy live event still settles.
 - **League rule relaxed.** Task 5 accepts a one-event listing (`events.length >= 1`, was `> 1`). This is safe on today's league page, which opens exactly one stream (full capture: one `SUBSCRIBE`, `filters.leagueIds [134]`). If PZBuk ever adds a single-event widget stream to the league page that answers first, the listing would shrink to that event. A1 (≥ 18 matches) would catch it.
 - Scrape time is about 17.4 s per event, so roughly 6 min per 20-event league.
 - Everton–Coventry kicks off 2026-11-06 20:00Z. Live events stay valid (`isValidEvent` ignores `isLive`), and their live page shape was not checked.
-- The legacy RSocket decoder branch is kept in case PZBuk rolls back or A/B tests the transport; it is tested with a synthetic frame only. The `ERROR` control-frame shape is synthetic too.
+- **A transport rollback is not matched.** `"sportsbook-api/websocket"` does not contain `"sportsbook-api/ws"`, so a return to the legacy `/websocket` path captures no frames and the scrape fails closed, with no data and never wrong prices. Until Task 5 the error is the bare `No WebSocket data captured`. After Task 5 it shows up as `no socket matched "sportsbook-api/ws" (sockets seen: …/websocket)`. Matching both paths needs an owner decision (open question 8).
+- The legacy RSocket *frame* decoder branch is kept, but it is reachable only if the matched `/ws` socket itself serves RSocket frames: sockets are filtered by URL before any decoding (navigation.ts:236 today; the Task 5 matching rule). It is tested with a synthetic frame only. The `ERROR` control-frame shape is synthetic too.
 
 ### Open questions for the owner
 
@@ -153,6 +155,8 @@ Event page 4408475, 10 groups, 242 group markets (232 unique): 1 Popularne 28, 2
 5. Should the evidence archive also be copied to the ledger raw-archive (`aityper/docs/audit-ledger/raw-archive/pzbuk/`, frontend repo)?
 6. Should the 40 "Pokaż więcej" clicks per event (no data effect, about 3-5 s) be dropped later?
 7. An INITIAL_STATE listing with 0 events (off-season) is reported here as `success:true, matches:[]`, so the observability plan's `empty` status and its league-level collapse see it. Is that the wanted semantics, or should it stay a failure?
+8. Is it acceptable that a rollback to `/websocket` is not matched? The plan default is the single pattern `"sportsbook-api/ws"`, which Task 1 ships and Tasks 2 and 5 pin. With it, a rollback becomes a loud capture failure after Task 5 (see Risks). The alternative is rollback tolerance: `WEBSOCKET_URL_PATTERNS = ["sportsbook-api/ws?", "sportsbook-api/websocket"]` in constants.ts, and `.some((p) => url.includes(p))` in the Task 5 matching rule. The `describeCaptureFailure` first message and the Task 2 and Task 5 expected `no socket matched …` strings would then have to name both patterns. Either choice is odds-safe: an unmatched socket captures nothing, and a matched legacy socket goes through the same `initialStatesOf` path.
+9. Should ids 57/77/91/92 route by id only when the name proves the ordinal is `1.`? Today a market with no market object gets the parser's id label, which names no live ordinal, so it reaches HALF_TIME_FIRST_GOAL / SECOND_HALF_FIRST_GOAL / FIRST_GOAL_TIME_ALT / FIRST_GOAL_TIME by id (Risks, "Unrendered ordinal templates"). The plan default keeps today's behaviour. The stricter rule would also flip four blessed `world-cup-2026_france_morocco` entries to OTHER, because they route through the id-label fallback: #32 `Pierwszy gol 1. połowy`, #57 `Czas pierwszego gola (10 min)`, #58 `Czas pierwszego gola (15 min)` and #135 `Pierwszy gol 2. połowy`.
 
 ### Acceptance criteria
 
@@ -168,6 +172,8 @@ Event page 4408475, 10 groups, 242 group markets (232 unique): 1 Popularne 28, 2
 | A8 | `scrapeFullOffer` duration | ≤ 10 min | ≈ 17.4 s/event |
 | A9 | Service run | `pzbuk completed: ≥18 matches, >0 markets saved`, 0 `marketKey collision … pzbuk` warnings | – |
 | A10 | `scripts/test-scrapers.sh test pzbuk premier-league` | `✓ Listing: ≥18 matches` and `✓ Details` with 1X2/BTTS/O/U 2.5/DC lines | fails today (parse1X2Odds 0/0/0) |
+| A11 | Transport counters `invalidFrames`, `chunkedFrames`, `maxFrameBytes` (SMOKE line and per-event log line) | reported, not part of `pass`. `invalidFrames` = 0 is expected. Chunk reassembly counts as live-verified only when `chunkedFrames` > 0 with `invalidFrames` = 0 | 0 invalid (all 17 recv frames of both fixtures decode as setup/data), 0 chunked, largest live frame 451,513 B (`originalByteLength`; none ≥ 1,048,576 B) |
+| A12 | Ordinal counters on the SMOKE line: `ordinalMarkets` (parsed names matching `/(?:^\|\s)(?:[2-9]\|\d{2,})\.\s*(?:gol\|strzelec\|kartk)/i`), `templateMarkets` (names containing `{SpecialIntValue`), `gatedNonOther` (markets of either set with `normalizedType !== "OTHER"`) | `gatedNonOther` = 0, part of `pass`. The other two are reported only. The ordinal gate counts as live-verified only when `ordinalMarkets` > 0 with `gatedNonOther` = 0 | 0 / 0 / 0 (167 archive names: only `1.` forms, no template, no blank name) |
 
 **Standalone single-bookmaker smoke test.** No DB and no running server needed. This shape was proven on the current code on 2026-11-06 and produced the failure output shown above. Avoid HH:00, when the scheduled scrape runs.
 
@@ -201,8 +207,8 @@ import { pzbukScraper } from './src/scrapers/bookmakers/pzbuk/index.ts';
 
 ## Review Focus
 
-1. A frame over 1 MiB (player-prop-heavy fixtures) split at a multi-byte UTF-8 boundary (`ł`, `ż`) must reassemble byte-exact. Task 1 test: "reassembles when a chunk boundary splits a multi-byte character".
-2. A future unknown market id whose real name is half-scoped (`1./2. Połowa - …`) or card/corner-scoped, or a live `2. gol` / `2. strzelec gola` ordinal, must never land in a full-match result, goals or first-goal code. Task 4 tests: ids 99001-99003 and the `2.` ordinal rows.
+1. A frame over 1 MiB (player-prop-heavy fixtures) split at a multi-byte UTF-8 boundary (`ł`, `ż`) must reassemble byte-exact. Task 1 test: "reassembles when a chunk boundary splits a multi-byte character". Task 5 test "counts chunked frames and the largest reassembled frame" covers the capture wiring. Live, it stays unverified until A11 reports `chunkedFrames` > 0 with `invalidFrames` = 0.
+2. A future unknown market id whose real name is half-scoped (`1./2. Połowa - …`) or card/corner-scoped, or a live `2. gol` / `2. strzelec gola` ordinal, must never land in a full-match result, goals or first-goal code. Task 4 tests: ids 99001-99003, the `2.` ordinal rows and the unrendered `{SpecialIntValue1}` template rows. Live, the gate stays unverified until A12 reports `ordinalMarkets` > 0 with `gatedNonOther` = 0.
 3. Two raw markets mapping to one non-OTHER marketKey with overlapping selection codes are silently resolved first-seen in storage. Task 6 test: "has no non-OTHER marketKey collision with overlapping selection codes".
 4. If the transport drifts again (new socket path, envelope or a server control frame), the concrete cause must reach `result.error` and the log, not a bare "No WebSocket data captured". Task 5 tests: "names the unmatched socket when the URL pattern drifts" and "reports undecodable frames on a matched socket"; Task 2 test "names the last server control frame".
 5. A group subscription that never answers must be visible (groups seen < declared) while the partial offer is still used, and the expansion clicks must not cancel a group that is already subscribed. Task 2 tests: "reports a market group that never answered" and "maps header texts to market-group ids"; Task 1 test "reads subscribed market-group ids from sent SUBSCRIBE frames"; Task 5 log lines.
@@ -295,7 +301,9 @@ describe("pzbuk ws transport", () => {
   it("matches the captured sportsbook socket URL", () => {
     expect(league.socketUrl).toBe("wss://www.pzbuk.pl/sportsbook-api/ws?franchiseCode=POLAND_PZBUK&locale=pl");
     expect(league.socketUrl.includes(WEBSOCKET_URL_PATTERN)).toBe(true);
-    expect("wss://www.pzbuk.pl/sportsbook-api/websocket".includes(WEBSOCKET_URL_PATTERN)).toBe(true); // legacy still matches
+    // The legacy RSocket path ("/websocket") does not contain "sportsbook-api/ws": a transport
+    // rollback to it captures no frames, so the scrape fails instead of returning data.
+    expect("wss://www.pzbuk.pl/sportsbook-api/websocket".includes(WEBSOCKET_URL_PATTERN)).toBe(false);
   });
   it("reads chunkSize from the SETUP frame", () => {
     expect(decodeFrame(league.frames[0].text)).toEqual({ kind: "setup", chunkSize: 1048576 });
@@ -367,7 +375,7 @@ Expected: FAIL. The suite does not load (`Error: Cannot find module '…/ws-prot
 
 - [ ] **Step 4: Implement**
 
-- constants.ts:246-249: `export const WEBSOCKET_URL_PATTERN = "sportsbook-api/ws";`. Comment: it matches both the new `/ws?franchiseCode=…` path and the legacy `/websocket`.
+- constants.ts:246-249: `export const WEBSOCKET_URL_PATTERN = "sportsbook-api/ws";`. Comment: it matches the JSON-envelope socket (`sportsbook-api/ws?franchiseCode=…&locale=…`). The legacy RSocket path (`sportsbook-api/websocket`) does not match: a transport rollback to it captures no frames, so the scrape fails instead of returning data (Risks, open question 8).
 - types.ts: change `PZBukWebSocketMessage.payload` to `unknown` and update its doc comment (INITIAL_STATE, SELECTION_DELTA, EVENT_DELTA). `grep -rn PZBukWebSocketMessage src` finds no other user. Append the other types listed under Interfaces.
 - `decodeFrame`: `trimStart()`.
   - Text starting with `{`: parse it. `SETUP` gives `setup` (`chunkSize ?? 0`). `DATA` gives `data` (`streamId`, plus `payload` if it is an array, otherwise `[]`). Any other `type` gives `control` with `message: typeof j.message === "string" ? j.message : null`.
@@ -412,6 +420,8 @@ git commit -m "fix(pzbuk): decode sportsbook-api/ws JSON envelope frames with ch
   export interface CaptureDiagnostics {
     socketUrls: string[]; matchedSockets: number; framesReceived: number;
     invalidFrames: number; lastInvalidError: string | null;
+    chunkedFrames: number;                                        // FrameAssembler.push calls that returned null (chunk continuations)
+    maxFrameBytes: number;                                        // byte length of the largest complete (reassembled) frame
     initialStates: number; maxEvents: number;                     // maxEvents = max events.length over decoded INITIAL_STATEs
     lastControl: { type: string; message: string | null } | null; // last received non-SETUP control frame
     groups?: { declared: number[]; seen: number[] };
@@ -517,6 +527,7 @@ Expected: FAIL with `SingleEventAccumulator is not a constructor` / `describeCap
 - `marketGroupsSeen`: for each merged payload with ≥ 1 market, take the **intersection** of its markets' `marketType.marketGroupIds`, add it to the seen set, and sort ascending. Do not use the union: 10 of the 28 "Popularne" markets also list other groups, so with stream 11 skipped the union still contains 28. The per-message intersection equals the subscribed group id on all 10 streams of both the trimmed and the full capture.
 - `groupIdForHeader`: compare `headerText.trim().toLowerCase()` with each `marketGroups[].name.trim().toLowerCase()`; `null` before an event is stored or without a match.
 - `describeCaptureFailure` checks in order: `matchedSockets === 0`, then `initialStates === 0`, then `isEmptyListing(d)`, then the no-usable-snapshot case. Messages are exactly the test strings. Use `WEBSOCKET_URL_PATTERN` in the first message. In the three matched-socket messages, append inside the parentheses `, last error: …` when `lastInvalidError` is set and `, last control: <type>[ <message>]` when `lastControl` is set.
+- `emptyDiagnostics()` sets `chunkedFrames` and `maxFrameBytes` to 0, like the other counters. Task 5 counts them, and the per-event log line and the Task 7 SMOKE line print them (A11). `describeCaptureFailure` does not print them, so its strings stay exactly the tested ones.
 
 - [ ] **Step 4: Run them to verify they pass**
 
@@ -670,7 +681,7 @@ Expected: 23 of the 35 routing rows FAIL: the 20 integrity rows (15 misroutes, 1
 - [ ] **Step 3: Implement**
 
 - **Id map.** Set `"36": OTHER`, `"37": GOALSCORER_LAST`, `"78": SECOND_HALF_DOUBLE_CHANCE`, `"79": SECOND_HALF_DRAW_NO_BET`, `"126": CARDS_RACE`, `"142": HALF_TIME_CARDS_TOTAL`, `"147": HALF_TIME_AWAY_EXACT_CARDS`, `"501": SECOND_HALF_RESULT_AND_BTTS`. Also set `"8": OTHER` (`{SpecialIntValue1}. goal`), `"21": OTHER` (`{Competitors[0]} exact goals`) and `"23": OTHER` (`Goal range`). Add `"58": HALF_TIME_DOUBLE_CHANCE`, `"59": HALF_TIME_DRAW_NO_BET`, `"75": HALF_TIME_CORRECT_SCORE`, `"146": HALF_TIME_HOME_EXACT_CARDS`, `"60"/"61"/"80": OTHER`. Give each entry a one-line comment with its captured real name or `originalName` and `evidence/pzbuk/market-type-ids-2026-11-06.json`.
-- **Overrides.** Add as the **first** `PZBUK_NAME_OVERRIDES` entry the ordinal gate `{ pattern: /(?:^|\s)(?:[2-9]|\d{2,})\.\s*(?:gol|strzelec|kartk)/i, code: "OTHER" }`. It catches the `{SpecialIntValue1}` families (8, 36, 57, 77, 91, 92, 140) once the ordinal is ≥ 2. It does not touch `2. Połowa - …`, because `Połowa` follows the ordinal there. Next to the `1. gol` override (:446), add `{ pattern: /^1\.\s*strzelec gola$/i, code: "GOALSCORER_FIRST" }`. Anchor the `suma` patterns as `suma\s*$` at :458-459 and in `matchMarketByName` :1071-1072.
+- **Overrides.** Add as the **first** `PZBUK_NAME_OVERRIDES` entry the ordinal gate `{ pattern: /(?:^|\s)(?:[2-9]|\d{2,})\.\s*(?:gol|strzelec|kartk)/i, code: "OTHER" }`. It catches the `{SpecialIntValue1}` families (8, 36, 57, 77, 91, 92, 140) once the ordinal is ≥ 2. It does not touch `2. Połowa - …`, because `Połowa` follows the ordinal there. Right after the gate, add `{ pattern: /\{SpecialIntValue\d*\}/i, code: "OTHER" }` for an unrendered `marketType.name` template (review fix round 1; Risks, "Unrendered ordinal templates"), tested by one row per captured template (8, 36, 57, 77, 91, 92, 140). Next to the `1. gol` override (:446), add `{ pattern: /^1\.\s*strzelec gola$/i, code: "GOALSCORER_FIRST" }`. Anchor the `suma` patterns as `suma\s*$` at :458-459 and in `matchMarketByName` :1071-1072.
 - **Scope guard.** In `matchMarketByName`, right after the half-scoped patterns (:1074), add: `if (/^[12]\.?\s*po[łl]owa\b/.test(lower) || /kartk|ro[żz]n/.test(lower)) return null;`.
 - **Selection cases.** Add `SECOND_HALF_DOUBLE_CHANCE` to the DC case (:598-599), `HALF_TIME_CARDS_TOTAL` to the O/U case (:638-656) and to `parameterizedMarkets` (:925-957), `HALF_TIME_AWAY_EXACT_CARDS` to the bucket case (:673-677), and `SECOND_HALF_RESULT_AND_BTTS` to the combination case (:811-820). `HALF_TIME_HOME_EXACT_CARDS` is already in the bucket case (:673).
 - **Labels.** In `PZBUK_ID_LABELS`, set `"78": "2. Połowa - Podwójna szansa"`, `"79": "2. Połowa - Remis bez zakładu"`, `"126": "Kartki 1x2"`, `"147": "Dokładna liczba kartek - goście - 1. połowa"`, `"501": "2. Połowa - 1x2 & oba zespoły strzelą"`, and add `"146": "Dokładna liczba kartek - gospodarze - 1. połowa"`.
@@ -718,6 +729,8 @@ This task brings pzbuk data back. Saving its files under a running dev server wr
   export interface CaptureResult { state: PZBukInitialState | null; diagnostics: CaptureDiagnostics }
   export function captureWebSocketData(page: Page, singleEvent?: boolean, expectedEventId?: number | string): Promise<CaptureResult>;
   // internal: expandAllMarketGroups(page, shouldStop, skipHeader?: (headerText: string) => boolean): Promise<{ clicked: number; skipped: number }>
+  // index.ts: run-level transport counters of the last scrapeFullOffer call (consumed by Task 7)
+  lastTransportStats: Pick<CaptureDiagnostics, "invalidFrames" | "chunkedFrames" | "maxFrameBytes">; // public field of the PZBuk scraper class
   ```
   Error strings in index.ts: `No WebSocket data captured: <describeCaptureFailure>` (scrapeLeague, scrapeFullOffer listing), `No WebSocket data for match details: <…>` (scrapeMatchDetails), and `No markets captured for any of <n> listed events (first failure: <…>)` (scrapeFullOffer when `matches.length === 0` after a non-empty listing). An empty listing (`isEmptyListing`) is `success: true, matches: []` in scrapeFullOffer.
 
@@ -790,6 +803,19 @@ describe("pzbuk captureWebSocketData", () => {
     expect([r.state?.markets.length, r.state?.selections.length]).toEqual([157, 656]);
     expect(r.diagnostics.groups).toEqual({ declared: [1, 2, 7, 8, 12, 13, 15, 17, 19, 28], seen: [1, 2, 7, 8, 12, 13, 15, 17, 19, 28] });
   });
+  it("counts chunked frames and the largest reassembled frame", async () => {
+    // Synthetic chunking: no live frame has reached the announced 1048576 B yet.
+    const group1 = Buffer.from(event.frames.find((f: any) => f.dir === "recv" && f.text.startsWith('{"type":"DATA","streamId":5,')).text);
+    const page = fakePage();
+    const p = captureWebSocketData(page, true, 4408475);
+    const ws = fakeSocket(event.socketUrl); page.emit("websocket", ws);
+    recv(ws, '{"type":"SETUP","chunkSize":32768}');
+    for (let i = 0; i < group1.length; i += 32768) ws.emit("framereceived", { payload: group1.subarray(i, i + 32768) }); // 32768, 32768, 16671 B
+    await vi.advanceTimersByTimeAsync(26_000);
+    const r = await p;
+    expect([r.state?.markets.length, r.state?.selections.length]).toEqual([28, 169]);
+    expect(r.diagnostics).toMatchObject({ framesReceived: 4, invalidFrames: 0, chunkedFrames: 2, maxFrameBytes: 82207, initialStates: 1 });
+  });
   it("single-event mode resolves at WS_MAX_WAIT with no frames", async () => {
     const page = fakePage();
     const p = captureWebSocketData(page, true);
@@ -832,12 +858,12 @@ The fake page has no `locator`/`getByText`. `dismissCookieConsent`, `expandAllMa
 - [ ] **Step 3: Run them to verify they fail**
 
 Run: `npx vitest run src/scrapers/bookmakers/pzbuk/__tests__/capture.test.ts`
-Expected: 8 FAIL. Three tests time out at 10000 ms: "captures the league snapshot…", "accepts a one-event listing" and "treats a 0-event listing…". The current loop cannot parse the envelope and resolves only at WS_MAX_WAIT (25 s), while these tests advance 1.5 s, so they hit vitest's `testTimeout: 10000`. The other five fail with `TypeError: Cannot read properties of null (reading 'state')` or `(reading 'diagnostics')`, because the current function resolves a bare `null`. These results were checked on the current code with this harness on 2026-11-06.
+Expected: 9 FAIL. Three tests time out at 10000 ms: "captures the league snapshot…", "accepts a one-event listing" and "treats a 0-event listing…". The current loop cannot parse the envelope and resolves only at WS_MAX_WAIT (25 s), while these tests advance 1.5 s, so they hit vitest's `testTimeout: 10000`. The other six fail with `TypeError: Cannot read properties of null (reading 'state')` or `(reading 'diagnostics')`, because the current function resolves a bare `null`. These results were checked on the current code with this harness on 2026-11-06. All 9 were re-checked on 2026-11-07 against the post-Task-1 loop, which matches the new socket but still slices `[{`: 3 timeouts and 6 TypeErrors. The chunk-counter test gives `(reading 'state')`.
 
 - [ ] **Step 4: Implement in navigation.ts**
 
 - Every `websocket` event pushes `ws.url()` to `socketUrls`. Matching sockets (`includes(WEBSOCKET_URL_PATTERN)`) increment `matchedSockets` and get their own `FrameAssembler`. They also get a `framesent` listener that adds `subscribedGroupIds(text)` to a `subscribed` set. Text is `Buffer.isBuffer(p) ? p.toString("utf8") : String(p)`.
-- The `framereceived` handler: `framesReceived++`, then `assembler.push(frame.payload)`, then `decodeFrame`:
+- The `framereceived` handler: `framesReceived++`, then `assembler.push(frame.payload)`. A `null` result (a chunk continuation) increments `chunkedFrames` and ends the handler. Otherwise set `maxFrameBytes = Math.max(maxFrameBytes, Buffer.byteLength(text, "utf8"))`, then `decodeFrame`:
   - `setup` calls `assembler.setChunkSize`.
   - `invalid` increments `invalidFrames` and sets `lastInvalidError`.
   - `control` sets `lastControl = { type, message }`.
@@ -855,13 +881,14 @@ Expected: 8 FAIL. Three tests time out at 10000 ms: "captures the league snapsho
 - Remove the four redundant `Promise.race([..., delay(WS_CAPTURE_TIMEOUT)])` wrappers (index.ts:103-106, 235-238, 333-336, 380-383). `captureWebSocketData` always resolves by `WS_MAX_WAIT` in both modes. Two tests prove it: "names the unmatched socket…" (league mode) and "single-event mode resolves at WS_MAX_WAIT with no frames". Drop the unused `WS_CAPTURE_TIMEOUT` import (:22).
 - Use `.state` everywhere. Append `describeCaptureFailure(diagnostics)` to the three error strings listed under Interfaces, and `console.warn` each one with the `[PZBuk]` / `[PZBuk/FullOffer]` prefix.
 - scrapeFullOffer listing: when `state === null && isEmptyListing(diagnostics)`, `console.log` `[PZBuk/FullOffer] listing is empty: <describeCaptureFailure>` and return `success: true, matches: []`.
-- Per event: call `captureWebSocketData(page, true, event.id)`. On success, log `[PZBuk/FullOffer] <home> vs <away>: <n> markets (groups <seen>/<declared>)`. When seen < declared, also `console.warn` `[PZBuk/FullOffer] <home> vs <away>: market groups never answered: <declared − seen ids>`; this covers a missing group 1 "Popularne". On an empty event capture, `console.warn` the description (today index.ts:385 skips silently).
+- Per event: call `captureWebSocketData(page, true, event.id)`. On success, log `[PZBuk/FullOffer] <home> vs <away>: <n> markets (groups <seen>/<declared>) (frames: invalid <invalidFrames>, chunked <chunkedFrames>, max <maxFrameBytes> B)`. When seen < declared, also `console.warn` `[PZBuk/FullOffer] <home> vs <away>: market groups never answered: <declared − seen ids>`; this covers a missing group 1 "Popularne". On an empty event capture, `console.warn` the description (today index.ts:385 skips silently).
 - At the end of scrapeFullOffer, when `matches.length === 0` after a non-empty listing, return `success: false` with the "No markets captured…" error instead of `success: true` (index.ts:426-432).
+- `lastTransportStats` (public field, initially all 0): scrapeFullOffer resets it to zeros at the start. After the listing capture and after every event capture it adds `invalidFrames` and `chunkedFrames` and takes the max of `maxFrameBytes`. This happens whatever the capture outcome, so a failed run still reports its counters to Task 7.
 
 - [ ] **Step 6: Run the tests to verify they pass**
 
 Run: `npx vitest run src/scrapers/bookmakers/pzbuk`
-Expected: PASS (8 capture tests, 22 ws-protocol tests, and `parser.test.ts`, including the Task 3 and Task 4 additions).
+Expected: PASS (9 capture tests, 22 ws-protocol tests, and `parser.test.ts`, including the Task 3 and Task 4 additions).
 
 - [ ] **Step 7: Commit**
 
@@ -969,14 +996,16 @@ git commit -m "test(pzbuk): add real-names golden fixture for premier-league Eve
 - Create: `scripts/pzbuk-smoke.ts`
 
 **Interfaces:**
-- Consumes: `pzbukScraper.scrapeFullOffer(league)`, `pzbukScraper.cleanup()` (index.ts), `normalizeMarketsForBookmaker(markets, "pzbuk", home, away, league)` (`src/services/normalization/index.ts:72`, no DB; output field `normalizedType`), and optionally `GET <peers>/api/odds?league=<slug>` (`data.matches[].{homeTeam, awayTeam, markets.MATCH_WINNER.bookmakerOdds[bm].selections[].{normalizedName, odds}}`).
-- Produces: CLI `npx tsx scripts/pzbuk-smoke.ts --league <slug> [--peers <baseUrl>]`, plus `--help` (prints usage, exits 0, no browser). It prints one line `SMOKE {"success":…,"matches":…,"minParsedMarkets":…,"minNonOther":…,"maxUnknownShareNonOther":…,"collisions":…,"peerMatched":…,"max1x2Deviation":…|null,"durationMs":…,"pass":…}` plus one line per match, and exits 1 when `pass` is false. Thresholds are constants matching A1-A6: `MIN_MATCHES = 18` (A1), `MIN_PARSED = 90` (A2, every match; the 7-group estimate is 105), `MIN_NON_OTHER = 40` (A3), `MAX_UNKNOWN_SHARE = 0.02` (A4), collisions `0` (A5), `MAX_1X2_DEVIATION = 0.08` (A6).
+- Consumes: `pzbukScraper.scrapeFullOffer(league)`, `pzbukScraper.lastTransportStats` (Task 5), `pzbukScraper.cleanup()` (index.ts), `normalizeMarketsForBookmaker(markets, "pzbuk", home, away, league)` (`src/services/normalization/index.ts:72`, no DB; output field `normalizedType`), and optionally `GET <peers>/api/odds?league=<slug>` (`data.matches[].{homeTeam, awayTeam, markets.MATCH_WINNER.bookmakerOdds[bm].selections[].{normalizedName, odds}}`).
+- Produces: CLI `npx tsx scripts/pzbuk-smoke.ts --league <slug> [--peers <baseUrl>]`, plus `--help` (prints usage, exits 0, no browser). It prints one line `SMOKE {"success":…,"matches":…,"minParsedMarkets":…,"minNonOther":…,"maxUnknownShareNonOther":…,"collisions":…,"peerMatched":…,"max1x2Deviation":…|null,"invalidFrames":…,"chunkedFrames":…,"maxFrameBytes":…,"ordinalMarkets":…,"templateMarkets":…,"gatedNonOther":…,"durationMs":…,"pass":…}` plus one line per match, and exits 1 when `pass` is false. The three transport counters are reported only and never affect `pass` (A11). Of the ordinal counters (A12), `gatedNonOther` > 0 fails `pass`; `ordinalMarkets` and `templateMarkets` are reported only. Thresholds are constants matching A1-A6: `MIN_MATCHES = 18` (A1), `MIN_PARSED = 90` (A2, every match; the 7-group estimate is 105), `MIN_NON_OTHER = 40` (A3), `MAX_UNKNOWN_SHARE = 0.02` (A4), collisions `0` (A5), `MAX_1X2_DEVIATION = 0.08` (A6).
 
 - [ ] **Step 1: Write `scripts/pzbuk-smoke.ts`**
 
 Follow the `scripts/pzbuk-market-discovery.ts` style (`#!/usr/bin/env npx tsx`, usage doc block, `parseArgs`, `main()`).
 - Per match: `parsed = m.markets.length`; count `normalizedType !== "OTHER"`, UNKNOWN among their selections, and overlapping-code collisions per `marketKey` (same rule as Task 6).
 - With `--peers`: join a pzbuk match to a peer row on exact `(homeTeam, awayTeam)`. Both sides already carry canonical names (`getCanonicalTeamName` in index.ts; the API serves stored canonical names). Take the median of HOME/DRAW/AWAY across `bookmakerOdds` excluding `pzbuk`. A match without a peer row, or without peers, contributes `null`. `max1x2Deviation` is the max over non-null matches, or `null` when none matched. `peerMatched` counts the joined matches. A `null` deviation does not fail `pass`.
+- Ordinal counters (A12), summed over all matches on the `normalizeMarketsForBookmaker` output (it keeps each market's `name`): `ordinalMarkets` counts names matching the Task 4 gate regex `/(?:^|\s)(?:[2-9]|\d{2,})\.\s*(?:gol|strzelec|kartk)/i` (test the trimmed name), `templateMarkets` counts names matching `/\{SpecialIntValue\d*\}/i`, and `gatedNonOther` counts markets of either set with `normalizedType !== "OTHER"`.
+- Copy `pzbukScraper.lastTransportStats` into the SMOKE line right after `scrapeFullOffer` returns. `maxFrameBytes` > 0 shows that the counters are wired, because every run receives at least the SETUP frame.
 - Finish with `await pzbukScraper.cleanup()` and `process.exit(pass ? 0 : 1)`.
 
 Check it before going live. `scripts/` is outside the tsconfig `include`, so the repo-wide `tsc` gate never sees it:
@@ -989,7 +1018,7 @@ Expected: usage text with exit 0, then tsc exit 0. The single-file tsc shape was
 - [ ] **Step 2: Run it live**
 
 Run: `cd /home/skamik/Documents/repositories/personal/aityper-scraper-api && timeout 900 npx tsx scripts/pzbuk-smoke.ts --league premier-league --peers http://localhost:3001`
-Expected: exit 0. `SMOKE {"success":true,"matches":20,…,"collisions":0,…,"pass":true}`, `minParsedMarkets` ≥ 90, `minNonOther` ≥ 40, `peerMatched` ≥ 18, `max1x2Deviation` ≤ 0.08. Log lines `(groups 10/10)` for next-round events and `(groups 7/7)` for later ones (A7), with no "market groups never answered" warning on more than 2 events. `durationMs` ≤ 600000 (A8).
+Expected: exit 0. `SMOKE {"success":true,"matches":20,…,"collisions":0,…,"pass":true}`, `minParsedMarkets` ≥ 90, `minNonOther` ≥ 40, `peerMatched` ≥ 18, `max1x2Deviation` ≤ 0.08. Log lines `(groups 10/10)` for next-round events and `(groups 7/7)` for later ones (A7), with no "market groups never answered" warning on more than 2 events. `durationMs` ≤ 600000 (A8). A11: `invalidFrames` 0 and `maxFrameBytes` > 0. `chunkedFrames` will most likely be 0, so record chunk reassembly as live-verified only when it is > 0 with `invalidFrames` 0. Otherwise the Risks entry stays "unverified live". If `invalidFrames` > 0, investigate before signing off A7. The per-event `(frames: invalid …)` log lines name the event. A12: `gatedNonOther` 0. A pre-match run will most likely report `ordinalMarkets` 0, so record the Task 4 ordinal gate as live-verified only when `ordinalMarkets` > 0 with `gatedNonOther` 0 (an in-play event after a goal or booking). Otherwise the Risks entry "Ordinal templates on live events" stays "unverified live", just like chunk reassembly. `templateMarkets` > 0 means a live payload with a blank `market.name` was seen; report it, because it bears on open question 9.
 
 - [ ] **Step 3: Run the legacy-path check**
 
@@ -1029,7 +1058,7 @@ git commit -m "chore(pzbuk): add live smoke script with acceptance thresholds"
 
 1. **Spec coverage.** URL pattern: Task 1. Envelope decoder (pure, durable fixture) and delta/control handling: Task 1. Chunk reassembly: Task 1. Numeric/string ids: Task 3, with `getSelectionName` deliberately excluded and pinned in Task 2. Normalizer updates for ids proven by real names and `originalName` templates, including the ordinal gate and 146: Task 4. Real error propagation, empty listing and the no-collapse header rule: Task 5; the run-level log is out of scope (observability plan). Golden refresh (failing first, rebless with an inspected diff, new fixture blessed by exact name): Tasks 4 and 6. Live smoke: Task 7 plus the proven one-liner. Acceptance A1-A10 map to Task 7 steps 2-4. Failure-message quality (Review Focus 4) is in the Task 2 and Task 5 tests. The rule for which groups count as answered was checked against the fixture: the union over-reports, the intersection does not.
 2. **Ordering.** Data flow returns only in Task 5, after the normalizer (Task 4). Tasks 1-4 leave pzbuk at 0 matches under a running dev server, because the old loop still fails on the envelope. Task 5 Step 1 checks the precondition.
-3. **Step scan.** Every test step carries names and assertions with captured values; synthetic values (deltas, `ERROR`, `2.` ordinals, 99001-99003) are labelled. The failing-first counts were run on the current code: Task 4 23/35 fail, Task 5 8/8 fail, Task 1 suite fails to load. Code steps give signatures and the one algorithmic rule each (assembler `>=` rule, accumulator merge rule, guard and ordinal regexes, header skip rule). No step says "handle edge cases".
-4. **Type consistency.** `CaptureResult.state` / `.diagnostics`, `CaptureDiagnostics.groups {declared, seen}`, `maxEvents`, `lastControl` and `AccumulatorStats.marketGroupsDeclared/Seen` are used the same way in Tasks 2, 5 and 7. `decodeFrame` returns `DecodedFrame`, and `initialStatesOf` is the only way tests and code read INITIAL_STATE payloads (Tasks 1, 2, 3 and 5). `PZBukWebSocketMessage` is reused, not duplicated. `WEBSOCKET_URL_PATTERN` changes in Task 1, before `describeCaptureFailure` (Task 2) relies on it.
+3. **Step scan.** Every test step carries names and assertions with captured values; synthetic values (deltas, `ERROR`, `2.` ordinals, 99001-99003, the 32768 B chunking) are labelled. The failing-first counts were run on the current code: Task 4 23/35 fail, Task 5 9/9 fail, Task 1 suite fails to load. Code steps give signatures and the one algorithmic rule each (assembler `>=` rule, accumulator merge rule, guard and ordinal regexes, header skip rule). No step says "handle edge cases".
+4. **Type consistency.** `CaptureResult.state` / `.diagnostics`, `CaptureDiagnostics.groups {declared, seen}`, `maxEvents`, `lastControl`, `chunkedFrames` / `maxFrameBytes` (Task 2 fields, Task 5 counting and `lastTransportStats`, Task 7 SMOKE) and `AccumulatorStats.marketGroupsDeclared/Seen` are used the same way in Tasks 2, 5 and 7. `decodeFrame` returns `DecodedFrame`, and `initialStatesOf` is the only way tests and code read INITIAL_STATE payloads (Tasks 1, 2, 3 and 5). `PZBukWebSocketMessage` is reused, not duplicated. `WEBSOCKET_URL_PATTERN` changes in Task 1, before `describeCaptureFailure` (Task 2) relies on it.
 5. **Review Focus.** Each of the 5 lines names its owning task's test.
 6. **Proportion.** Code blocks are tests (where the values live) and commands; implementation bodies are one-line rules.

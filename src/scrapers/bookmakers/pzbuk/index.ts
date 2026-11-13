@@ -19,7 +19,6 @@ import { PlaywrightScraper } from "../../base/playwright-base.js";
 import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { ScraperCache, CACHE_TTLS } from "../../../services/cache-manager.js";
 
-import { LEAGUE_URLS, WS_CAPTURE_TIMEOUT } from "./constants.js";
 import {
   navigateToLeaguePage,
   navigateToEventPage,
@@ -27,6 +26,11 @@ import {
   buildEventUrl,
   delay,
 } from "./navigation.js";
+import {
+  describeCaptureFailure,
+  isEmptyListing,
+  type CaptureDiagnostics,
+} from "./ws-protocol.js";
 import {
   parseTeamNames,
   parse1X2Odds,
@@ -37,6 +41,10 @@ import {
   isValidEvent,
 } from "./parser.js";
 import type { PZBukEvent, PZBukMarket, PZBukSelection } from "./types.js";
+
+type TransportStats = Pick<CaptureDiagnostics, "invalidFrames" | "chunkedFrames" | "maxFrameBytes">;
+
+const emptyTransportStats = (): TransportStats => ({ invalidFrames: 0, chunkedFrames: 0, maxFrameBytes: 0 });
 
 interface PZBukCachedEvent {
   event: PZBukEvent;
@@ -53,6 +61,12 @@ const eventsCache = new ScraperCache<PZBukCachedEvent>({
 export class PzbukPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "pzbuk";
   config: ScraperConfig;
+  /**
+   * Transport counters of the last `scrapeFullOffer` call, summed (max for
+   * `maxFrameBytes`) over the listing capture and every event capture,
+   * whatever their outcome.
+   */
+  lastTransportStats: TransportStats = emptyTransportStats();
 
   constructor(config?: Partial<ScraperConfig>) {
     super();
@@ -83,6 +97,13 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
     return eventsCache.get(eventId);
   }
 
+  private addTransportStats(diagnostics: CaptureDiagnostics): void {
+    const stats = this.lastTransportStats;
+    stats.invalidFrames += diagnostics.invalidFrames;
+    stats.chunkedFrames += diagnostics.chunkedFrames;
+    stats.maxFrameBytes = Math.max(stats.maxFrameBytes, diagnostics.maxFrameBytes);
+  }
+
   async scrapeLeague(league: string): Promise<ScraperResult> {
     return this.executeLeagueScrape(
       league,
@@ -90,7 +111,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
       async (page, leagueSlug) => {
         const startTime = Date.now();
 
-        const wsDataPromise = captureWebSocketData(page, false);
+        const capture = captureWebSocketData(page, false);
         const navSuccess = await navigateToLeaguePage(page, leagueSlug);
 
         if (!navSuccess) {
@@ -100,17 +121,12 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
           );
         }
 
-        const wsData = await Promise.race([
-          wsDataPromise,
-          delay(WS_CAPTURE_TIMEOUT).then(() => null),
-        ]);
+        const { state: wsData, diagnostics } = await capture;
 
-        if (!wsData || !wsData.events || wsData.events.length === 0) {
-          console.log("[PZBuk] No WebSocket data captured");
-          return this.createNotFoundResult(
-            "No WebSocket data captured",
-            Date.now() - startTime
-          );
+        if (!wsData) {
+          const message = `No WebSocket data captured: ${describeCaptureFailure(diagnostics)}`;
+          console.warn(`[PZBuk] ${message}`);
+          return this.createNotFoundResult(message, Date.now() - startTime);
         }
 
         console.log(
@@ -222,7 +238,7 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
 
     return this.executeWithBrowser(
       async (page) => {
-        const wsDataPromise = captureWebSocketData(page, true);
+        const capture = captureWebSocketData(page, true, eventId);
         const navSuccess = await navigateToEventPage(page, eventUrl);
 
         if (!navSuccess) {
@@ -232,21 +248,12 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
           );
         }
 
-        const wsData = await Promise.race([
-          wsDataPromise,
-          delay(WS_CAPTURE_TIMEOUT).then(() => null),
-        ]);
+        const { state: wsData, diagnostics } = await capture;
 
-        if (
-          !wsData ||
-          !wsData.events?.length ||
-          !wsData.markets?.length ||
-          !wsData.selections?.length
-        ) {
-          return this.createMatchDetailNotFoundResult(
-            "No WebSocket data for match details",
-            Date.now() - startTime
-          );
+        if (!wsData || wsData.markets.length === 0) {
+          const message = `No WebSocket data for match details: ${describeCaptureFailure(diagnostics)}`;
+          console.warn(`[PZBuk] ${message}`);
+          return this.createMatchDetailNotFoundResult(message, Date.now() - startTime);
         }
 
         const event = wsData.events[0];
@@ -313,13 +320,14 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
   }
 
   async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
+    this.lastTransportStats = emptyTransportStats();
     return this.executeFullOfferScrape(
       league,
       (l) => isLeagueSupported(l, this.bookmaker),
       async (page, leagueSlug) => {
         const startTime = Date.now();
 
-        const wsDataPromise = captureWebSocketData(page, false);
+        const listingCapture = captureWebSocketData(page, false);
         const navSuccess = await navigateToLeaguePage(page, leagueSlug);
 
         if (!navSuccess) {
@@ -330,33 +338,55 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
           );
         }
 
-        const wsData = await Promise.race([
-          wsDataPromise,
-          delay(WS_CAPTURE_TIMEOUT).then(() => null),
-        ]);
+        const { state: listing, diagnostics: listingDiagnostics } = await listingCapture;
+        this.addTransportStats(listingDiagnostics);
 
-        if (!wsData || !wsData.events || wsData.events.length === 0) {
+        if (!listing) {
+          if (isEmptyListing(listingDiagnostics)) {
+            console.log(
+              `[PZBuk/FullOffer] listing is empty: ${describeCaptureFailure(listingDiagnostics)}`
+            );
+            return {
+              success: true,
+              bookmaker: this.bookmaker,
+              league: leagueSlug,
+              matches: [],
+              duration: Date.now() - startTime,
+            };
+          }
+
+          const message = `No WebSocket data captured: ${describeCaptureFailure(listingDiagnostics)}`;
+          console.warn(`[PZBuk/FullOffer] ${message}`);
           return {
             success: false,
             bookmaker: this.bookmaker,
             league: leagueSlug,
             matches: [],
-            error: "No WebSocket data captured",
+            error: message,
             duration: Date.now() - startTime,
           };
         }
 
         console.log(
-          `[PZBuk/FullOffer] Found ${wsData.events.length} events in listing`
+          `[PZBuk/FullOffer] Found ${listing.events.length} events in listing`
         );
 
         const matches: FullMatchOffer[] = [];
+        let validEvents = 0;
+        let firstFailure: string | null = null;
+        const recordFailure = (failure: string) => {
+          console.warn(`[PZBuk/FullOffer] ${failure}`);
+          firstFailure ??= failure;
+        };
 
-        for (const event of wsData.events) {
+        for (const event of listing.events) {
           if (!isValidEvent(event)) continue;
 
           const teams = parseTeamNames(event);
           if (!teams.homeTeam || !teams.awayTeam) continue;
+
+          validEvents++;
+          const label = `${teams.homeTeam} vs ${teams.awayTeam}`;
 
           try {
             const eventUrl = buildEventUrl(
@@ -367,31 +397,33 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
               event.leagueName
             );
 
-            const eventWsPromise = captureWebSocketData(page, true);
+            const eventCapture = captureWebSocketData(page, true, event.id);
             const eventNavSuccess = await navigateToEventPage(page, eventUrl);
 
             if (!eventNavSuccess) {
-              console.warn(
-                `[PZBuk/FullOffer] Failed to navigate to ${teams.homeTeam} vs ${teams.awayTeam}`
-              );
+              // Let the capture end before the next navigation, so its
+              // expansion trigger cannot click headers on the next event's
+              // page; its transport counters still count.
+              this.addTransportStats((await eventCapture).diagnostics);
+              recordFailure(`${label}: failed to navigate to the event page`);
               continue;
             }
 
-            const eventWsData = await Promise.race([
-              eventWsPromise,
-              delay(WS_CAPTURE_TIMEOUT).then(() => null),
-            ]);
+            const { state: eventState, diagnostics } = await eventCapture;
+            this.addTransportStats(diagnostics);
 
-            if (eventWsData && eventWsData.selections?.length > 0) {
-              this.updateCache(
-                [event],
-                eventWsData.markets || [],
-                eventWsData.selections
-              );
+            if (!eventState) {
+              recordFailure(`${label}: ${describeCaptureFailure(diagnostics)}`);
+            } else {
+              this.updateCache([event], eventState.markets, eventState.selections);
 
-              const markets = parseAllMarkets(eventWsData, event.id, teams);
+              const markets = parseAllMarkets(eventState, event.id, teams);
 
-              if (markets.length > 0) {
+              if (markets.length === 0) {
+                recordFailure(
+                  `${label}: 0 markets parsed from ${eventState.selections.length} selections`
+                );
+              } else {
                 matches.push({
                   matchId: event.id,
                   bookmaker: this.bookmaker,
@@ -403,18 +435,27 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
                   scrapedAt: new Date(),
                 });
 
+                const groups = diagnostics.groups ?? { declared: [], seen: [] };
                 console.log(
-                  `[PZBuk/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`
+                  `[PZBuk/FullOffer] ${label}: ${markets.length} markets (groups ${groups.seen.length}/${groups.declared.length}) (frames: invalid ${diagnostics.invalidFrames}, chunked ${diagnostics.chunkedFrames}, max ${diagnostics.maxFrameBytes} B)`
                 );
+
+                const missing = groups.declared.filter((id) => !groups.seen.includes(id));
+                if (missing.length > 0) {
+                  console.warn(
+                    `[PZBuk/FullOffer] ${label}: market groups never answered: ${missing.join(", ")}`
+                  );
+                }
               }
             }
 
             await delay(200);
           } catch (error) {
             console.warn(
-              `[PZBuk/FullOffer] Failed to fetch details for ${teams.homeTeam} vs ${teams.awayTeam}:`,
+              `[PZBuk/FullOffer] Failed to fetch details for ${label}:`,
               error
             );
+            firstFailure ??= `${label}: ${error instanceof Error ? error.message : String(error)}`;
           }
         }
 
@@ -422,6 +463,21 @@ export class PzbukPlaywrightScraper extends PlaywrightScraper {
         console.log(
           `[PZBuk/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
         );
+
+        if (matches.length === 0) {
+          const cause =
+            firstFailure ?? `none attempted (${listing.events.length} listed, ${validEvents} valid)`;
+          const message = `No markets captured for any of ${listing.events.length} listed events (first failure: ${cause})`;
+          console.warn(`[PZBuk/FullOffer] ${message}`);
+          return {
+            success: false,
+            bookmaker: this.bookmaker,
+            league: leagueSlug,
+            matches: [],
+            error: message,
+            duration: Date.now() - startTime,
+          };
+        }
 
         return {
           success: true,

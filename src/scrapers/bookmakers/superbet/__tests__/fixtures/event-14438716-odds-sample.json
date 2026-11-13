@@ -1,0 +1,939 @@
+{
+ "eventId": 14438716,
+ "matchName": "Arsenal·Hull City",
+ "marketCount": 340,
+ "oddsSample": [
+  {
+   "uuid": "d19afd75-a12a-5d5a-9ed9-768e455a7859",
+   "marketUuid": "5ae798b7-00d9-55ce-8004-452305e0b447",
+   "marketId": 239621,
+   "outcomeId": 17970,
+   "price": 20,
+   "specialBetValue": "sr:player:100578-John Egan-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935777479,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 0.5",
+   "marketName": "Zawodnik - liczba asyst",
+   "info": "John Egan powyżej 0.5 asyst",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "a11f1554-d145-58f0-8c9e-0767697c3c8b",
+   "marketUuid": "b51b9ab8-f634-54a2-826a-6d96ab8a1c03",
+   "marketId": 239621,
+   "outcomeId": 17970,
+   "price": 4.1,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935777479,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 0.5",
+   "marketName": "Zawodnik - liczba asyst",
+   "info": "Viktor Gyokeres powyżej 0.5 asyst",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "a74d84b7-8915-5708-998e-d4590cea18a2",
+   "marketUuid": "3d5991a9-b651-5de4-80d3-b82259100224",
+   "marketId": 239621,
+   "outcomeId": 17970,
+   "price": 17,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935777479,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 1.5",
+   "marketName": "Zawodnik - liczba asyst",
+   "info": "Viktor Gyokeres powyżej 1.5 asyst",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "ebd13a65-4682-5412-a7b9-b921dc17faf9",
+   "marketUuid": "3a18777c-5e33-5521-aab3-07905c3fd8b2",
+   "marketId": 239621,
+   "outcomeId": 17970,
+   "price": 29,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935777479,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 2.5",
+   "marketName": "Zawodnik - liczba asyst",
+   "info": "Viktor Gyokeres powyżej 2.5 asyst",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "860887d7-b4e1-5b05-b7c0-d3d4616b0f64",
+   "marketUuid": "404da067-4a34-57a0-80a6-32c9f4d37530",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 1.36,
+   "specialBetValue": "sr:player:100578-John Egan-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 0.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "John Egan popełni powyżej 0.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "15275e4d-c179-5f37-9d5a-abb447d8fc1a",
+   "marketUuid": "651e6a57-13da-5514-9be1-b5b4865e9d9e",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 2.7,
+   "specialBetValue": "sr:player:100578-John Egan-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 1.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "John Egan popełni powyżej 1.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "2ed7c11e-0736-5106-8238-553442026fba",
+   "marketUuid": "5216cf8b-6a57-53f5-8983-21f25a4d2310",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 5.75,
+   "specialBetValue": "sr:player:100578-John Egan-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 2.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "John Egan popełni powyżej 2.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "505ad37f-4a06-5762-9750-912221d988e2",
+   "marketUuid": "c25b9634-c2db-5dbe-93d5-376c7aeae3f7",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 13,
+   "specialBetValue": "sr:player:100578-John Egan-3.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "3.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 3.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "John Egan popełni powyżej 3.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "36698a46-9568-522d-aabb-acc92b72e8ef",
+   "marketUuid": "60b07917-5d2d-5865-bd84-1ff6d7b339bd",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 1.33,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 0.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "Viktor Gyokeres popełni powyżej 0.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "8382b3ef-cd5d-5313-9101-810de40ffd90",
+   "marketUuid": "99f6d4a8-ef32-5c91-8602-645579afbe3a",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 2.55,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 1.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "Viktor Gyokeres popełni powyżej 1.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "1839626a-a2b6-5e4e-9d82-b0b5b94cc1af",
+   "marketUuid": "695770ab-1d25-5368-8d79-3f75dc0c7cc9",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 5.4,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 2.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "Viktor Gyokeres popełni powyżej 2.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "a1479fad-2f42-5fde-959b-205cc9d1a7c4",
+   "marketUuid": "9af6bafc-4464-57d2-8ee3-12d1d73afaa9",
+   "marketId": 236216,
+   "outcomeId": 418,
+   "price": 12,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-3.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "3.5"
+   },
+   "marketGroupOrder": 935914571,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 3.5",
+   "marketName": "Zawodnik - liczba popełnionych fauli",
+   "info": "Viktor Gyokeres popełni powyżej 3.5 fauli w meczu",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "42cb58c9-d21a-5931-9817-28f6dff234ff",
+   "marketUuid": "e2780b16-a3ec-51d7-b6f1-47a0d57b272a",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 1.13,
+   "specialBetValue": "sr:player:100578-John Egan-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 0.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "John Egan powyżej 0.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "740f4812-1629-55ef-affc-18d3af7a32d9",
+   "marketUuid": "f72e22fd-de26-5775-83a9-4f57ba9b14c5",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 1.77,
+   "specialBetValue": "sr:player:100578-John Egan-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 1.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "John Egan powyżej 1.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "455973eb-6794-51ea-800b-939ab3555996",
+   "marketUuid": "42424df8-4a0a-56c3-90fe-b6329fa1b55b",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 3.2,
+   "specialBetValue": "sr:player:100578-John Egan-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 2.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "John Egan powyżej 2.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "963bb933-d0db-51c5-ac2e-95494b22d0ce",
+   "marketUuid": "81dae7df-b658-5d77-b12b-179b4b8108de",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 5.5,
+   "specialBetValue": "sr:player:100578-John Egan-3.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "3.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 3.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "John Egan powyżej 3.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "22cf5ec1-d537-5fc6-8937-4435bd8c1562",
+   "marketUuid": "d8932a59-0473-505f-832b-3c7cf10e7237",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 11,
+   "specialBetValue": "sr:player:100578-John Egan-4.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "4.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 4.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "John Egan powyżej 4.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "9ed331f0-0812-5451-9d0f-58604d57ae67",
+   "marketUuid": "e1f9a9be-df46-5ef3-b96d-e6281daafc5d",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 1.53,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 0.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "Viktor Gyokeres powyżej 0.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "44b7b1ab-9a8f-515c-a67c-081d1931f401",
+   "marketUuid": "4c4b83c7-4877-50a4-909a-302e7bcdb2ff",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 3.35,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 1.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "Viktor Gyokeres powyżej 1.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "73729459-4be7-5858-bc7c-436a359a659e",
+   "marketUuid": "7ba90b3f-1fa5-5246-859e-96794e935f26",
+   "marketId": 236222,
+   "outcomeId": 12698,
+   "price": 7.3,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935950308,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 2.5",
+   "marketName": "Zawodnik - liczba odbiorów",
+   "info": "Viktor Gyokeres powyżej 2.5 odbiorów w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "3db3a8cf-6cfd-5df6-968e-4ec4ecbc317e",
+   "marketUuid": "2d88fda1-d273-54b9-90ee-bb75c5983e13",
+   "marketId": 238453,
+   "outcomeId": 16194,
+   "price": 2.02,
+   "specialBetValue": "sr:player:100578-John Egan-0.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "0.5"
+   },
+   "marketGroupOrder": 935970237,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 0.5",
+   "marketName": "Zawodnik - liczba odbiorów na zawodniku",
+   "info": "Powyżej 0.5 odebranych piłek zawodnikowi John Egan w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "74ce9667-f758-5bc4-b84f-9564f1461486",
+   "marketUuid": "874e1f6f-2131-5dde-919d-6ba264a7784e",
+   "marketId": 238453,
+   "outcomeId": 16194,
+   "price": 4.9,
+   "specialBetValue": "sr:player:100578-John Egan-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:100578",
+    "player_name": "John Egan",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935970237,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:100578",
+    "cp_player_ids;0": "31vQ64MsNTHo8UEWFR9mS",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "2",
+    "universal-player-id": "universal:player:935d515b9d4358610c35162dd4f2fa58"
+   },
+   "name": "John Egan - powyżej 1.5",
+   "marketName": "Zawodnik - liczba odbiorów na zawodniku",
+   "info": "Powyżej 1.5 odebranych piłek zawodnikowi John Egan w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "66a58ecc-f999-5724-8456-4daa1a3f0190",
+   "marketUuid": "38c0fd7c-7dad-5e1d-b31a-23f23672ed48",
+   "marketId": 238453,
+   "outcomeId": 16194,
+   "price": 1.07,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-1.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "1.5"
+   },
+   "marketGroupOrder": 935970237,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 1.5",
+   "marketName": "Zawodnik - liczba odbiorów na zawodniku",
+   "info": "Powyżej 1.5 odebranych piłek zawodnikowi Viktor Gyokeres w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "0b76d0bd-0aa7-59dd-9746-82bbd197aff8",
+   "marketUuid": "c14335a2-02d7-5b16-8515-9b35e3dd7f4a",
+   "marketId": 238453,
+   "outcomeId": 16194,
+   "price": 1.38,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-2.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "2.5"
+   },
+   "marketGroupOrder": 935970237,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 2.5",
+   "marketName": "Zawodnik - liczba odbiorów na zawodniku",
+   "info": "Powyżej 2.5 odebranych piłek zawodnikowi Viktor Gyokeres w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "6ab99052-2bb5-5afb-992a-84cd487aa5c8",
+   "marketUuid": "fdf7f45b-b84d-5067-a81f-ba3869ebc09f",
+   "marketId": 238453,
+   "outcomeId": 16194,
+   "price": 1.97,
+   "specialBetValue": "sr:player:869030-Viktor Gyokeres-3.5",
+   "status": "active",
+   "specifiers": {
+    "player_id": "sr:player:869030",
+    "player_name": "Viktor Gyokeres",
+    "total": "3.5"
+   },
+   "marketGroupOrder": 935970237,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "pm_boostable_market,sub,Risk Product - Players,v2",
+   "extra": {
+    "betradar-player-id": "sr:player:869030",
+    "cp_player_ids;0": "31vQPJEqKjj6ApkWIIGUD",
+    "so_far": "0",
+    "tags": "Risk Product - Players,pm_boostable_market,sub,v2",
+    "team": "1",
+    "universal-player-id": "universal:player:06089bb9ba1119352d7b83ed15bf2c9d"
+   },
+   "name": "Viktor Gyokeres - powyżej 3.5",
+   "marketName": "Zawodnik - liczba odbiorów na zawodniku",
+   "info": "Powyżej 3.5 odebranych piłek zawodnikowi Viktor Gyokeres w meczu. Rozliczenie na podstawie statystyk OPTA: „Tackles” (odbiory)",
+   "generosity": {
+    "isSuperSubEligible": true
+   }
+  },
+  {
+   "uuid": "12d1d9f7-8cf7-5fec-aba2-987d7a089402",
+   "marketUuid": "11e6ee66-350d-509b-b10a-5abbfc1be54a",
+   "marketId": 200685,
+   "outcomeId": 151781,
+   "price": 1.04,
+   "specialBetValue": "0.5",
+   "status": "active",
+   "specifiers": {
+    "total": "0.5"
+   },
+   "marketGroupOrder": 1211570089,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "Corners (BLENDED),BPWM,SGA,pm_boostable_market,v2",
+   "extra": {
+    "tags": "BPWM,Corners (BLENDED),SGA,pm_boostable_market,v2"
+   },
+   "name": "Powyżej 0.5 - tak",
+   "marketName": "Każda z drużyn powyżej X rzutów rożnych",
+   "info": "Każda z drużyn wykona powyżej 0.5 rzutów rożnych w meczu"
+  },
+  {
+   "uuid": "7cb27acf-60f0-585b-8aa2-c3b620f13f7c",
+   "marketUuid": "b392a4e1-6a89-5e31-9fe6-76bccb0a6e56",
+   "marketId": 200685,
+   "outcomeId": 151781,
+   "price": 1.27,
+   "specialBetValue": "1.5",
+   "status": "active",
+   "specifiers": {
+    "total": "1.5"
+   },
+   "marketGroupOrder": 1211570089,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "Corners (BLENDED),BPWM,SGA,pm_boostable_market,v2",
+   "extra": {
+    "tags": "BPWM,Corners (BLENDED),SGA,pm_boostable_market,v2"
+   },
+   "name": "Powyżej 1.5 - tak",
+   "marketName": "Każda z drużyn powyżej X rzutów rożnych",
+   "info": "Każda z drużyn wykona powyżej 1.5 rzutów rożnych w meczu"
+  },
+  {
+   "uuid": "5e7d43c1-fb45-5a44-b31a-fc399d886691",
+   "marketUuid": "ebcb9ef9-df98-504c-8bdb-aa8a99d7dd48",
+   "marketId": 200685,
+   "outcomeId": 151781,
+   "price": 1.75,
+   "specialBetValue": "2.5",
+   "status": "active",
+   "specifiers": {
+    "total": "2.5"
+   },
+   "marketGroupOrder": 1211570089,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "Corners (BLENDED),BPWM,SGA,pm_boostable_market,v2",
+   "extra": {
+    "tags": "BPWM,Corners (BLENDED),SGA,pm_boostable_market,v2"
+   },
+   "name": "Powyżej 2.5 - tak",
+   "marketName": "Każda z drużyn powyżej X rzutów rożnych",
+   "info": "Każda z drużyn wykona powyżej 2.5 rzutów rożnych w meczu"
+  },
+  {
+   "uuid": "dfdaf0c8-c5b5-5bef-8b3b-d81bf45f45a4",
+   "marketUuid": "190e1176-ad2a-522f-816d-5c286b6e64ff",
+   "marketId": 200685,
+   "outcomeId": 151781,
+   "price": 2.67,
+   "specialBetValue": "3.5",
+   "status": "active",
+   "specifiers": {
+    "total": "3.5"
+   },
+   "marketGroupOrder": 1211570089,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "Corners (BLENDED),BPWM,SGA,pm_boostable_market,v2",
+   "extra": {
+    "tags": "BPWM,Corners (BLENDED),SGA,pm_boostable_market,v2"
+   },
+   "name": "Powyżej 3.5 - tak",
+   "marketName": "Każda z drużyn powyżej X rzutów rożnych",
+   "info": "Każda z drużyn wykona powyżej 3.5 rzutów rożnych w meczu"
+  },
+  {
+   "uuid": "ea40c6e2-38ee-51bb-a83a-9b9efce7b0da",
+   "marketUuid": "1df2bb6f-f86c-5d6c-811f-7221047cf507",
+   "marketId": 200685,
+   "outcomeId": 151781,
+   "price": 4.4,
+   "specialBetValue": "4.5",
+   "status": "active",
+   "specifiers": {
+    "total": "4.5"
+   },
+   "marketGroupOrder": 1211570089,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "Corners (BLENDED),BPWM,SGA,pm_boostable_market,v2",
+   "extra": {
+    "tags": "BPWM,Corners (BLENDED),SGA,pm_boostable_market,v2"
+   },
+   "name": "Powyżej 4.5 - tak",
+   "marketName": "Każda z drużyn powyżej X rzutów rożnych",
+   "info": "Każda z drużyn wykona powyżej 4.5 rzutów rożnych w meczu"
+  },
+  {
+   "uuid": "ea91ddad-a846-50f6-b0f8-8c3ee3838fca",
+   "marketUuid": "93c681a1-6aa4-5ac7-b7b8-3f365f4ae2ee",
+   "marketId": 200685,
+   "outcomeId": 151781,
+   "price": 7.5,
+   "specialBetValue": "5.5",
+   "status": "active",
+   "specifiers": {
+    "total": "5.5"
+   },
+   "marketGroupOrder": 1211570089,
+   "offerStateId": 1,
+   "showSpecialBetValue": "0",
+   "tags": "Corners (BLENDED),BPWM,SGA,pm_boostable_market,v2",
+   "extra": {
+    "tags": "BPWM,Corners (BLENDED),SGA,pm_boostable_market,v2"
+   },
+   "name": "Powyżej 5.5 - tak",
+   "marketName": "Każda z drużyn powyżej X rzutów rożnych",
+   "info": "Każda z drużyn wykona powyżej 5.5 rzutów rożnych w meczu"
+  }
+ ]
+}

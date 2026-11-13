@@ -133,6 +133,7 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "roznica goli": "WINNING_MARGIN",
   "rzuty rozne - przedzialy": "CORNERS_RANGE",
   "spalone 1x2 (opta)": "OFFSIDES_1X2",
+  "spalone 1x2 (opta) (z dogrywka)": "OFFSIDES_1X2",
   "strzaly celne - 1x2 (opta)": "MOST_SHOTS_ON_TARGET",
   "suma celnych strzalow w meczu (opta)": "TOTAL_SHOTS_ON_TARGET",
   "suma celnych strzalow w meczu  (opta)": "TOTAL_SHOTS_ON_TARGET",
@@ -142,6 +143,9 @@ const BETCLIC_MARKET_NAME_TO_CODE: Record<string, NormalizedMarketType> = {
   "liczba strzalow w meczu (opta)": "TOTAL_SHOTS",
   "suma faulu w meczu (opta)": "FOULS_TOTAL",
   "suma spalonych w meczu (opta)": "OFFSIDES_TOTAL",
+  "liczba spalonych w meczu (opta)": "OFFSIDES_TOTAL",
+  "liczba fauli w meczu (opta) (z dogrywka)": "FOULS_TOTAL",
+  "pierwsza druzyna, ktora zostanie zlapana na pozycji spalonej w meczu": "FIRST_OFFSIDE",
   "ostatni rozny": "LAST_CORNER",
   "rzuty rozne": "CORNERS_TOTAL",
   "wiecej kartek": "CARDS_RACE",
@@ -690,6 +694,10 @@ function resolveTeamTacklesMarket(
   const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
   const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
 
+  // Derbies such as Newcastle United vs Manchester United match both sides on
+  // a shared word; an unresolved side stays OTHER rather than being guessed.
+  if (isHome && isAway) return null;
+
   if (isHome) return { teamSide: "HOME", teamName: ctx.homeTeam };
   if (isAway) return { teamSide: "AWAY", teamName: ctx.awayTeam };
 
@@ -708,8 +716,8 @@ function resolveTeamOffsidesMarket(
   const home = normalizeName(ctx.homeTeam);
   const away = normalizeName(ctx.awayTeam);
 
-  // Pattern: "suma spalonych w meczu - {teamName} (opta)"
-  const match = normalizedName.match(/^suma spalonych w meczu\s*-\s*(.+?)\s*\(opta\)$/i);
+  // Pattern: "(suma|liczba) spalonych w meczu - {teamName} (opta)"
+  const match = normalizedName.match(/^(?:suma|liczba) spalonych w meczu\s*-\s*(.+?)\s*\(opta\)$/i);
   if (!match) return null;
 
   const teamPart = match[1].trim();
@@ -717,8 +725,40 @@ function resolveTeamOffsidesMarket(
   const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
   const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
 
+  // Derbies such as Newcastle United vs Manchester United match both sides on
+  // a shared word; an unresolved side stays OTHER rather than being guessed.
+  if (isHome && isAway) return null;
+
   if (isHome) return { code: "HOME_TEAM_TOTAL_OFFSIDES", teamSide: "HOME" };
   if (isAway) return { code: "AWAY_TEAM_TOTAL_OFFSIDES", teamSide: "AWAY" };
+
+  return null;
+}
+
+interface TeamFoulsResult {
+  code: "HOME_TEAM_TOTAL_FOULS" | "AWAY_TEAM_TOTAL_FOULS";
+  teamSide: "HOME" | "AWAY";
+}
+
+function resolveTeamFoulsMarket(
+  normalizedName: string,
+  ctx: NormalizationContext
+): TeamFoulsResult | null {
+  // Pattern: "liczba fauli (opta) - {teamName} (z dogrywka)"
+  const match = normalizedName.match(/^liczba fauli\s*\(opta\)\s*-\s*(.+?)(?:\s*\(z dogrywka\))?$/i);
+  if (!match) return null;
+
+  const teamPart = match[1].trim();
+
+  const isHome = fragmentIsTeam(teamPart, ctx.homeTeam, ctx.league);
+  const isAway = fragmentIsTeam(teamPart, ctx.awayTeam, ctx.league);
+
+  // Derbies such as Newcastle United vs Manchester United match both sides on
+  // a shared word; an unresolved side stays OTHER rather than being guessed.
+  if (isHome && isAway) return null;
+
+  if (isHome) return { code: "HOME_TEAM_TOTAL_FOULS", teamSide: "HOME" };
+  if (isAway) return { code: "AWAY_TEAM_TOTAL_FOULS", teamSide: "AWAY" };
 
   return null;
 }
@@ -884,6 +924,11 @@ function resolveMarketCode(
   const teamOffsides = resolveTeamOffsidesMarket(normalizedName, ctx);
   if (teamOffsides) {
     return { marketCode: teamOffsides.code, matchedBy: "pattern", teamSide: teamOffsides.teamSide };
+  }
+
+  const teamFouls = resolveTeamFoulsMarket(normalizedName, ctx);
+  if (teamFouls) {
+    return { marketCode: teamFouls.code, matchedBy: "pattern", teamSide: teamFouls.teamSide };
   }
 
   const winAtLeastOneHalf = resolveWinAtLeastOneHalfMarket(normalizedName, ctx);
@@ -1596,7 +1641,15 @@ function normalizePenaltyGoalSelection(
 ): NormalizedSelection {
   const normalized = normalizeName(selectionName);
 
-  if (normalized.includes("ktorykolwiek") || normalized.includes("zawodnik") || normalized.includes("any")) {
+  // "Którykolwiek zawodnik strzeli rzut karny" (WC label) and "Którakolwiek
+  // drużyna strzeli gola z rzutu karnego" (current Betclic label) are the same
+  // either-team leg.
+  if (
+    normalized.includes("ktorykolwiek") ||
+    normalized.includes("ktorakolwiek") ||
+    normalized.includes("zawodnik") ||
+    normalized.includes("any")
+  ) {
     return "ANY";
   }
 
@@ -1918,6 +1971,7 @@ function normalizeSelectionForMarket(
     case "FIRST_HALF_FIRST_CARD":
     case "FIRST_SHOT":
     case "FIRST_SHOT_ON_TARGET":
+    case "FIRST_OFFSIDE":
       return normalizeFirstCardSelection(trimmed, ctx.homeTeam, ctx.awayTeam, ctx.league);
 
      case "FIRST_CORNER":
@@ -1977,6 +2031,8 @@ function normalizeSelectionForMarket(
     case "AWAY_POSSESSION":
     case "TOTAL_SHOTS_ON_TARGET":
     case "FOULS_TOTAL":
+    case "HOME_TEAM_TOTAL_FOULS":
+    case "AWAY_TEAM_TOTAL_FOULS":
     case "OFFSIDES_TOTAL":
     case "HOME_TEAM_TOTAL_OFFSIDES":
     case "AWAY_TEAM_TOTAL_OFFSIDES":
@@ -2447,6 +2503,18 @@ function mergeHalfTimeExactCardsTail(
   return merged;
 }
 
+/**
+ * True when a 3-way market resolved to exactly one HOME, one DRAW and one
+ * AWAY leg. normalizeBetclic1x2Selection tests HOME first through
+ * isTeamInSelection, which accepts a single shared word, so in derbies such
+ * as Newcastle United v Manchester United both team legs come out HOME in
+ * either leg order. Such a set cannot be priced per side.
+ */
+function isDistinctHomeDrawAway(selections: { code: NormalizedSelection }[]): boolean {
+  const codes = new Set(selections.map((s) => s.code));
+  return selections.length === 3 && codes.size === 3 && codes.has("HOME") && codes.has("DRAW") && codes.has("AWAY");
+}
+
 export const betclicNormalizer: BookmakerMarketNormalizer = {
   bookmaker: "betclic",
 
@@ -2502,6 +2570,7 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       "CORNERS_TEAM",
       "TEAM_TOTAL_SHOTS",
       "TEAM_TOTAL_SHOTS_ON_TARGET",
+      "TEAM_TOTAL_TACKLES",
     ]);
     if (teamSide && TEAM_SUFFIX_MARKETS_WITH_LINE.has(marketCode)) {
       paramValue = paramValue ? `${teamSide}:${paramValue}` : teamSide;
@@ -2530,6 +2599,30 @@ export const betclicNormalizer: BookmakerMarketNormalizer = {
       label: sel.name,
       odds: sel.odds,
     }));
+
+    // Odds integrity: an offsides 1X2 offer whose legs do not resolve to one
+    // HOME, one DRAW and one AWAY (derby names sharing a word) falls back to
+    // OTHER. Publishing it would show the away price on the HOME side, or
+    // store a second HOME row carrying the away price.
+    if (marketCode === "OFFSIDES_1X2" && !isDistinctHomeDrawAway(selections)) {
+      return {
+        marketCode: "OTHER",
+        paramValue: undefined,
+        parameters: undefined,
+        marketKey: buildMarketKey("OTHER", undefined),
+        customLabel: undefined,
+        selections: mergedRawSelections.map((sel) => ({
+          code: normalizeSelectionForMarket(sel.name, "OTHER", ctx, raw.name),
+          label: sel.name,
+          odds: sel.odds,
+        })),
+        debug: {
+          rawName: raw.name,
+          rawId: raw.bookmakerMarketId ?? undefined,
+          matchedBy,
+        },
+      };
+    }
 
     let customLabel: string | undefined;
     if (marketCode === "RED_CARD_TEAM" && teamName) {

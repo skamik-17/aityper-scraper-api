@@ -1,0 +1,9 @@
+{
+ "betbyApiUrl": "https://betting-betby-secundus.prod.sbteam.xyz",
+ "betbyBrandId": "2694137186776920067",
+ "betbyWsUrl": "wss://api1-ws.sptpub.com/api/v1",
+ "bettingPlatformSvcUrl": "https://betting-betby-secundus.prod.sbteam.xyz",
+ "brandName": "lebull-pl-bb",
+ "translationsUrl": "https://lebull-pl-bb.boxwebcdn.work/translations",
+ "_note": "Subset of https://lebull-pl-bb.boxwebcdn.work/assets/public/config.json (2026-11-06); analytics/sentry keys dropped."
+}

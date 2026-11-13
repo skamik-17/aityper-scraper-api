@@ -265,7 +265,7 @@ function convertSelections(
     .map((s) => ({
       name: s.name || `Selection ${s.order}`,
       odds: s.rate?.decimal || 0,
-      externalId: String(s.id),
+      externalId: s.selection_id,
       status: s.status === "active" ? ("active" as const) : undefined,
     }))
     // Decimal odds <= 1.0 are suspended/placeholder cells (zero payout is
@@ -300,9 +300,10 @@ export function parseMarket(
 
   return {
     name: marketName,
-    // Carry the stable LVBet market id so the normalization audit can match
-    // by id instead of relying on brittle name-regex matching.
-    bookmakerMarketId: market.id != null ? String(market.id) : undefined,
+    // Carry the LVBet market-type (class) id. It is shared by sibling
+    // products (one class can cover several market names), so any id-keyed
+    // lookup downstream must also check the name.
+    bookmakerMarketId: market.markets_class_id != null ? String(market.markets_class_id) : undefined,
     groupName: getMarketGroup(market.name || ""),
     type: getMarketType(market.name || ""),
     selections: convertSelections(validSelections, teams),
@@ -441,11 +442,102 @@ function splitBulkPlayerListMarket(
 
     results.push({
       name: marketName,
-      bookmakerMarketId: market.id != null ? String(market.id) : undefined,
+      bookmakerMarketId: market.markets_class_id != null ? String(market.markets_class_id) : undefined,
       groupName: getMarketGroup(market.name || ""),
       type: getMarketType(market.name || ""),
       paramValue: sel.name,
       selections: [{ name: selectionLabel, odds: sel.odds, externalId: sel.externalId }],
+    });
+  }
+
+  return results.length > 0 ? results : null;
+}
+
+/**
+ * LVBet market group that holds the per-player stat ladders: one market per
+ * stat, every player's tiers bundled as "<Player> <N>+" selections.
+ */
+const PLAYER_STAT_LADDER_GROUP = "Zawodnicy - statystyki";
+
+/**
+ * Normalized names (normalizeMarketName output) of the "Zawodnicy -
+ * statystyki" ladders that have a player-parameter catalog code. Must stay in
+ * sync with LVBET_PLAYER_LADDER_PATTERNS in lvbet-normalizer.ts (a test ties
+ * the two). A ladder missing here stays unsplit, and the normalizer then
+ * drops it to OTHER instead of publishing "<Player> <N>+" as a player code.
+ */
+export const PLAYER_STAT_LADDER_NAMES: ReadonlySet<string> = new Set([
+  "strzały",
+  "strzały celne",
+  "popełnione faule",
+  "faule na zawodniku",
+  "odbiory (tackle)",
+  "asysty",
+  "spalone zawodnika",
+  "obrony bramkarza",
+  "strzały celne głowa",
+  "strzały celne spoza pola karnego",
+]);
+
+const PLAYER_LADDER_SELECTION_PATTERN = /^(.+\S)\s+(\d+)\+$/;
+
+/**
+ * Splits a "Zawodnicy - statystyki" ladder ("Strzały": "Viktor Gyokeres 3+",
+ * "Viktor Gyokeres 4+", ...) into one ScrapedMarket per player, carrying the
+ * player via `paramValue` and each tier N as a "Powyzej <N - 0.5>" selection,
+ * so the normalizer reuses the bulk-split "Powyżej X" -> "N+" tier mapping.
+ * Returns null (the market stays unsplit) unless the market is in the ladder
+ * group, its name is a mapped ladder, and every valid selection has the
+ * "<Player> <N>+" shape: any drift leaves the whole ladder unsplit rather
+ * than guessing a player out of an unknown label.
+ */
+export function splitPlayerStatLadderMarket(
+  market: LVBetMarket,
+  seenPlayerParams: Set<string>
+): ScrapedMarket[] | null {
+  if (market.markets_group?.name !== PLAYER_STAT_LADDER_GROUP) return null;
+
+  const normalizedName = normalizeMarketName(market.name || "");
+  if (!PLAYER_STAT_LADDER_NAMES.has(normalizedName)) return null;
+
+  const selections = convertSelections(market.selections ?? []);
+  if (selections.length === 0) return null;
+
+  const tiersByPlayer = new Map<string, Array<{ tier: number; selection: MarketSelection }>>();
+  for (const selection of selections) {
+    const match = selection.name.match(PLAYER_LADDER_SELECTION_PATTERN);
+    if (!match) return null;
+    const player = match[1];
+    const tier = Number(match[2]);
+    const tiers = tiersByPlayer.get(player) ?? [];
+    // Two prices for one player's tier is not a known shape: picking either
+    // would be a guess, so leave the whole ladder unsplit.
+    if (tiers.some((t) => t.tier === tier)) return null;
+    tiers.push({ tier, selection });
+    tiersByPlayer.set(player, tiers);
+  }
+
+  const results: ScrapedMarket[] = [];
+  for (const [player, tiers] of tiersByPlayer) {
+    // A second market instance of the same ladder must not emit the same
+    // player twice (the rows would collide on one downstream market key).
+    const dedupeKey = `ladder::${normalizedName}::${player}`;
+    if (seenPlayerParams.has(dedupeKey)) continue;
+    seenPlayerParams.add(dedupeKey);
+
+    results.push({
+      name: market.name,
+      bookmakerMarketId: market.markets_class_id != null ? String(market.markets_class_id) : undefined,
+      groupName: getMarketGroup(market.name || ""),
+      type: getMarketType(market.name || ""),
+      paramValue: player,
+      selections: tiers
+        .sort((a, b) => a.tier - b.tier)
+        .map(({ tier, selection }) => ({
+          name: `Powyzej ${tier - 0.5}`,
+          odds: selection.odds,
+          externalId: selection.externalId,
+        })),
     });
   }
 
@@ -465,18 +557,23 @@ export function parseAllMarkets(
   const seenPlayerParams = new Set<string>();
 
   for (const market of markets) {
-    // Create unique key to avoid duplicates. Prefer the stable market id:
-    // LVBet can expose several market instances under the same name (e.g.
-    // player lists split across instances) and deduping by name alone would
-    // silently drop all but the first instance.
-    const key =
-      market.id != null ? `id:${market.id}` : `${market.name}_${market.line || ""}`;
+    // Create unique key to avoid duplicates. Prefer the per-instance
+    // market_id: LVBet publishes distinct products under the same name and
+    // line (e.g. the exact and the range "Arsenal - Dokładna liczba goli"),
+    // and deduping by name alone silently drops all but the first one.
+    const key = market.market_id ?? `${market.name}_${market.line ?? ""}`;
     if (seenKeys.has(key)) continue;
     seenKeys.add(key);
 
     const bulkSplit = splitBulkPlayerListMarket(market, teams, seenPlayerParams);
     if (bulkSplit) {
       result.push(...bulkSplit);
+      continue;
+    }
+
+    const ladderSplit = splitPlayerStatLadderMarket(market, seenPlayerParams);
+    if (ladderSplit) {
+      result.push(...ladderSplit);
       continue;
     }
 
@@ -541,8 +638,10 @@ export function parseExtendedMarkets(markets: LVBetMarket[]): {
 
     // Over/Under
     if (isOverUnderMarket(market) && market.line) {
-      const line = parseFloat(market.line);
-      if (line > 0 && market.line.includes(".5")) {
+      // The v5 payload sends a numeric line; older captures sent a string.
+      const lineText = String(market.line);
+      const line = parseFloat(lineText);
+      if (line > 0 && lineText.includes(".5")) {
         const lineStr = line.toFixed(1);
         const odds = parseOverUnderOdds(market.selections);
         if (odds.over > 0 && odds.under > 0) {

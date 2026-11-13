@@ -19,7 +19,12 @@ export const EKSTRAKLASA_TEAMS: CanonicalTeam[] = [
   // TheSportsDB uses English city names and ASCII characters
   { id: "134010", name: "Lech Poznan", normalized: "lech poznan" },
   { id: "133992", name: "Legia Warszawa", normalized: "legia warszawa" },
-  { id: "135303", name: "Wisla Plock", normalized: "wisla plock" },
+  // TheSportsDB 135659 is Wisła Płock; 135303 (once listed here for Płock)
+  // is Wisła Kraków.
+  { id: "135659", name: "Wisla Plock", normalized: "wisla plock" },
+  // 2026/27 Ekstraklasa (fortuna round 2026-11-20..23): Kraków has three clubs.
+  { id: "135303", name: "Wisla Krakow", normalized: "wisla krakow" },
+  { id: "152462", name: "Wieczysta Krakow", normalized: "wieczysta krakow" },
   { id: "137670", name: "Rakow Czestochowa", normalized: "rakow czestochowa" },
   {
     id: "135297",

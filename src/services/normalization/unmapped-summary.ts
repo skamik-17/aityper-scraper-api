@@ -11,14 +11,14 @@ export interface UnmappedSummary {
   top: Array<[id: string, count: number]>;
 }
 
-const DEFAULT_TOP_N = 5;
+export const UNMAPPED_SUMMARY_TOP_N = 20;
 
 /**
  * Count normalized markets that ended up as OTHER. The key is the raw
  * `bookmakerMarketId`, or the market name when the bookmaker has no id.
  * `top` is sorted by count (desc), then by id (asc, code-unit order).
  */
-export function summarizeUnmappedMarkets(markets: ScrapedMarket[], topN: number = DEFAULT_TOP_N): UnmappedSummary {
+export function summarizeUnmappedMarkets(markets: ScrapedMarket[], topN: number = UNMAPPED_SUMMARY_TOP_N): UnmappedSummary {
   const counts = new Map<string, number>();
   let otherMarkets = 0;
 

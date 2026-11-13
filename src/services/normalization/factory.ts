@@ -128,7 +128,11 @@ function toNormalizedMarket(
   originalParamValue?: string
 ): NormalizedMarket {
   if (!output) {
-    console.warn(`[Normalizer] Market mapped to OTHER: "${originalName}"`);
+    // One summary line per bookmaker per run replaces this per-market line
+    // (unmapped-summary.ts); set NORMALIZER_LOG_OTHER=true to get it back.
+    if (process.env.NORMALIZER_LOG_OTHER === "true") {
+      console.warn(`[Normalizer] Market mapped to OTHER: "${originalName}"`);
+    }
     // Bare "OTHER" (not a truncated-name-based key) so this flows through
     // full-offer-repository.ts's resolveStorageMarketKey() — the single
     // authority for giving each distinct raw OTHER market its own storage

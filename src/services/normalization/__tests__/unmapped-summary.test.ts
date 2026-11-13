@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { summarizeUnmappedMarkets, formatUnmappedSummary } from "../unmapped-summary.js";
 import { normalizeAndSaveMatches } from "../../scrape-helpers.js";
+import { normalizer } from "../index.js";
 import type { FullMatchOffer, ScrapedMarket } from "../../../types/full-offer.js";
 
 // normalizeAndSaveMatches persists through the repository; replace it so the
@@ -94,5 +95,42 @@ describe("unmapped market summary", () => {
       useBatchInsert: true,
     });
     expect(summaryLines()).toEqual([]);
+  });
+  it("keeps the 20 most frequent keys", () => {
+    const markets = Array.from({ length: 25 }, (_, i) =>
+      Array.from({ length: i + 1 }, () => mk(`id${String(i).padStart(2, "0")}`, "OTHER")),
+    ).flat();
+    const s = summarizeUnmappedMarkets(markets);
+    expect(s).toMatchObject({ otherMarkets: 325, distinctIds: 25 });
+    expect(s.top).toHaveLength(20);
+    expect(s.top[0]).toEqual(["id24", 25]);
+    expect(s.top[19]).toEqual(["id05", 6]);
+  });
+
+  it("the factory no longer warns once per OTHER market", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const r = normalizer.normalize(
+      { name: "Zupełnie nieznany rynek", bookmakerMarketId: "bc:999", selections: [{ name: "Tak", odds: 2 }] },
+      "lvbet",
+      "Arsenal",
+      "Chelsea",
+      "premier-league",
+    );
+    expect(r.normalizedType).toBe("OTHER");
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("NORMALIZER_LOG_OTHER=true restores the per-market line", () => {
+    vi.stubEnv("NORMALIZER_LOG_OTHER", "true");
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    normalizer.normalize(
+      { name: "Zupełnie nieznany rynek", bookmakerMarketId: "bc:999", selections: [{ name: "Tak", odds: 2 }] },
+      "lvbet",
+      "Arsenal",
+      "Chelsea",
+      "premier-league",
+    );
+    expect(warn).toHaveBeenCalledWith('[Normalizer] Market mapped to OTHER: "Zupełnie nieznany rynek"');
+    vi.unstubAllEnvs();
   });
 });

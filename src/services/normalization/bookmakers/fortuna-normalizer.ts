@@ -1381,12 +1381,44 @@ export const fortunaNormalizer: BookmakerMarketNormalizer = {
   normalizeMarket(raw: RawBookmakerMarket, ctx: NormalizationContext): NormalizedMarketOutput | null {
     const marketId = raw.bookmakerMarketId ? String(raw.bookmakerMarketId) : null;
 
-    // "Wynik meczu lub 2 gol(e) przewagi" (result OR a 2-goal lead at any point)
-    // settles differently from plain 1X2, and its 3-way shape does not fit the
-    // 2-way WIN_OR_WIN_BY_2 catalog code either. Exclude — never route to
-    // MATCH_WINNER even though the odds look 1X2-like.
-    if (/^wynik meczu lub/.test(normalizeMarketName(raw.name))) {
-      return null;
+    // "Wynik meczu lub N gol(e) PRZEWAGI" (00-p1: a team leg wins if the team
+    // wins the match OR takes an N-goal lead at any point) settles differently
+    // from plain 1X2, so it never reaches MATCH_WINNER even though its odds
+    // look 1X2-like. The 2-goal variant is the 2-way WIN_OR_WIN_BY_2 that
+    // betclic and forbet quote: keep the two team legs and drop "Remis", which
+    // Fortuna prices like the plain final-result draw that MATCH_WINNER
+    // already carries. The team legs must resolve to exactly one HOME and one
+    // AWAY; anything else drops the market rather than guessing a side. Every
+    // other variant, the 1-goal one included, has no catalog code: drop it.
+    const normalizedName = normalizeMarketName(raw.name);
+    if (/^wynik meczu lub/.test(normalizedName)) {
+      if (!/^wynik meczu lub\s+2\s+gol/.test(normalizedName)) return null;
+      const teamLegs = raw.selections
+        .filter((sel) => !isFortunaDrawLabel(sel.name))
+        .map((sel) => ({
+          code: normalize1x2Selection(sel.name, ctx.homeTeam, ctx.awayTeam, ctx.league),
+          label: sel.name,
+          odds: sel.odds,
+        }));
+      const homeLegs = teamLegs.filter((sel) => sel.code === "HOME");
+      const awayLegs = teamLegs.filter((sel) => sel.code === "AWAY");
+      if (teamLegs.length !== 2 || homeLegs.length !== 1 || awayLegs.length !== 1) {
+        console.warn(
+          `[fortuna] WIN_OR_WIN_BY_2: could not resolve one HOME and one AWAY leg for "${raw.name}" (id: ${marketId ?? "none"})`
+        );
+        return null;
+      }
+      return {
+        marketCode: "WIN_OR_WIN_BY_2",
+        paramValue: undefined,
+        marketKey: buildMarketKey("WIN_OR_WIN_BY_2"),
+        selections: teamLegs,
+        debug: {
+          rawName: raw.name,
+          rawId: marketId ?? undefined,
+          matchedBy: "name",
+        },
+      };
     }
 
     let marketCode: NormalizedMarketType | null = null;

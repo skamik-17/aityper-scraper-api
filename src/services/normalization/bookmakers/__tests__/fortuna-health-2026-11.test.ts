@@ -529,3 +529,32 @@ describe("Task 5: exact-goals markets", () => {
     expect(legs(out)).toEqual(["0@4.9", "1@2.95"]);
   });
 });
+
+describe("Task 6: result or a 2-goal lead", () => {
+  it("arsenalHull 00-p1 '… 2 gol(e) PRZEWAGI' is routed", () => {
+    const out = run(live("arsenalHull", "00-p1", "\u00a02\u00a0").raw, ctxOf("arsenalHull"));
+    expect(out?.marketKey).toBe("WIN_OR_WIN_BY_2");
+    expect(legs(out)).toEqual(["AWAY@12.5", "HOME@1.14"]);
+  });
+  it("arsenalHull 00-p1 '… 1 gol(e) PRZEWAGI' stays dropped", () => {
+    expect(run(live("arsenalHull", "00-p1", "\u00a01\u00a0").raw, ctxOf("arsenalHull"))).toBeNull();
+  });
+  it("is dropped when its team legs do not resolve to exactly one HOME and one AWAY", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const name = "Wynik meczu lub\u00a02\u00a0gol(e) PRZEWAGI";
+      // An unresolvable team label: publishing it would mean guessing the side.
+      expect(run({ bookmakerMarketId: "ufo:mtyp:00-p1", name,
+        selections: [{ name: "Remis", odds: 6.5 }, { name: "Chelsea", odds: 12.5 }, { name: "Arsenal", odds: 1.14 }] },
+        ctxOf("arsenalHull"))).toBeNull(); // synthetic
+      // Both team legs on one side.
+      expect(run({ bookmakerMarketId: "ufo:mtyp:00-p1", name,
+        selections: [{ name: "Remis", odds: 6.5 }, { name: "Arsenal", odds: 12.5 }, { name: "Arsenal", odds: 1.14 }] },
+        ctxOf("arsenalHull"))).toBeNull(); // synthetic
+      expect(warn).toHaveBeenCalledTimes(2);
+      expect(String(warn.mock.calls[0][0])).toContain("[fortuna] WIN_OR_WIN_BY_2");
+    } finally {
+      warn.mockRestore();
+    }
+  });
+});

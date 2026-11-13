@@ -522,7 +522,7 @@ describe("fortuna audit fixes", () => {
     expect(away?.selections.map((s) => s.code)).toEqual(["NO", "YES"]);
   });
 
-  it("excludes 'Wynik meczu lub 2 gol(e) przewagi' from MATCH_WINNER", () => {
+  it("routes 'Wynik meczu lub 2 gol(e) przewagi' to the 2-way WIN_OR_WIN_BY_2, never MATCH_WINNER", () => {
     const out = fortunaNormalizer.normalizeMarket(
       {
         name: "Wynik meczu lub 2 gol(e) PRZEWAGI",
@@ -534,7 +534,9 @@ describe("fortuna audit fixes", () => {
       },
       ctxARG
     );
-    expect(out).toBeNull();
+    expect(out?.marketCode).toBe("WIN_OR_WIN_BY_2");
+    expect(out?.marketKey).toBe("WIN_OR_WIN_BY_2");
+    expect(out?.selections.map((s) => `${s.code}@${s.odds}`)).toEqual(["HOME@1.14", "AWAY@19.5"]);
   });
 
   it("routes 00-gg to MOST_SHOTS_ON_TARGET with the 'Równo' draw leg", () => {

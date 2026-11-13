@@ -23,10 +23,11 @@
  *       of a non-OTHER, non-player market (UNKNOWN is A4's)
  *       0 invalidOdds: every normalized selection has a finite price above 1
  *   A6  every compared PZBuk MATCH_WINNER selection within 2.5 percentage
- *       points of the peer median's implied probability, or inside the peer
- *       [min, max] (controller ruling 11: a relative band on decimal odds
- *       fails legitimate long shots, while a swap or a 10x leak is far
- *       outside both). A match without a peer row or without peers is not
+ *       points of the peer median's implied probability (controller ruling
+ *       11: a relative band on decimal odds fails legitimate long shots,
+ *       while a swap or a 10x leak is far outside the band; the peer
+ *       [min, max] is not a pass criterion, as one swapped peer widens it).
+ *       A match without a peer row or without peers is not
  *       compared and does not fail, but peers that were requested with
  *       --peers and could not be loaded fail the run ("A6 NOT CHECKED").
  *   A12 gatedNonOther = 0: no ordinal ("2. gol") or unrendered template
@@ -59,8 +60,8 @@ const MAX_UNKNOWN_SHARE = 0.02;
 const MAX_COLLISIONS = 0;
 /**
  * A6: largest |1/odds - 1/median| (implied probability) of a PZBuk
- * MATCH_WINNER selection against the peer median; a price inside the peer
- * [min, max] passes as well (withinPeerBand).
+ * MATCH_WINNER selection against the peer median (withinPeerBand). The peer
+ * [min, max] is reported but never lets a price pass.
  */
 const MAX_1X2_IMPLIED_PROBABILITY_GAP = 0.025;
 /** Catalog view types whose selection list is a player placeholder, not a closed vocabulary. */
@@ -297,12 +298,11 @@ const impliedProbabilityGap = (q: X12Quote): number => Math.abs(1 / q.odds - 1 /
 
 /**
  * A6 for one selection (controller ruling 11): a valid PZBuk price within
- * MAX_1X2_IMPLIED_PROBABILITY_GAP of the peer median's implied probability,
- * or inside the peer [min, max].
+ * MAX_1X2_IMPLIED_PROBABILITY_GAP of the peer median's implied probability.
  */
 export function withinPeerBand(q: X12Quote): boolean {
   if (!isPrice(q.odds)) return false;
-  return impliedProbabilityGap(q) <= MAX_1X2_IMPLIED_PROBABILITY_GAP || (q.min <= q.odds && q.odds <= q.max);
+  return impliedProbabilityGap(q) <= MAX_1X2_IMPLIED_PROBABILITY_GAP;
 }
 
 /** Largest implied-probability gap over the valid quotes; null when none could be compared. */

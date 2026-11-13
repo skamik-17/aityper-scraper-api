@@ -242,13 +242,22 @@ describe("pzbuk smoke: MATCH_WINNER against peers (A6)", () => {
     expect(arsenalHull(9).x12Outliers.map((q) => q.code)).toEqual(["AWAY"]);
   });
 
-  it("A6 rule: within 2.5 pp of the median's implied probability, or inside the peer [min, max]", () => {
+  it("A6 rule: within 2.5 pp of the median's implied probability, nothing else", () => {
     const q = (odds: number, median: number, min: number, max: number) => ({ code: "DRAW", odds, median, min, max });
     expect(withinPeerBand(q(3.9, 3.6, 3.55, 3.65))).toBe(true); // 2.1 pp, outside the range
-    expect(withinPeerBand(q(4.15, 3.6, 3.4, 4.2))).toBe(true); // 3.7 pp, inside the range
+    expect(withinPeerBand(q(4.15, 3.6, 3.4, 4.2))).toBe(false); // 3.7 pp, inside the range but too far
     expect(withinPeerBand(q(4.25, 3.6, 3.4, 4.2))).toBe(false); // 4.2 pp, above the range
     expect(withinPeerBand(q(Number.NaN, 3.6, 3.4, 4.2))).toBe(false);
     expect(withinPeerBand(q("3.6" as unknown as number, 3.6, 3.4, 4.2))).toBe(false);
+  });
+
+  it("fails a PZBuk swap even when one swapped peer widens the peer range", () => {
+    const peerHomes = [1.6, 1.62, 1.65, 1.7, 5.0]; // median 1.65, one peer swapped HOME/AWAY: range covers 4.91
+    const rows = Object.fromEntries(peerHomes.map((h, i) => [`peer${i}`, x12(h, 3.9, 5.0)]));
+    const swapped = [market("1x2", "MATCH_WINNER", "MATCH_WINNER", [["Everton FC", "HOME", 4.91], ["Remis", "DRAW", 3.92], ["Coventry City", "AWAY", 1.66]])];
+    const peers = new Map([[peerKey("Everton", "Coventry City"), peerRow("Everton", "Coventry City", rows)]]);
+    const report = evaluateMatch({ ...fixtureMatch(), markets: [] }, quiet(swapped), peers);
+    expect(report.x12Outliers.map((q) => q.code)).toContain("HOME");
   });
 
   it("treats a non-finite PZBuk price as an outlier, not as a missing comparison", () => {

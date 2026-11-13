@@ -26,8 +26,12 @@ export interface FakeStsServerOptions {
   silentAlways?: readonly string[];
   /** open() rejects with it */
   openError?: Error;
+  /** The n-th open() rejects with the n-th entry (undefined = opens) */
+  openErrorsInOrder?: ReadonlyArray<Error | undefined>;
   /** The collect active at the first fixture request rejects with it */
   closeOnFixtureRequest?: Error;
+  /** Only this many sessions, from the first, close on their fixture request (default: every one) */
+  closingSessions?: number;
 }
 
 export interface FakeStsServer {
@@ -58,6 +62,9 @@ export function createFakeStsServer(opts: FakeStsServerOptions): FakeStsServer {
     async open(sessionOpts: WsSessionOptions): Promise<WsSession> {
       server.opened.push(sessionOpts);
       if (opts.openError) throw opts.openError;
+      const openError = opts.openErrorsInOrder?.[server.opened.length - 1];
+      if (openError) throw openError;
+      const closesOnFixtureRequest = server.opened.length <= (opts.closingSessions ?? Infinity);
 
       const queue: string[] = [];
       const stats = { framesReceived: 0, bytesReceived: 0 };
@@ -99,7 +106,7 @@ export function createFakeStsServer(opts: FakeStsServerOptions): FakeStsServer {
           const msg = JSON.parse(data) as { t: number; u?: Array<{ s: string; n?: number }> };
           for (const entry of msg.u ?? []) {
             if (entry.n !== 0) continue;
-            if (opts.closeOnFixtureRequest && FIXTURE_TOPIC.test(entry.s) && !closedWith) {
+            if (opts.closeOnFixtureRequest && closesOnFixtureRequest && FIXTURE_TOPIC.test(entry.s) && !closedWith) {
               closedWith = opts.closeOnFixtureRequest;
               turn();
               return;
@@ -156,7 +163,7 @@ export async function runWsPath(
   league = "premier-league",
 ): Promise<{ value: FullOfferScraperResult; lines: string[]; server: FakeStsServer; scraper: StsWsScraper }> {
   const server = createFakeStsServer({ ipl: [input.ipl], fixtures: input.byFixture, ...extra });
-  const scraper = new StsWsScraper({ openSession: server.open });
+  const scraper = new StsWsScraper({ openSession: server.open, retryDelayMs: () => 0 });
   const { value, lines } = await captureLines(() => scraper.scrapeFullOffer(league, budget));
   return { value, lines, server, scraper };
 }

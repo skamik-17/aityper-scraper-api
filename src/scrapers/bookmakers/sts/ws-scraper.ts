@@ -8,11 +8,15 @@
  * subscription; re-send once with n:0 only for the ids still missing; skip
  * what is missing after that (no offer, so no write and no prune), and fail
  * the whole run when the misses trip the breaker.
+ *
+ * A socket that fails to connect, times out or closes mid-stream is retried
+ * once with a fresh session and fresh state, when the budget still holds a
+ * whole attempt.
  */
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";
 import type { FullMatchOffer, FullOfferScraperResult } from "../../../types/full-offer.js";
-import { createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
+import { BudgetExceededError, createScrapeBudget, type ScrapeBudget } from "../../shared/budget.js";
 import {
   DEFAULT_MAX_DURATION_MS,
   type FullOfferScraper,
@@ -43,18 +47,40 @@ import {
 export interface StsWsScraperDeps {
   /** Default: openWsSession */
   openSession?: (opts: WsSessionOptions) => Promise<WsSession>;
+  /** Delay before the one retry. Default: 0-499 ms full jitter */
+  retryDelayMs?: () => number;
 }
+
+/** Below this budget a retry could not wait for the i_pl and one snapshot round, so none is made */
+export const STS_RETRY_MIN_BUDGET_MS = STS_IPL_TIMEOUT_MS + STS_SNAPSHOT_TIMEOUT_MS;
+
+const RETRYABLE = /^ws (failed|closed|timeout) /;
+
+function errorText(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+/** A dropped, refused or timed-out socket; never the run budget, nor an edge that blocks us (1008) */
+function isRetryable(error: unknown): boolean {
+  if (error instanceof BudgetExceededError) return false;
+  const message = errorText(error);
+  return RETRYABLE.test(message) && classifyStsWsFailure(message) === "transient";
+}
+
+const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
 export class StsWsScraper implements FullOfferScraper, TransportStatsSource {
   readonly bookmaker: PolishBookmaker = "sts";
   readonly transport = "websocket" as const;
 
   private readonly openSession: (opts: WsSessionOptions) => Promise<WsSession>;
+  private readonly retryDelayMs: () => number;
   /** Cumulative and monotonic since construction (README §3); every session adds to it */
   private readonly totalStats = { framesReceived: 0, bytesReceived: 0 };
 
   constructor(deps: StsWsScraperDeps = {}) {
     this.openSession = deps.openSession ?? openWsSession;
+    this.retryDelayMs = deps.retryDelayMs ?? (() => Math.floor(Math.random() * 500));
   }
 
   transportStats(): TransportStats {
@@ -77,6 +103,31 @@ export class StsWsScraper implements FullOfferScraper, TransportStatsSource {
     if (!isLeagueSupported(league, this.bookmaker)) return fail(`Unknown league: ${league}`);
     const runBudget = budget ?? createScrapeBudget(DEFAULT_MAX_DURATION_MS.websocket);
 
+    try {
+      return await this.attempt(league, runBudget, start, fail);
+    } catch (e) {
+      if (!isRetryable(e) || runBudget.remainingMs() < STS_RETRY_MIN_BUDGET_MS) return fail(errorText(e));
+      console.warn(`[STS/WS] retrying once with a fresh session after: ${errorText(e)}`);
+    }
+    try {
+      await sleep(this.retryDelayMs());
+      return await this.attempt(league, runBudget, start, fail);
+    } catch (e) {
+      return fail(errorText(e));
+    }
+  }
+
+  /**
+   * One session from scratch: i_pl, then the fixture snapshots. Failures the
+   * session itself decides are returned through `fail`; a transport error or
+   * a budget abort is thrown.
+   */
+  private async attempt(
+    league: string,
+    runBudget: ScrapeBudget,
+    start: number,
+    fail: (error: string) => FullOfferScraperResult,
+  ): Promise<FullOfferScraperResult> {
     let session: WsSession | undefined;
     try {
       runBudget.checkpoint();
@@ -168,8 +219,6 @@ export class StsWsScraper implements FullOfferScraper, TransportStatsSource {
         ...(missing.length > 0 ? { error: missCause } : {}),
         duration: Date.now() - start,
       };
-    } catch (e) {
-      return fail(e instanceof Error ? e.message : String(e));
     } finally {
       if (session) {
         this.totalStats.framesReceived += session.stats.framesReceived;

@@ -109,10 +109,49 @@ describe("StsWsScraper", () => {
   });
 
   it.each([`ws timeout 10000ms ${URL}`, `ws failed ECONNRESET ${URL}`])("connect failure is transient, no fallback hint: %s", async (msg) => {
-    const { value: r, lines, scraper } = await runWsPath(wsInput(), { openError: new Error(msg) });
+    const { value: r, lines, scraper, server } = await runWsPath(wsInput(), { openError: new Error(msg) });
     expect(r.error).toBe(msg);
-    expect(lines.some((l) => l.startsWith("[STS/WS]"))).toBe(false);
+    expect(lines.filter((l) => l.startsWith("[STS/WS]"))).toEqual([`[STS/WS] retrying once with a fresh session after: ${msg}`]);
+    expect(server.opened).toHaveLength(2); // the one retry fails the same way
     expect(scraper.transportStats()).toEqual({ ws: { framesReceived: 0, bytesReceived: 0 } });
+  });
+
+  it.each([`ws timeout 10000ms ${URL}`, `ws failed ECONNRESET ${URL}`, `ws closed 1006 ${URL}`])("one failed connect is retried once with a fresh session: %s", async (msg) => {
+    const { value: r, lines, server } = await runWsPath(wsInput(), { openErrorsInOrder: [new Error(msg)] });
+    expect(r).toMatchObject({ success: true, bookmaker: "sts" });
+    expect("error" in r).toBe(false);
+    expect(r.matches.map((m) => m.matchId)).toEqual([...WS_IDS]);
+    expect(server.opened).toHaveLength(2);
+    expect(lines).toContain(`[STS/WS] retrying once with a fresh session after: ${msg}`);
+  });
+
+  it("a socket closed while snapshots stream is retried once with fresh state", async () => {
+    const msg = `ws closed 1006 ${URL}`;
+    const { value: r, server, scraper } = await runWsPath(wsInput(), { closeOnFixtureRequest: new Error(msg), closingSessions: 1 });
+    expect(r).toMatchObject({ success: true });
+    expect("error" in r).toBe(false);
+    expect(r.matches.map((m) => m.matchId)).toEqual([...WS_IDS]);
+    expect(server.opened).toHaveLength(2);
+    expect(server.closeCalls).toBe(2);
+    // The fixture request that met the close, then a fresh session from scratch: i_pl + sync, then every fixture
+    const IPL = '{"t":1,"u":[{"s":"i_pl","n":0}]}';
+    expect(server.sent).toEqual([IPL, '{"t":4}', ALL, IPL, '{"t":4}', ALL]);
+    // Session 1 got the i_pl only; session 2 the i_pl and four snapshots
+    expect(scraper.transportStats().ws!.framesReceived).toBe(1 + 5);
+  });
+
+  it("no retry when the budget left is below a fresh attempt", async () => {
+    const msg = `ws closed 1006 ${URL}`;
+    const { value: r, server, lines } = await runWsPath(wsInput(), { closeOnFixtureRequest: new Error(msg), closingSessions: 1 }, createScrapeBudget(14_000));
+    expect(r).toMatchObject({ success: false, error: msg, matches: [] });
+    expect(server.opened).toHaveLength(1);
+    expect(lines.some((l) => l.includes("retrying"))).toBe(false);
+  });
+
+  it.each([`ws handshake HTTP 403 ${URL}`, `ws handshake HTTP 503 ${URL}`, `ws closed 1008 ${URL}`])("a blocked edge is not retried: %s", async (msg) => {
+    const { value: r, server } = await runWsPath(wsInput(), { openErrorsInOrder: [new Error(msg)] });
+    expect(r).toMatchObject({ success: false, error: msg });
+    expect(server.opened).toHaveLength(1);
   });
 
   it("i_pl never arrives", async () => {
@@ -122,11 +161,12 @@ describe("StsWsScraper", () => {
     expect(server.closeCalls).toBe(1);
   });
 
-  it("socket closes while snapshots stream", async () => {
+  it("socket closes while snapshots stream, and again on the one retry", async () => {
     const msg = `ws closed 1006 ${URL}`;
     const { value: r, server } = await runWsPath(wsInput(), { closeOnFixtureRequest: new Error(msg) });
     expect(r).toMatchObject({ success: false, error: msg, matches: [] });
-    expect(server.closeCalls).toBe(1);
+    expect(server.opened).toHaveLength(2);
+    expect(server.closeCalls).toBe(2);
   });
 
   it("unknown league: no session", async () => {

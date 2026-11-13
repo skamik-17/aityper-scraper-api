@@ -121,6 +121,46 @@ describe("BetcrisSwarmScraper", () => {
     expect(r.matches).toHaveLength(kept);
   });
 
+  /** A fake whose first session drops (1006) when game `RECORDED_GAME_IDS[at]` is requested; `session` holds each game request's session */
+  const droppingFake = (at: number, sessionsThatDrop = 1) => {
+    const session = new Map<number, number[]>();
+    const fake: FakeSwarm = createFakeSwarm(recordedAnswer({ override: (q) => {
+      if (!isGame(q)) return undefined;
+      const n = fake.opened.length;
+      session.set(n, [...(session.get(n) ?? []), q.params.where.game.id]);
+      return n <= sessionsThatDrop && q.params.where.game.id === RECORDED_GAME_IDS[at] ? { closeCode: 1006 } : undefined;
+    } }));
+    return { fake, session };
+  };
+
+  it("betcris swarm: a mid-stream drop reopens the session once and re-requests only the failed games", async () => {
+    const { fake, session } = droppingFake(12);
+    const r = await settle(scraper(fake).scrapeFullOffer("premier-league"));
+    expect(r).toMatchObject({ success: true }); expect(r.error).toBeUndefined();
+    expect(r.matches.map((m) => m.matchId)).toEqual(RECORDED_GAME_IDS.map(String)); // listing order
+    expect(r.matches.map((m) => m.markets.length)).toEqual(Array(20).fill(perGame));
+    expect(fake.opened).toHaveLength(2); expect(fake.closed).toBe(2);
+    // Games 1-12 were answered before the drop; only the 13th and later are asked again
+    expect([...session.get(2)!].sort()).toEqual([...RECORDED_GAME_IDS.slice(12)].sort());
+    expect(warns()).toContain(`[Betcris/Swarm] session dropped (ws closed 1006 ${WS}); reopening once for 8 failed games`);
+  });
+
+  it("betcris swarm: no reopen when the budget left is below a fresh session and one game", async () => {
+    const { fake } = droppingFake(12);
+    const r = await settle(scraper(fake).scrapeFullOffer("premier-league", createScrapeBudget(15_000)));
+    expect(r).toMatchObject({ success: true, error: `8 of 20 details failed | ws closed 1006 ${WS}` });
+    expect(r.matches).toHaveLength(12); expect(fake.opened).toHaveLength(1);
+  });
+
+  it("betcris swarm: the reopened session dropping too ends the scrape with what both sessions got", async () => {
+    const { fake, session } = droppingFake(12, 2);
+    const r = await settle(scraper(fake).scrapeFullOffer("premier-league"));
+    expect(fake.opened).toHaveLength(2); expect(fake.closed).toBe(2);
+    expect(session.get(2)![0]).toBe(RECORDED_GAME_IDS[12]); // the trigger is asked first again and drops session 2
+    expect(r).toMatchObject({ success: true, error: `8 of 20 details failed | ws closed 1006 ${WS}` });
+    expect(r.matches.map((m) => m.matchId)).toEqual(RECORDED_GAME_IDS.slice(0, 12).map(String));
+  });
+
   it("betcris swarm: fails with the close cause when the socket drops before the listing reply", async () => {
     const fake = createFakeSwarm(recordedAnswer({ override: (q) => (q.params?.where?.competition ? { closeCode: 1006 } : undefined) }));
     const r = await settle(scraper(fake).scrapeFullOffer("premier-league"));
@@ -156,5 +196,6 @@ describe("BetcrisSwarmScraper", () => {
     const r = await settle(scraper(fake).scrapeFullOffer("premier-league", createScrapeBudget(120_000, parent.signal)));
     expect(r).toMatchObject({ success: false, matches: [], error: "20 of 20 details failed | scrape aborted: shutdown" });
     expect(fake.sent.filter(isGame).length).toBeLessThanOrEqual(4); expect(fake.closed).toBe(1);
+    expect(fake.opened).toHaveLength(1); // a budget abort is never reopened
   });
 });

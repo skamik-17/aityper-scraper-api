@@ -82,6 +82,16 @@ describe("betcris swarm-client", () => {
     const outcomes = await settle(Promise.allSettled(pending));
     expect(outcomes.map((o) => (o.status === "rejected" ? String(o.reason?.message) : "fulfilled"))).toEqual(Array(3).fill(`ws closed 1006 ${WS}`));
     await expect(settle(client.request("get", swarmGameParams(31333515), 10_000))).rejects.toThrow(`ws closed 1006 ${WS}`);
+    expect(client.dropped?.message).toBe(`ws closed 1006 ${WS}`);
+  });
+
+  it("dropped: null while the session is open and after our own close", async () => {
+    const fake = createFakeSwarm(recordedAnswer());
+    const client = await settle(openSwarmClient(CFG, createScrapeBudget(120_000), fake.open));
+    await settle(client.request("get", swarmGameParams(31333512), 10_000));
+    expect(client.dropped).toBeNull();
+    await client.close();
+    expect(client.dropped).toBeNull();
   });
 
   it("openSwarmClient rejects and closes the session when request_session fails", async () => {

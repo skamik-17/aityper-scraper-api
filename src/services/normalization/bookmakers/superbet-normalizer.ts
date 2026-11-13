@@ -1200,16 +1200,6 @@ function normalizeSelectionForMarket(
     case "CORNERS_TEAM_RANGE":
       return normalizeRangeSelection(trimmed, lower);
 
-    case "HALF_TIME_HOME_EXACT_GOALS": {
-      // The catalog's top band is a bare count ("3"); Superbet quotes it as
-      // "3+" - strip the "+" so the odds join the existing comparison column.
-      const plusBand = trimmed.match(/^(\d+)\+$/);
-      if (plusBand && literalCatalogCodes?.includes(plusBand[1])) {
-        return plusBand[1] as NormalizedSelection;
-      }
-      return normalizeRangeSelection(trimmed, lower);
-    }
-
     case "HALF_WITH_MORE_GOALS":
     case "HOME_HALF_WITH_MOST_GOALS":
     case "AWAY_HALF_WITH_MOST_GOALS":
@@ -1481,12 +1471,16 @@ function normalizeSelectionForMarket(
     // Every in-vocabulary band was already returned by the literal catalog-
     // code passthrough at the top. Anything else must not reach the 1X2
     // mapper below, where a bare "3" (outside HALF_TIME_EXACT_GOALS's
-    // 0/1/2/2+/3+) would become DRAW.
+    // 0/1/2/2+/3+) would become DRAW. HALF_TIME_HOME_EXACT_GOALS's bands are
+    // 0/1/2/2+/3 with no "3+": Superbet's top band "3+" (3 or more) used to
+    // be stripped to "3" (exactly 3). It is UNKNOWN now and dropped in
+    // normalizeMarket (controller ruling 3).
     case "EXACT_GOALS":
     case "HOME_EXACT_GOALS":
     case "AWAY_EXACT_GOALS":
     case "HALF_TIME_EXACT_GOALS":
     case "HALF_TIME_AWAY_EXACT_GOALS":
+    case "HALF_TIME_HOME_EXACT_GOALS":
       return "UNKNOWN";
 
     case "OTHER":
@@ -1786,6 +1780,14 @@ export const superbetNormalizer: BookmakerMarketNormalizer = {
     // instead of surfacing a second, unlabeled-looking button online.
     if (EACH_TEAM_OVER_ONLY_MARKETS.has(marketCode)) {
       selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+    }
+
+    // HALF_TIME_HOME_EXACT_GOALS has no catalog tier for Superbet's "3+"
+    // band (see normalizeSelectionForMarket): drop it rather than publish a
+    // 3-or-more price under another band.
+    if (marketCode === "HALF_TIME_HOME_EXACT_GOALS") {
+      selections = selections.filter((sel) => sel.code !== "UNKNOWN");
+      if (selections.length === 0) return null;
     }
 
     // "Liczba czerwonych kartek" (RED_CARDS_TOTAL's OVER/UNDER selections on

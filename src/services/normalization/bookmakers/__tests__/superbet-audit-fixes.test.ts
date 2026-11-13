@@ -256,19 +256,6 @@ describe("superbet: exact-goals family maps by id", () => {
       ],
       ["0", "1", "2", "3+"],
     ],
-    // Regression: 558 was already mapped; its catalog top band is a bare "3".
-    [
-      "558",
-      "HALF_TIME_HOME_EXACT_GOALS",
-      "1.połowa - Arsenal - dokładna liczba goli",
-      [
-        ["0", 3],
-        ["1", 2.5],
-        ["2", 3.75],
-        ["3+", 5.8],
-      ],
-      ["0", "1", "2", "3"],
-    ],
   ];
 
   it.each(rows)("exact goals: id %s maps to %s", (id, marketCode, name, sels, codes) => {
@@ -287,6 +274,48 @@ describe("superbet: exact-goals family maps by id", () => {
     expect(out.selections.map((s) => s.code)).toEqual(codes);
     expect(out.selections.map((s) => s.odds)).toEqual(sels.map(([, odds]) => odds));
     expect(console.warn).not.toHaveBeenCalled();
+  });
+
+  // Controller ruling 3: HALF_TIME_HOME_EXACT_GOALS's catalog bands are
+  // 0/1/2/2+/3, with no "3+". Superbet's top band is "3+" (3 or more), which
+  // used to be published as "3" (exactly 3). No catalog tier carries a 3+
+  // price for this market, so the band is dropped, never relabelled.
+  it("558 drops the '3+' band instead of publishing it as exactly '3'", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "558",
+        name: "1.połowa - Arsenal - dokładna liczba goli",
+        selections: [
+          { name: "0", odds: 3 },
+          { name: "1", odds: 2.5 },
+          { name: "2", odds: 3.75 },
+          { name: "3+", odds: 5.8 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.marketCode).toBe("HALF_TIME_HOME_EXACT_GOALS");
+    expect(out.marketKey).toBe("HALF_TIME_HOME_EXACT_GOALS");
+    expect(out.debug?.matchedBy).toBe("id");
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["0", 3], ["1", 2.5], ["2", 3.75]]);
+  });
+
+  it("558 keeps a real exactly-3 band", () => {
+    const out = run(
+      {
+        bookmakerMarketId: "558",
+        name: "1.połowa - Arsenal - dokładna liczba goli",
+        selections: [
+          { name: "0", odds: 3 },
+          { name: "1", odds: 2.5 },
+          { name: "2", odds: 3.75 },
+          { name: "3", odds: 9 },
+          { name: "4+", odds: 21 },
+        ],
+      },
+      arsHul
+    );
+    expect(out.selections.map((s) => [s.code, s.odds])).toEqual([["0", 3], ["1", 2.5], ["2", 3.75], ["3", 9]]);
   });
 
   // Hypothetical ladder: every live 568 ladder (100 ladders on the 20 PL

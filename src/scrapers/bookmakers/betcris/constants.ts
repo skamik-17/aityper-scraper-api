@@ -225,8 +225,14 @@ export const WS_CONFIG = {
   MAX_WAIT_TIME_SINGLE_EVENT: 16000,
   /** No Swarm socket this long after page.goto settles (resolve or reject) -> failure (ms) */
   WS_OPEN_TIMEOUT: 15000,
-  /** No useful frame this long after the first Swarm socket opened -> failure (ms) */
+  /** Listing: no useful frame this long after the first Swarm socket opened -> failure (ms) */
   FIRST_USEFUL_FRAME_TIMEOUT: 30000,
+  /**
+   * Single-event (match page): the same window, longer. A match page has less
+   * headroom under load than the listing, and its target_game_missing is final
+   * (never retried), so a slow page must not be mistaken for a gone game (ms).
+   */
+  FIRST_USEFUL_FRAME_TIMEOUT_SINGLE_EVENT: 45000,
   /** Capture attempts per URL (target_game_missing is never retried) */
   MAX_ATTEMPTS: 2,
   /** Pause between capture attempts (ms) */

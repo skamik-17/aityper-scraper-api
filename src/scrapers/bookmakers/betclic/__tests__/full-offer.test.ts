@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { PlaywrightScraper } from "../../../base/playwright-base.js";
 import { groupResults, ORDER, TOP_MSG } from "./betclic-fixtures.js";
+import { hasTransportStats } from "../../../shared/scraper-contract.js";
+import { addBetclicTransportStats, type BetclicTransportStats } from "../navigation.js";
 
 const h = vi.hoisted(() => ({
   fetchLeagueMatches: vi.fn(),
@@ -95,6 +97,31 @@ describe("BetclicPlaywrightScraper.scrapeFullOffer", () => {
     h.listing.mockReturnValue([ARSENAL]);
     h.fetchMarketGroupResults.mockResolvedValue(groupResults(Object.fromEntries(ORDER.map((g) => [g, TOP_MSG.subarray(0, 5995)]))));
     expect(await scrape()).toMatchObject({ success: false, matches: [], error: "1 of 1 details failed | 0 markets parsed" });
+  });
+
+  it("logs per-match and per-run transport stats and keeps cumulative totals", async () => {
+    h.listing.mockReturnValue([ARSENAL, LEEDS]);
+    h.fetchLeagueMatches.mockImplementation(async (_league: string, opts?: { stats?: BetclicTransportStats }) => {
+      if (opts?.stats) addBetclicTransportStats(opts.stats, { requests: 1, retries: 0, failures: 0, bytes: 100, byStatus: { "200": 1 }, gzipResponses: 1 });
+      return Buffer.alloc(16);
+    });
+    h.fetchMarketGroupResults.mockImplementation(async (_id: string, opts?: { stats?: BetclicTransportStats }) => {
+      if (opts?.stats) addBetclicTransportStats(opts.stats, { requests: 7, retries: 0, failures: 0, bytes: 1000, byStatus: { "200": 7 }, gzipResponses: 7 });
+      return groupResults();
+    });
+    const s = new BetclicPlaywrightScraper();
+    await s.scrapeFullOffer("premier-league");
+    expect(logLines()).toContain("[Betclic/Transport] Arsenal vs Hull: wire 1000 B, 7 requests, 0 retries, 0 failures, gzip 7/7");
+    expect(logLines().filter((l) => /^\[Betclic\/Transport\] premier-league: 2\/2 matches in \d+ ms, wire 2100 B, 15 requests, 0 retries, 0 failures, gzip 15\/15$/.test(l)))
+      .toHaveLength(1);
+    expect(hasTransportStats(s)).toBe(true);
+    const first = s.transportStats();
+    expect(first).toEqual({ http: { requests: 15, retries: 0, failures: 0, bytes: 2100, byStatus: { "200": 15 } } });
+    await s.scrapeFullOffer("premier-league");
+    const second = s.transportStats();
+    expect(second).toEqual({ http: { requests: 30, retries: 0, failures: 0, bytes: 4200, byStatus: { "200": 30 } } });
+    expect(second).not.toBe(first);
+    expect(second.http!.byStatus).not.toBe(first.http!.byStatus);
   });
 
   it("fails the run when more than half of the attempted matches are skipped", async () => {

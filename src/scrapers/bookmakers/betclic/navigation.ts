@@ -25,8 +25,50 @@ import {
   RETRY_DELAY,
   MARKET_GROUP_FILTERS,
 } from "./constants.js";
+import { pipeline } from "node:stream";
+import { createGunzip } from "node:zlib";
+import type { HttpStats } from "../../shared/http/http-client.js";
 import { encodeVarint, encodeBigVarint } from "./parser.js";
 import { MIN_GROUP_BYTES, type BetclicGroupName, type BetclicGroupResult } from "./match-groups.js";
+
+/**
+ * gRPC transport counters with HttpStats semantics: requests = HTTP attempts sent,
+ * retries = attempts after the first per fetchGrpcStream call, failures =
+ * fetchGrpcStream calls that rejected, bytes = response body bytes as received
+ * (compressed when gzip), byStatus = status per response, or "timeout" / "network"
+ * for an attempt that got no response headers. gzipResponses counts gzip bodies.
+ */
+export interface BetclicTransportStats extends HttpStats {
+  gzipResponses: number;
+}
+
+export function createBetclicTransportStats(): BetclicTransportStats {
+  return { requests: 0, retries: 0, failures: 0, bytes: 0, byStatus: {}, gzipResponses: 0 };
+}
+
+/** Adds `from` into `into`, summing every counter and merging byStatus. */
+export function addBetclicTransportStats(into: BetclicTransportStats, from: Readonly<BetclicTransportStats>): void {
+  into.requests += from.requests;
+  into.retries += from.retries;
+  into.failures += from.failures;
+  into.bytes += from.bytes;
+  into.gzipResponses += from.gzipResponses;
+  for (const [status, n] of Object.entries(from.byStatus)) into.byStatus[status] = (into.byStatus[status] ?? 0) + n;
+}
+
+export function formatBetclicTransportStats(s: Readonly<BetclicTransportStats>): string {
+  return `wire ${s.bytes} B, ${s.requests} requests, ${s.retries} retries, ${s.failures} failures, gzip ${s.gzipResponses}/${s.byStatus["200"] ?? 0}`;
+}
+
+/** Per-call options: counters to add to, and the frame deadline (default GRPC_FRAME_DEADLINE). */
+export interface GrpcCallOptions {
+  stats?: BetclicTransportStats;
+  deadlineMs?: number;
+}
+
+function countStatus(stats: BetclicTransportStats | undefined, key: string): void {
+  if (stats) stats.byStatus[key] = (stats.byStatus[key] ?? 0) + 1;
+}
 
 /**
  * Fetch data from gRPC-web endpoint with retry logic
@@ -38,12 +80,14 @@ import { MIN_GROUP_BYTES, type BetclicGroupName, type BetclicGroupResult } from 
  * @param url - gRPC endpoint URL
  * @param body - Protobuf message body (without frame header)
  * @param timeoutMs - Request timeout in milliseconds
+ * @param opts - Transport counters and the frame deadline
  * @returns Decoded response buffer
  */
 export async function fetchGrpcStream(
   url: string,
   body: Buffer,
-  timeoutMs: number = REQUEST_TIMEOUT
+  timeoutMs: number = REQUEST_TIMEOUT,
+  opts: GrpcCallOptions = {}
 ): Promise<Buffer> {
   // Build gRPC-web frame: 1 byte flag + 4 bytes length (big endian) + message
   const frame = Buffer.alloc(5 + body.length);
@@ -54,8 +98,9 @@ export async function fetchGrpcStream(
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    if (attempt > 0 && opts.stats) opts.stats.retries++;
     try {
-      const result = await fetchGrpcWithNodeHttp(url, frame, timeoutMs);
+      const result = await fetchGrpcWithNodeHttp(url, frame, timeoutMs, opts);
       return result;
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
@@ -71,30 +116,37 @@ export async function fetchGrpcStream(
     }
   }
 
+  if (opts.stats) opts.stats.failures++;
   throw lastError || new Error("All retry attempts failed");
 }
 
 /**
- * Internal function to perform gRPC request using Node.js https module
- * This avoids fetch's stream handling issues with gRPC-web streaming endpoints
+ * One gRPC-web attempt over node:https (node:http for an http: URL, as tests use).
+ * This avoids fetch's stream handling issues with gRPC-web streaming endpoints.
+ *
+ * Asks for gzip and decodes it in front of the complete-frame reader. On every
+ * settle (frame complete, deadline, error, non-200, trailers-only, unsupported
+ * encoding) the SOURCE response and the request are destroyed, so the socket
+ * never outlives the call: Betclic never ends these streams.
  */
-async function fetchGrpcWithNodeHttp(
+export async function fetchGrpcWithNodeHttp(
   url: string,
   frame: Buffer,
-  timeoutMs: number
+  timeoutMs: number,
+  opts: GrpcCallOptions = {}
 ): Promise<Buffer> {
-  // Dynamic import to avoid top-level import issues
-  const https = await import("https");
-
   const parsedUrl = new URL(url);
+  // Dynamic import to avoid top-level import issues
+  const transport = parsedUrl.protocol === "http:" ? await import("node:http") : await import("node:https");
+  const { stats } = opts;
 
   return new Promise((resolve, reject) => {
     const options = {
       hostname: parsedUrl.hostname,
-      port: 443,
+      port: parsedUrl.port || 443,
       path: parsedUrl.pathname,
       method: "POST",
-      headers: GRPC_HEADERS,
+      headers: { ...GRPC_HEADERS, "Accept-Encoding": "gzip" },
       // Socket idle timeout: it guards the wait for the response headers.
       // Once they arrive, the frame deadline below bounds the body.
       timeout: timeoutMs,
@@ -102,10 +154,23 @@ async function fetchGrpcWithNodeHttp(
 
     // The frame deadline counts from the request start, not from the headers
     const startedAt = Date.now();
+    let gotResponse = false;
+    if (stats) stats.requests++;
 
-    const req = https.request(options, (res) => {
-      if (res.statusCode !== 200) {
+    const req = transport.request(options, (res) => {
+      gotResponse = true;
+      // The SOURCE response and the request/socket, never only a wrapper stream
+      const release = () => {
         res.destroy();
+        req.destroy();
+      };
+      countStatus(stats, String(res.statusCode));
+      res.on("data", (chunk: Buffer) => {
+        if (stats) stats.bytes += chunk.length;
+      });
+
+      if (res.statusCode !== 200) {
+        release();
         reject(new Error(`gRPC request failed: HTTP ${res.statusCode}`));
         return;
       }
@@ -113,20 +178,35 @@ async function fetchGrpcWithNodeHttp(
       // Trailers-only response: the call failed and no data frame follows
       const grpcStatus = res.headers["grpc-status"];
       if (grpcStatus !== undefined && grpcStatus !== "0") {
-        res.destroy();
+        release();
         reject(new Error(`gRPC error ${grpcStatus}: ${res.headers["grpc-message"] ?? ""}`));
         return;
       }
 
-      const deadlineMs = Math.max(1, GRPC_FRAME_DEADLINE - (Date.now() - startedAt));
-      readGrpcWebTextStream(res, { deadlineMs }).then(resolve, (error: Error) => {
-        req.destroy();
-        reject(error);
-      });
+      const encoding = String(res.headers["content-encoding"] ?? "identity").toLowerCase();
+      if (encoding !== "gzip" && encoding !== "identity") {
+        release();
+        reject(new Error(`gRPC-web unsupported content-encoding ${encoding}`));
+        return;
+      }
+      if (encoding === "gzip" && stats) stats.gzipResponses++;
+
+      const deadlineMs = Math.max(1, (opts.deadlineMs ?? GRPC_FRAME_DEADLINE) - (Date.now() - startedAt));
+      // pipeline needs its callback (else ERR_INVALID_ARG_TYPE); errors reach the reader as body 'error'
+      const body = encoding === "gzip" ? pipeline(res, createGunzip(), () => {}) : res;
+      readGrpcWebTextStream(body, { deadlineMs, release }).then(resolve, (error: NodeJS.ErrnoException) =>
+        reject(
+          error.code?.startsWith("Z_") ? new Error(`Incomplete gRPC-web frame: gzip ${error.code} ${error.message}`) : error
+        )
+      );
     });
 
-    req.on("error", reject);
+    req.on("error", (error) => {
+      if (!gotResponse) countStatus(stats, "network");
+      reject(error);
+    });
     req.on("timeout", () => {
+      if (!gotResponse) countStatus(stats, "timeout");
       req.destroy();
       reject(new Error("Request timeout"));
     });
@@ -204,7 +284,7 @@ export function decodeGrpcWebTextFrame(data: string): GrpcWebTextFrame {
  */
 export function readGrpcWebTextStream(
   res: NodeJS.ReadableStream & { destroy?(): void },
-  opts: { deadlineMs: number }
+  opts: { deadlineMs: number; release?: () => void }
 ): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: string[] = [];
@@ -226,6 +306,8 @@ export function readGrpcWebTextStream(
       settled = true;
       clearTimeout(deadline);
       res.destroy?.();
+      // The caller's source (response + request) behind a decoding wrapper
+      opts.release?.();
       outcome();
     };
 
@@ -359,7 +441,7 @@ export function buildMatchDetailsRequestWithFilter(
  * @param league - League slug (e.g., "premier-league")
  * @returns Raw protobuf buffer with listing response
  */
-export async function fetchLeagueMatches(league: string): Promise<Buffer | null> {
+export async function fetchLeagueMatches(league: string, opts: GrpcCallOptions = {}): Promise<Buffer | null> {
   const competitionId = COMPETITION_IDS[league];
   if (!competitionId) {
     console.error(`[Betclic/Navigation] Unknown league: ${league}`);
@@ -369,7 +451,7 @@ export async function fetchLeagueMatches(league: string): Promise<Buffer | null>
   try {
     console.log(`[Betclic/Navigation] Fetching ${league} (competition ID: ${competitionId})`);
     const requestBody = buildListingRequest(competitionId);
-    const response = await fetchGrpcStream(ENDPOINTS.listing, requestBody);
+    const response = await fetchGrpcStream(ENDPOINTS.listing, requestBody, REQUEST_TIMEOUT, opts);
 
     if (response.length < 10) {
       console.warn(`[Betclic/Navigation] Empty response for ${league}`);
@@ -484,7 +566,10 @@ function delay(ms: number): Promise<void> {
  * throws: a failed group carries its error message so the caller can decide
  * whether the match is complete enough to be written (see match-groups.ts).
  */
-export async function fetchMarketGroupResults(matchId: string): Promise<BetclicGroupResult[]> {
+export async function fetchMarketGroupResults(
+  matchId: string,
+  opts: GrpcCallOptions = {}
+): Promise<BetclicGroupResult[]> {
   const filterEntries = Object.entries(MARKET_GROUP_FILTERS) as [BetclicGroupName, string | null][];
 
   console.log(
@@ -495,7 +580,7 @@ export async function fetchMarketGroupResults(matchId: string): Promise<BetclicG
     filterEntries.map(async ([group, categoryId]): Promise<BetclicGroupResult> => {
       try {
         const requestBody = buildMatchDetailsRequestWithFilter(matchId, categoryId);
-        const response = await fetchGrpcStream(ENDPOINTS.match, requestBody);
+        const response = await fetchGrpcStream(ENDPOINTS.match, requestBody, REQUEST_TIMEOUT, opts);
         return { group, response, error: null };
       } catch (error) {
         console.warn(

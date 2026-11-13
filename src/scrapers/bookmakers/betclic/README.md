@@ -224,6 +224,7 @@ npx tsx scripts/betclic-market-discovery.ts --proto
 | Symptom | Cause | Solution |
 |---------|-------|----------|
 | HTTP 403 | Missing headers | Check GRPC_HEADERS in constants.ts |
+| Incomplete gRPC-web frame: gzip Z_… | Stream cut mid-gzip | Retried automatically; if persistent, check the response content-encoding |
 | 0 markets | Wrong protobuf structure | Use `--proto` flag to inspect |
 | Timeout / Incomplete gRPC-web frame | Slow or throttled stream | Check the retry warnings; raise GRPC_FRAME_DEADLINE |
 | BigInt error | Match ID overflow | Use encodeBigVarint() |

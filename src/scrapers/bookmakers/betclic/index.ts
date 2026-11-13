@@ -26,6 +26,10 @@ import {
   fetchMarketGroupResults,
   extractMatchIdFromUrl,
   buildEventUrl,
+  createBetclicTransportStats,
+  addBetclicTransportStats,
+  formatBetclicTransportStats,
+  type BetclicTransportStats,
 } from "./navigation.js";
 import {
   parseListingResponse,
@@ -41,6 +45,7 @@ import {
 import type { BetclicListingMatch } from "./types.js";
 import { assessMatchGroups } from "./match-groups.js";
 import { toIsoStartTime } from "../../shared/start-time.js";
+import type { TransportStats, TransportStatsSource } from "../../shared/scraper-contract.js";
 
 /** Same value as plan 02's MAX_SKIPPED_DETAIL_RATIO: more skipped matches than this fails the run. */
 const MAX_SKIPPED_MATCH_RATIO = 0.5;
@@ -48,6 +53,8 @@ const MAX_SKIPPED_MATCH_RATIO = 0.5;
 /** Per-run context handed to fetchMatchOffer. */
 interface MatchFetchContext {
   league: string;
+  /** The match's own transport counters. */
+  stats: BetclicTransportStats;
 }
 
 /** What happened to one listed match: written, or skipped with the reason (no write, no prune). */
@@ -61,10 +68,12 @@ const eventsCache = new ScraperCache<BetclicListingMatch>({
   maxSize: 500,
 });
 
-export class BetclicPlaywrightScraper extends PlaywrightScraper {
+export class BetclicPlaywrightScraper extends PlaywrightScraper implements TransportStatsSource {
   bookmaker: PolishBookmaker = "betclic";
   readonly transport = "http" as const;
   config: ScraperConfig;
+  /** Transport counters of every scrapeFullOffer since construction (README §3: cumulative). */
+  private readonly totals = createBetclicTransportStats();
 
   constructor(config?: Partial<ScraperConfig>) {
     super();
@@ -73,6 +82,12 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       ...config,
       enabled: true,
     };
+  }
+
+  /** A copy of the cumulative counters; callers diff two readings around a unit of work. */
+  transportStats(): TransportStats {
+    const { requests, retries, failures, bytes, byStatus } = this.totals;
+    return { http: { requests, retries, failures, bytes, byStatus: { ...byStatus } } };
   }
 
   private updateCache(matches: BetclicListingMatch[]): void {
@@ -256,8 +271,9 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       );
     }
 
+    const runStats = createBetclicTransportStats();
     try {
-      const listingData = await fetchLeagueMatches(league);
+      const listingData = await fetchLeagueMatches(league, { stats: runStats });
       if (!listingData) {
         return {
           success: false,
@@ -280,7 +296,12 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       for (const listingMatch of listingMatches) {
         if (!listingMatch.matchId) continue;
 
-        const outcome = await this.fetchMatchOffer(listingMatch, { league });
+        const matchStats = createBetclicTransportStats();
+        const outcome = await this.fetchMatchOffer(listingMatch, { league, stats: matchStats });
+        console.log(
+          `[Betclic/Transport] ${listingMatch.homeTeam} vs ${listingMatch.awayTeam}: ${formatBetclicTransportStats(matchStats)}`
+        );
+        addBetclicTransportStats(runStats, matchStats);
         if (outcome.kind === "written") {
           matches.push(outcome.offer);
         } else {
@@ -294,6 +315,9 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       }
 
       const totalMarkets = matches.reduce((sum, m) => sum + m.markets.length, 0);
+      console.log(
+        `[Betclic/Transport] ${league}: ${matches.length}/${listingMatches.length} matches in ${Date.now() - startTime} ms, ${formatBetclicTransportStats(runStats)}`
+      );
       console.log(
         `[Betclic/FullOffer] Completed: ${matches.length} matches, ${totalMarkets} total markets`
       );
@@ -316,6 +340,8 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
       };
     } catch (error) {
       return this.createFullOfferErrorResult(league, error, Date.now() - startTime);
+    } finally {
+      addBetclicTransportStats(this.totals, runStats);
     }
   }
 
@@ -335,7 +361,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
         `[Betclic/FullOffer] Fetching markets for ${homeTeam} vs ${awayTeam} (ID: ${matchId})`
       );
 
-      const assessment = assessMatchGroups(await fetchMarketGroupResults(matchId));
+      const assessment = assessMatchGroups(await fetchMarketGroupResults(matchId, { stats: ctx.stats }));
       if (!assessment.ok) return { kind: "skipped", reason: assessment.reason };
 
       console.log(

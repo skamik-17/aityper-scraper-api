@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -110,5 +110,20 @@ describe("readGrpcWebTextStream", () => {
     const p = readGrpcWebTextStream(s, { deadlineMs: 5000 });
     s.write(grpcWebTextFrame(0x01, gzipSync(decodeGrpcWebTextFrame(HANDICAP).message)));
     await expect(p).rejects.toThrow(/gRPC-web compressed frame not supported/);
+  });
+  it("readGrpcWebTextStream calls release exactly once per settle", async () => {
+    const ok = new PassThrough();
+    const r1 = vi.fn();
+    const p1 = readGrpcWebTextStream(ok, { deadlineMs: 5000, release: r1 });
+    ok.write(HANDICAP);
+    await expect(p1).resolves.toHaveLength(11926);
+    ok.write("more");
+    expect(r1).toHaveBeenCalledTimes(1);
+    const cut = new PassThrough();
+    const r2 = vi.fn();
+    const p2 = readGrpcWebTextStream(cut, { deadlineMs: 5000, release: r2 });
+    cut.end(HANDICAP.slice(0, 8000));
+    await expect(p2).rejects.toThrow(/^Incomplete gRPC-web frame: 5995\/11926 bytes$/);
+    expect(r2).toHaveBeenCalledTimes(1);
   });
 });

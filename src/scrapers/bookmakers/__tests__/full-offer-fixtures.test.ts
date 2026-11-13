@@ -71,7 +71,7 @@ import { EtotoBrowserScraper } from "../etoto/index.js";
 import { FuksiarzBrowserScraper } from "../fuksiarz/index.js";
 import { BetfanBrowserScraper } from "../betfan/index.js";
 import { LVBetPlaywrightScraper } from "../lvbet/index.js";
-import { SuperbetPlaywrightScraper } from "../superbet/index.js";
+import { SuperbetBrowserScraper } from "../superbet/index.js";
 import { BetclicPlaywrightScraper } from "../betclic/index.js";
 import { parseListingResponse } from "../betclic/parser.js";
 
@@ -100,7 +100,7 @@ const SCRAPERS = [
   ["fuksiarz", () => new FuksiarzBrowserScraper()],
   ["betfan", () => new BetfanBrowserScraper()],
   ["lvbet", () => new LVBetPlaywrightScraper()],
-  ["superbet", () => new SuperbetPlaywrightScraper()],
+  ["superbet", () => new SuperbetBrowserScraper()],
 ] as const;
 
 describe("full-offer harness (recorded payloads, no browser)", () => {

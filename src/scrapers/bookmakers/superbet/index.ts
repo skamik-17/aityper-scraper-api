@@ -35,7 +35,8 @@ import {
 import type { SuperbetEvent } from "./types.js";
 import { mapSuperbetEventOffer, selectUpcomingSuperbetEvents } from "./full-offer-mapping.js";
 
-export class SuperbetPlaywrightScraper extends PlaywrightScraper {
+/** superbet's browser path, kept as the SCRAPER_TRANSPORT_SUPERBET=browser fallback (src/scrapers/bookmakers/index.ts picks). */
+export class SuperbetBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "superbet";
   config: ScraperConfig;
 
@@ -287,4 +288,4 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
   }
 }
 
-export const superbetScraper = new SuperbetPlaywrightScraper();
+export { SuperbetHttpScraper } from "./http-scraper.js";

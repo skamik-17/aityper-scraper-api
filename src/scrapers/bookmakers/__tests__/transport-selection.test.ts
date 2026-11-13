@@ -14,6 +14,7 @@ describe("per-brand transport selection", () => {
     ["fuksiarz", "SCRAPER_TRANSPORT_FUKSIARZ", "fuksiarzScraper", "FuksiarzHttpScraper", "FuksiarzBrowserScraper"],
     ["betfan", "SCRAPER_TRANSPORT_BETFAN", "betfanScraper", "BetfanHttpScraper", "BetfanBrowserScraper"],
     ["fortuna", "SCRAPER_TRANSPORT_FORTUNA", "fortunaScraper", "FortunaHttpScraper", "FortunaBrowserScraper"],
+    ["superbet", "SCRAPER_TRANSPORT_SUPERBET", "superbetScraper", "SuperbetHttpScraper", "SuperbetBrowserScraper"],
   ])(
     "%s: HTTP by default, browser class when %s=browser",
     async (_bm, env, inst, httpCls, browserCls) => {
@@ -28,9 +29,14 @@ describe("per-brand transport selection", () => {
     },
   );
 
-  it("the audit registry audits the selected fortuna instance", async () => {
-    const m = await import("../index.js");
+  it.each([["fortuna", "fortunaScraper"], ["superbet", "superbetScraper"]])("the audit registry audits the selected %s instance", async (bm, inst) => {
+    const m: any = await import("../index.js");
     const reg = await import("../../../services/audit/bookmaker-registry.js");
-    expect(reg.getBookmakerAuditTargets("fortuna")!.scraper).toBe(m.fortunaScraper);
+    expect(reg.getBookmakerAuditTargets(bm)!.scraper).toBe(m[inst]);
+  });
+
+  it("superbet no longer opts out of resource blocking", async () => {
+    const { DEFAULT_SCRAPER_CONFIGS } = await import("../../../types/scraper.js");
+    expect(DEFAULT_SCRAPER_CONFIGS.superbet.disableResourceBlocking).toBeUndefined();
   });
 });

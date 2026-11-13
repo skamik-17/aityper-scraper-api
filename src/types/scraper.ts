@@ -168,7 +168,6 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
-    disableResourceBlocking: true, // Uses network interception for API data
   },
   lvbet: {
     bookmaker: "lvbet",

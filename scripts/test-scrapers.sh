@@ -33,7 +33,7 @@ declare -A SCRAPERS=(
     ["lvbet"]="LVBetPlaywrightScraper"
     ["pzbuk"]="PzbukPlaywrightScraper"
     ["sts"]="STSScraper"
-    ["superbet"]="SuperbetPlaywrightScraper"
+    ["superbet"]="SuperbetBrowserScraper"
     ["totalbet"]="TotalbetPlaywrightScraper"
 )
 
@@ -333,7 +333,7 @@ import * as scrapers from './src/scrapers/bookmakers/index.ts';
         fortuna: scrapers.FortunaBrowserScraper,
         lvbet: scrapers.LVBetPlaywrightScraper,
         sts: scrapers.STSScraper,
-        superbet: scrapers.SuperbetPlaywrightScraper,
+        superbet: scrapers.SuperbetBrowserScraper,
         fuksiarz: scrapers.FuksiarzBrowserScraper,
     };
 
@@ -388,7 +388,7 @@ import * as scrapers from './src/scrapers/bookmakers/index.ts';
         fortuna: scrapers.FortunaBrowserScraper,
         lvbet: scrapers.LVBetPlaywrightScraper,
         sts: scrapers.STSScraper,
-        superbet: scrapers.SuperbetPlaywrightScraper,
+        superbet: scrapers.SuperbetBrowserScraper,
     };
 
     const filter = '$match_filter'.toLowerCase();

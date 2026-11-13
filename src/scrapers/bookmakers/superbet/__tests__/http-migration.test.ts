@@ -5,7 +5,7 @@ import { captureLogs, envelope, runBrowserPathOffline, stripScrapedAt, type Repl
 import { browserPool } from "../../../base/browser-pool.js";
 import type { HttpClient } from "../../../shared/http/http-client.js";
 import { SuperbetHttpScraper } from "../http-scraper.js";
-import { SuperbetPlaywrightScraper } from "../index.js";
+import { SuperbetBrowserScraper } from "../index.js";
 import { buildSuperbetListingUrl, superbetEventDetailUrl } from "../navigation.js";
 import { parseAllMarkets, parseTeamNames } from "../parser.js";
 import type { SuperbetEventDetailResponse, SuperbetEventsResponse } from "../types.js";
@@ -44,7 +44,7 @@ describe("superbet browser path (characterization, recorded 2026-11-07)", () => 
   it("listing URL equals plan 01's builder output (literal '+' and ':')", () => expect(buildSuperbetListingUrl("106", CAPTURED_AT)).toBe(LISTING_URL));
 
   it("browser path (characterization): kickoff order, finished event dropped, failed detail absent", async () => {
-    const { result, requests } = await runBrowserPathOffline(new SuperbetPlaywrightScraper(), "premier-league", ROUTES);
+    const { result, requests } = await runBrowserPathOffline(new SuperbetBrowserScraper(), "premier-league", ROUTES);
     expect(result.success).toBe(true);
     expect(result.matches.map(envelope)).toEqual(ENVELOPES);
     expect(result.matches.map((m) => m.markets)).toEqual([parsed(14438716), parsed(14656301)]);
@@ -76,7 +76,7 @@ describe("SuperbetHttpScraper", () => {
   it("declares transport http", () => expect(new SuperbetHttpScraper().transport).toBe("http"));
 
   it("contract: deep-equals the browser path; the failed detail is reported, not dropped silently", async () => {
-    const old = await runBrowserPathOffline(new SuperbetPlaywrightScraper(), "premier-league", ROUTES);
+    const old = await runBrowserPathOffline(new SuperbetBrowserScraper(), "premier-league", ROUTES);
     const client = createReplayHttpClient(ROUTES);
     const { value: neu, logs } = await captureLogs(() => new SuperbetHttpScraper(client).scrapeFullOffer("premier-league"));
     expect(neu).toMatchObject({ success: true, error: `1 of 3 details failed | fetch HTTP 500 ${DETAIL_URL(14438722)}` });

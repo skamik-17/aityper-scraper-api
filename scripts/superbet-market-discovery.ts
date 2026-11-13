@@ -11,7 +11,7 @@
  *   npx tsx scripts/superbet-market-discovery.ts --url "<event url>" --league <slug> --market "Liczba goli"  # one market detail
  *   npx tsx scripts/superbet-market-discovery.ts --url "<event url>" --league <slug> --all      # full detail for all markets
  */
-import { superbetScraper } from "../src/scrapers/bookmakers/superbet/index.js";
+import { superbetScraper } from "../src/scrapers/bookmakers/index.js";
 import { superbetNormalizer } from "../src/services/normalization/bookmakers/superbet-normalizer.js";
 import { runScraperDiscovery } from "../src/services/audit/scraper-audit-core.js";
 

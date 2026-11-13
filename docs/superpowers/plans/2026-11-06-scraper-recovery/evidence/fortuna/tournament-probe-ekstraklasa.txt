@@ -1,0 +1,313 @@
+# tournament-probe 2026-11-13T17:24:42.982Z old id ufo:tour:00-0b9
+base https://www.efortuna.pl -> HTTP 200 https://www.efortuna.pl/
+
+## 1. old id ufo:tour:00-0b9: HTTP 404, fixtures -1, error non-JSON body: Structure with id ufo:tour:00-0b9 not found
+
+## 2. league page https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/polska-ekstraklasa -> HTTP 200 https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/polska-ekstraklasa
+structure endpoints seen:
+  1x 200 /offer/structure/api/v1_0/codebook/timeFilters
+  3x 200 /offer/structure/api/v1_0/fixtures/count
+  1x 200 /offer/structure/api/v1_0/sport/ufo:sprt:00/categories
+  1x 200 /offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  1x 200 /offer/structure/api/v1_0/sports
+  1x 200 /offer/structure/api/v1_0/tournaments
+  1x 200 /offer/structure/api/v1_0/widget/prematch/bonus-tip
+  1x 404 /offer/structure/api/v1_0/prematch/tournament/ufo:tour:00-0b9/fixtures
+  1x 404 /offer/structure/api/v1_0/sport/ufo:sprt:00/races
+tournament ids seen: 206
+  ufo:tour:00-000  names=["EURO 2028"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-004  names=["Japonia Puchar Ligi"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-005  names=["1.Indonezja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00b  names=["1.Anglia (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00g  names=["Spotkania towarzyskie U-23"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00i  names=["4.Niemcy Południowy zachód"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00k  names=["4.Niemcy Bawaria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00p  names=["3.Szwajcaria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00t  names=["Belgia (U21)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00v  names=["1.Hiszpania (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00x  names=["Portugalia (U19)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-00y  names=["2.Bułgaria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-010  names=["1.Francja (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-011  names=["1.Ghana"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-015  names=["1.Senegal"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-01o  names=["2.Holandia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-01s  names=["Argentyna Primera B"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-01u  names=["1.Australia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-01x  names=["ZEA Puchar Ligi"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-022  names=["3.Czechy MSFL"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-023  names=["3.Czechy CFL"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-025  names=["1.Dania (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-026  names=["1.Austria (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-02i  names=["1.Rumunia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-02z  names=["Anglia Premier League Cup (U21)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-037  names=["King s Cup"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03a  names=["1.Kenia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03i  names=["1.USA (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03l  names=["Anglia FA Cup"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03m  names=["1.Anglia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03n  names=["1.Chorwacja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03p  names=["1.Cypr"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03q  names=["1.Czechy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-03r  names=["5.Anglia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-040  names=["2.Anglia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-044  names=["Ekstraliga (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-045  names=["2.Francja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-04a  names=["1.Argentyna (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-04b  names=["Kwalifikacje Pucharu Narodów Afryki"]  sources=json:/offer/structure/api/v1_0/tournaments, json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-04c  names=["1.Grecja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-04e  names=["2.Grecja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-04g  names=["1.Węgry"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-04j  names=["1.Australia (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-04y  names=["1.Chiny (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-055  names=["2.Maroko"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-059  names=["1.Japonia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05a  names=["1.Łotwa"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05b  names=["2.Bahrajn"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05f  names=["1.Norwegia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05g  names=["1.Irlandia Płn."]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05k  names=["Ekstraklasa Polska"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05o  names=["2.Czechy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05r  names=["2.Szkocja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05s  names=["3.Szkocja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05u  names=["1.Włochy (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05v  names=["4.Szkocja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05w  names=["1.Szkocja (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05x  names=["3.Japonia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05y  names=["Anglia EFL Cup"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-05z  names=["1.Serbia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-062  names=["1.Słowacja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-064  names=["1.Nigeria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-065  names=["1.Słowenia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-069  names=["1.Szwajcaria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-06d  names=["Niemcy Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-06i  names=["2.Norwegia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-06l  names=["2.Słowacja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-06o  names=["1.Belgia (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-06q  names=["Polska 1.liga"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-06t  names=["1.Włochy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-06w  names=["1.Niemcy (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-073  names=["1.Uzbekistan"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-078  names=["Liga Narodów UEFA"]  sources=json:/offer/structure/api/v1_0/tournaments, json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-07a  names=["1.Portugalia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-07d  names=["2.Portugalia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-07f  names=["3.Anglia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-07l  names=["SAFF Championship"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-07r  names=["1.Bułgaria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-07u  names=["Spotkania towarzyskie"]  sources=json:/offer/structure/api/v1_0/tournaments, json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-07v  names=["4.Anglia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-082  names=["1.Walia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08c  names=["Kwalifikacje ME U-21"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08e  names=["Portugalia (U23)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08h  names=["Francja (U19)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08i  names=["3.Holandia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08l  names=["3.Włochy A"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08m  names=["3.Włochy B"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08n  names=["3.Włochy C"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08t  names=["1.Kolumbia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08x  names=["1.Panama"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-08z  names=["2.Meksyk"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-092  names=["Liga Narodów CONCACAF"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-093  names=["Hiszpania Copa Federación"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-094  names=["1.Meksyk"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09b  names=["2.Kostaryka"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09c  names=["1.Urugwaj"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09h  names=["1.Boliwia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09l  names=["Polska Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09n  names=["USA USL Championship"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09p  names=["Czechy Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09w  names=["1.Meksyk (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-09y  names=["MŚ 2027 (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0a4  names=["2.Walia Płd."]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0a5  names=["2.Walia Płn."]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ad  names=["1.Szwajcaria (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ai  names=["Słowacja Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ak  names=["Chorwacja Puchar "]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0b8  names=["1.Brazylia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0b9  names=[]  sources=request-url
+  ufo:tour:00-0bc  names=["Włochy Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0bd  names=["Hiszpania Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0bg  names=["Szkocja Puchar Ligi"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0bi  names=["Francja Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0bo  names=["1.Francja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0bu  names=["Liga Konferencji"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0by  names=["1.Japonia (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0c2  names=["4.Dania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0c3  names=["3.Hiszpania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0c5  names=["Holandia (U21)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0c6  names=["1.Niemcy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0cb  names=["1.RPA"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0cd  names=["1.Szkocja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0cf  names=["Towarzyskie klubów"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0cp  names=["1.Holandia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ct  names=["Brazylia Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0d1  names=["1.Belgia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0d2  names=["Brazylia Pernambucano"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0d5  names=["Copa Libertadores"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0d8  names=["Walia Puchar"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0da  names=["1.Dania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0db  names=["2.Brazylia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0dk  names=["1.Szwecja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0dm  names=["2.Japonia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0dr  names=["3.Słowacja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0dv  names=["1.Peru"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0e3  names=["4.Niemcy Północ"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0e6  names=["2.Niemcy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0e8  names=["1.Austria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ee  names=["2.Dania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0eg  names=["Puchar Ameryki Płd."]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ei  names=["3.Niemcy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ep  names=["Polska 2.liga"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0eq  names=["1.Turcja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0er  names=["2.Włochy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0es  names=["2.Słowenia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0et  names=["2.Hiszpania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0eu  names=["4.Hiszpania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ex  names=["2.Rumunia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0f6  names=["Anglia FA Trophy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0ff  names=["3.Dania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0fo  names=["Liga Europy"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0fu  names=["2.Ukraina"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0fy  names=["Liga Mistrzów"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0fz  names=["2.Irlandia Płn."]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0g0  names=["2.Argentyna"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0g1  names=["1.Gruzja"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0g5  names=["2.Czarnogóra"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0g8  names=["2.Serbia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0gn  names=["Kwalifikacje ME U-19"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0h7  names=["1.Hiszpania"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0hc  names=["Czechy U19"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0hg  names=["1.Algieria"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0hi  names=["Indie I-League"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0hk  names=["Spotkania towarzyskie U-21"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0hl  names=["Spotkania towarzyskie U-20"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0i1  names=["1.Arabia S."]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0lr  names=["4.Czechy-gr. D"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0lt  names=["4.Czechy-gr. A"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0lu  names=["4.Czechy-gr. B"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0lv  names=["4.Czechy-gr. C"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0m6  names=["4.Czechy-gr. E"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0m8  names=["4.Czechy-gr. F"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0os  names=["Polska 3.liga grupa I"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0pn  names=["Japonia Football League"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0pt  names=["Polska 3.liga grupa II"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0pu  names=["Polska 3.liga grupa III"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0te  names=["2.Wenezuela"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0x4  names=["USA USL Super League (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0x7  names=["Anglia amatorzy Isthmian League, Pr. Div"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0x8  names=["Anglia amatorzy Southern League Premier South"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0x9  names=["Anglia amatorzy Northern Premier League Premier"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0xa  names=["Anglia amatorzy Southern League Premier Central"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0xu  names=["1.Czechy (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0y2  names=["Holandia Derde Divisie"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-0yl  names=["Polska 3.liga grupa IV"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-10y  names=["3.Meksyk"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-111  names=["Hiszpania Primera Federacion (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-12h  names=["2.Francja (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-16l  names=["USA MLS"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-17d  names=["Liga Mistrzów-Afryka (K)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-181  names=["1.Mali"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-1ks  names=["N.Zelandia Northern League"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-2bv  names=["Australia-Championship"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:00-2tf  names=["3. Irlandia"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:0c-002  names=["Esports Battle Liga Mistrzów (2x6 min.)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:0c-00c  names=["Esports Battle Volta International A (2x3 min.)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:0c-00z  names=["Esports Battle Liga Mistrzów (2x4 min.)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:0c-01f  names=["Esports Battle - Super Lig (2x4 min.)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:0c-026  names=["Esports Battle - World Cup B (2x4min)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:0c-02a  names=["Esports Battle - A-League (2x4 min.)"]  sources=json:/offer/structure/api/v1_0/sport/ufo:sprt:00/tournaments
+  ufo:tour:0i-00b  names=["NBA"]  sources=json:/offer/structure/api/v1_0/tournaments
+  ufo:tour:0i-00d  names=["Euroliga (M)"]  sources=json:/offer/structure/api/v1_0/tournaments
+  ufo:tour:0i-031  names=["Polska OBL (M)"]  sources=json:/offer/structure/api/v1_0/tournaments
+  ufo:tour:0m-03i  names=["Polska TAURON Liga (M)"]  sources=json:/offer/structure/api/v1_0/tournaments
+  ufo:tour:0w-00n  names=["1.Polska"]  sources=json:/offer/structure/api/v1_0/tournaments
+  ufo:tour:0x-0iy  names=["WTA Finals, singiel"]  sources=json:/offer/structure/api/v1_0/tournaments
+
+## 3. candidates (12)
+candidate ufo:tour:00-05k: HTTP 200, fixtures 9  names=["Ekstraklasa Polska"]
+  2026-11-21T16:30:00.000Z  AWAY:Górnik Zabrze | HOME:Zagłębie Lubin  (tournamentId ufo:tour:00-05k, ufo:mtch:1xw-056)
+  2026-11-21T19:15:00.000Z  AWAY:Wisła Kraków | HOME:Radomiak Radom  (tournamentId ufo:tour:00-05k, ufo:mtch:1xw-057)
+  2026-11-21T13:45:00.000Z  AWAY:Jagiellonia Białystok | HOME:Cracovia  (tournamentId ufo:tour:00-05k, ufo:mtch:1xw-055)
+  2026-11-22T13:45:00.000Z  AWAY:Lech Poznań | HOME:GKS Katowice  (tournamentId ufo:tour:00-05k, ufo:mtch:1xx-04x)
+  2026-11-22T11:15:00.000Z  AWAY:Widzew Łódź | HOME:Raków Częstochowa  (tournamentId ufo:tour:00-05k, ufo:mtch:1xx-04y)
+  fixture tournamentIds ["ufo:tour:00-05k"]
+candidate ufo:tour:00-06q: HTTP 200, fixtures 9  names=["Polska 1.liga"]
+  2026-11-21T14:30:00.000Z  AWAY:Arka Gdynia | HOME:Pogon Grodzisk Mazowiecki  (tournamentId ufo:tour:00-06q, ufo:mtch:1xw-08j)
+  2026-11-21T14:30:00.000Z  AWAY:Warta Poznań | HOME:Ruch Chorzów  (tournamentId ufo:tour:00-06q, ufo:mtch:1xw-08g)
+  2026-11-21T14:30:00.000Z  AWAY:Stal Mielec | HOME:Polonia Warszawa  (tournamentId ufo:tour:00-06q, ufo:mtch:1xw-08h)
+  2026-11-22T16:00:00.000Z  AWAY:Polonia Bytom | HOME:Stal Rzeszów  (tournamentId ufo:tour:00-06q, ufo:mtch:1xx-09m)
+  2026-11-22T11:00:00.000Z  AWAY:Pogoń Siedlce | HOME:Unia Skierniewice  (tournamentId ufo:tour:00-06q, ufo:mtch:1xx-086)
+  fixture tournamentIds ["ufo:tour:00-06q"]
+candidate ufo:tour:00-09l: HTTP 200, fixtures 8  names=["Polska Puchar"]
+  2026-12-02T17:00:00.000Z  AWAY:Ruch Chorzów | HOME:Odra Opole  (tournamentId ufo:tour:00-09l, ufo:mtch:1y7-020)
+  2026-12-02T11:00:00.000Z  AWAY:Stal Rzeszów | HOME:Siarka Tarnobrzeg  (tournamentId ufo:tour:00-09l, ufo:mtch:1y7-01v)
+  2026-12-03T16:00:00.000Z  AWAY:Jagiellonia Białystok | HOME:Termalica Nieciecza  (tournamentId ufo:tour:00-09l, ufo:mtch:1y7-01u)
+  2026-12-02T14:00:00.000Z  AWAY:Chrobry Głogów | HOME:GKS Tychy  (tournamentId ufo:tour:00-09l, ufo:mtch:1y7-01x)
+  2026-12-02T20:00:00.000Z  AWAY:Raków Częstochowa | HOME:Polonia Warszawa  (tournamentId ufo:tour:00-09l, ufo:mtch:1y7-01w)
+  fixture tournamentIds ["ufo:tour:00-09l"]
+candidate ufo:tour:00-0b9: HTTP 404, fixtures -1, error non-JSON body: Structure with id ufo:tour:00-0b9 not found  names=[]
+candidate ufo:tour:00-0ep: HTTP 200, fixtures 7  names=["Polska 2.liga"]
+  2026-11-14T12:00:00.000Z  AWAY:Lechia Zielona Góra | HOME:Śląsk II Wrocław  (tournamentId ufo:tour:00-0ep, ufo:mtch:1xp-0i8)
+  2026-11-14T15:00:00.000Z  AWAY:Zawisza Bydgoszcz | HOME:Chojniczanka Chojnice  (tournamentId ufo:tour:00-0ep, ufo:mtch:1xp-0ib)
+  2026-11-14T11:00:00.000Z  AWAY:Avia Świdnik | HOME:Podhale Nowy Targ  (tournamentId ufo:tour:00-0ep, ufo:mtch:1xp-0ia)
+  2026-11-25T17:00:00.000Z  AWAY:Świt Szczecin | HOME:Resovia Rzeszów  (tournamentId ufo:tour:00-0ep, ufo:mtch:1xo-04l)
+  2026-11-14T11:00:00.000Z  AWAY:Hutnik Kraków | HOME:Górnik Łęczna  (tournamentId ufo:tour:00-0ep, ufo:mtch:1xp-06g)
+  fixture tournamentIds ["ufo:tour:00-0ep"]
+candidate ufo:tour:00-0os: HTTP 200, fixtures 8  names=["Polska 3.liga grupa I"]
+  2026-11-14T11:00:00.000Z  AWAY:Mazovia Mińsk Mazowiecki | HOME:ŁKS II Łódź  (tournamentId ufo:tour:00-0os, ufo:mtch:1xp-0o5)
+  2026-11-14T12:00:00.000Z  AWAY:Polonia Lidzbark Warmiński | HOME:Ząbkovia Ząbki  (tournamentId ufo:tour:00-0os, ufo:mtch:1xp-0q7)
+  2026-11-15T11:00:00.000Z  AWAY:Pelikan Łowicz | HOME:Lechia Tomaszów Mazowiecki  (tournamentId ufo:tour:00-0os, ufo:mtch:1xq-0j8)
+  2026-11-14T12:00:00.000Z  AWAY:Warta Sieradz | HOME:ŁKS Łomża  (tournamentId ufo:tour:00-0os, ufo:mtch:1xp-1cs)
+  2026-11-14T12:00:00.000Z  AWAY:Olimpia Elbląg | HOME:Świt Nowy Dwór Mazowiecki  (tournamentId ufo:tour:00-0os, ufo:mtch:1xp-1cu)
+  fixture tournamentIds ["ufo:tour:00-0os"]
+candidate ufo:tour:00-0pt: HTTP 200, fixtures 7  names=["Polska 3.liga grupa II"]
+  2026-11-14T15:00:00.000Z  AWAY:Kss Kotwica Kornik | HOME:Polonia Sroda WLKP  (tournamentId ufo:tour:00-0pt, ufo:mtch:1xp-0tp)
+  2026-11-14T12:00:00.000Z  AWAY:Gedania Gdańsk | HOME:Unia Swarzędz  (tournamentId ufo:tour:00-0pt, ufo:mtch:1xp-0qf)
+  2026-11-14T11:00:00.000Z  AWAY:Flota Świnoujście | HOME:Wikęd Luzino  (tournamentId ufo:tour:00-0pt, ufo:mtch:1xp-1cw)
+  2026-11-14T11:00:00.000Z  AWAY:KKS Kalisz | HOME:Grom Nowy Staw  (tournamentId ufo:tour:00-0pt, ufo:mtch:1xp-1cv)
+  2026-11-14T12:00:00.000Z  AWAY:Lipno Stęszew | HOME:Noteć Czarnków  (tournamentId ufo:tour:00-0pt, ufo:mtch:1xp-1cy)
+  fixture tournamentIds ["ufo:tour:00-0pt"]
+candidate ufo:tour:00-0pu: HTTP 200, fixtures 7  names=["Polska 3.liga grupa III"]
+  2026-11-14T11:00:00.000Z  AWAY:KS Row 1964 Rybnik | HOME:Miedź II Legnica   (tournamentId ufo:tour:00-0pu, ufo:mtch:1xp-0nu)
+  2026-11-15T11:00:00.000Z  AWAY:Odra Bytom Odrzański | HOME:Sparta Katowice  (tournamentId ufo:tour:00-0pu, ufo:mtch:1xq-0j7)
+  2026-11-15T12:00:00.000Z  AWAY:Zagłębie Sosnowiec | HOME:Stal Brzeg  (tournamentId ufo:tour:00-0pu, ufo:mtch:1xq-112)
+  2026-11-14T14:30:00.000Z  AWAY:Carina Gubin | HOME:MKS Kluczbork  (tournamentId ufo:tour:00-0pu, ufo:mtch:1xp-1ds)
+  2026-11-14T12:00:00.000Z  AWAY:Karkonosze Jelenia Góra | HOME:Warta Gorzów Wielkopolski  (tournamentId ufo:tour:00-0pu, ufo:mtch:1xp-1dr)
+  fixture tournamentIds ["ufo:tour:00-0pu"]
+candidate ufo:tour:00-0yl: HTTP 200, fixtures 7  names=["Polska 3.liga grupa IV"]
+  2026-11-14T16:00:00.000Z  AWAY:Pogoń Sokół Lubaczów | HOME:Wiślanie Skawina  (tournamentId ufo:tour:00-0yl, ufo:mtch:1xp-0vd)
+  2026-11-14T12:00:00.000Z  AWAY:KSZO Ostrowiec Świętokrzyski  | HOME:Siarka Tarnobrzeg  (tournamentId ufo:tour:00-0yl, ufo:mtch:1xp-0pv)
+  2026-11-14T12:00:00.000Z  AWAY:AKS 1947 Busko Zdroj | HOME:Sokół Kolbuszowa Dolna  (tournamentId ufo:tour:00-0yl, ufo:mtch:1xp-0qy)
+  2026-11-15T10:00:00.000Z  AWAY:Moravia Morawica | HOME:Korona II Kielce  (tournamentId ufo:tour:00-0yl, ufo:mtch:1xq-0i4)
+  2026-11-15T11:00:00.000Z  AWAY:KS Hetman Zamosc | HOME:Wieczysta II Krakow  (tournamentId ufo:tour:00-0yl, ufo:mtch:1xq-0j6)
+  fixture tournamentIds ["ufo:tour:00-0yl"]
+candidate ufo:tour:0i-031: HTTP 200, fixtures 7  names=["Polska OBL (M)"]
+  2026-11-14T16:30:00.000Z  AWAY:King Szczecin | HOME:Legia Warszawa  (tournamentId ufo:tour:0i-031, ufo:mtch:1xp-0hi)
+  2026-11-14T14:00:00.000Z  AWAY:Trefl Sopot | HOME:Pierniki Toruń  (tournamentId ufo:tour:0i-031, ufo:mtch:1xp-0hh)
+  2026-11-14T18:30:00.000Z  AWAY:Zastal Zielona Góra | HOME:Śląsk Wrocław  (tournamentId ufo:tour:0i-031, ufo:mtch:1xp-0hj)
+  2026-11-15T16:30:00.000Z  AWAY:Dziki Warszawa | HOME:Stal Ostrów Wlkp.  (tournamentId ufo:tour:0i-031, ufo:mtch:1xq-0dx)
+  2026-11-15T11:30:00.000Z  AWAY:Górnik Wałbrzych | HOME:Astoria Bydgoszcz  (tournamentId ufo:tour:0i-031, ufo:mtch:1xq-0dw)
+  fixture tournamentIds ["ufo:tour:0i-031"]
+candidate ufo:tour:0m-03i: HTTP 200, fixtures 6  names=["Polska TAURON Liga (M)"]
+  2026-11-14T14:00:00.000Z  AWAY:AZS Olsztyn | HOME:Skra Bełchatów  (tournamentId ufo:tour:0m-03i, ufo:mtch:1xp-0dp)
+  2026-11-14T19:30:00.000Z  AWAY:Cuprum Stilon Gorzów | HOME:Warta Zawiercie  (tournamentId ufo:tour:0m-03i, ufo:mtch:1xp-0do)
+  2026-11-14T17:00:00.000Z  AWAY:ZAKSA Kędzierzyn Koźle | HOME:Ślepsk Suwałki  (tournamentId ufo:tour:0m-03i, ufo:mtch:1xp-0dn)
+  2026-11-13T19:30:00.000Z  AWAY:Norwid Częstochowa | HOME:GKS Katowice  (tournamentId ufo:tour:0m-03i, ufo:mtch:1xo-05e)
+  2026-11-15T17:00:00.000Z  AWAY:Jastrzębie Barkom | HOME:Trefl Gdańsk  (tournamentId ufo:tour:0m-03i, ufo:mtch:1xq-0dj)
+  fixture tournamentIds ["ufo:tour:0m-03i"]
+candidate ufo:tour:0w-00n: HTTP 200, fixtures 2  names=["1.Polska"]
+  2026-11-13T18:00:00.000Z  AWAY:Unia Oświęcim | HOME:JKH Jastrzębie  (tournamentId ufo:tour:0w-00n, ufo:mtch:1xo-05s)
+  2026-11-13T17:30:00.000Z  AWAY:Zagłębie Sosnowiec | HOME:KH Toruń  (tournamentId ufo:tour:0w-00n, ufo:mtch:1xo-04p)
+  fixture tournamentIds ["ufo:tour:0w-00n"]
+
+## 4. peer totalbet ae7d4621-313d-4df6-b3be-046b76a32938: events 9
+  2026-11-20T17:00:00Z  Piast Gliwice | Korona Kielce
+  2026-11-20T19:30:00Z  Pogoń Szczecin | Śląsk Wrocław
+  2026-11-21T13:45:00Z  Cracovia Kraków | Jagiellonia Białystok
+  2026-11-21T16:30:00Z  Zagłębie Lubin | Górnik Zabrze
+  2026-11-21T19:15:00Z  Radomiak Radom | Wisła Kraków
+  2026-11-22T11:15:00Z  Raków Częstochowa | Widzew Łódź
+  2026-11-22T13:45:00Z  GKS Katowice | Lech Poznań
+  2026-11-22T16:30:00Z  Wisła Płock | Legia Warszawa
+  2026-11-23T18:00:00Z  Wieczysta Kraków | Motor Lublin
+
+# done 2026-11-13T17:24:46.784Z

@@ -9,6 +9,8 @@ import type { MatchOdds, OddsEntry, BestOdds, BookmakerStatus, LatestOddsRow, Ma
 import type { NormalizedMarketType } from "../types/normalization.js";
 import { updateBestOdds } from "../utils/market-aggregation.js";
 import { getPlannedNextRun } from "./interval-scheduler.js";
+import { isStaleQuote, staleQuoteThresholdMs } from "./odds-freshness.js";
+import { isStaleExclusionEnabled } from "../config/odds-storage.js";
 
 export async function getAllLatestOdds(
   leagueSlug: string = "ekstraklasa",
@@ -30,6 +32,9 @@ export async function getAllLatestOdds(
     getBookmakerStatusSnapshot(leagueSlug),
   ]);
 
+  const now = new Date();
+  const staleAfter = staleQuoteThresholdMs();
+  const excludeStale = isStaleExclusionEnabled();
   const matches: MatchOdds[] = aggregatedData.map((row) => {
     const markets: MatchOdds["markets"] = {};
 
@@ -55,15 +60,18 @@ export async function getAllLatestOdds(
       }
 
       const bestOdds: BestOdds = {};
-      const bookmakerOdds: Record<string, { selections: any[]; eventUrl?: string; scrapedAt: string }> = {};
+      const bookmakerOdds: Record<string, { selections: any[]; eventUrl?: string; scrapedAt: string; stale?: true }> = {};
 
       for (const [bookmaker, oddsData] of Object.entries(marketData.bookmakerOdds || {})) {
+        const stale = isStaleQuote(oddsData.scrapedAt, now, staleAfter);
         bookmakerOdds[bookmaker] = {
           selections: oddsData.selections,
           eventUrl: oddsData.eventUrl ?? undefined,
           scrapedAt: oddsData.scrapedAt,
+          ...(stale ? { stale: true as const } : {}),
         };
-        updateBestOdds(bestOdds, bookmaker as PolishBookmaker, oddsData.selections);
+        // Stale quotes stay in best odds unless the owner turns the exclusion on (B12)
+        if (!(stale && excludeStale)) updateBestOdds(bestOdds, bookmaker as PolishBookmaker, oddsData.selections);
       }
 
       markets[marketKey] = {
@@ -136,6 +144,9 @@ export async function getOddsForMatch(
     return null;
   }
 
+  const now = new Date();
+  const staleAfter = staleQuoteThresholdMs();
+  const excludeStale = isStaleExclusionEnabled();
   const match: MatchOdds = {
     matchId: firstRow.match_id,
     homeTeam: firstRow.home_team,
@@ -160,13 +171,15 @@ export async function getOddsForMatch(
     }
 
     const market = match.markets[marketKey];
+    const stale = isStaleQuote(row.scraped_at, now, staleAfter);
     market.bookmakerOdds[row.bookmaker] = {
       selections: row.selections,
       eventUrl: row.event_url ?? undefined,
       scrapedAt: row.scraped_at,
+      ...(stale ? { stale: true as const } : {}),
     };
 
-    updateBestOdds(market.bestOdds, row.bookmaker, row.selections);
+    if (!(stale && excludeStale)) updateBestOdds(market.bestOdds, row.bookmaker, row.selections);
   }
 
   return match;

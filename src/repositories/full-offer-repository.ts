@@ -9,7 +9,8 @@ import { calculateBestOdds } from "../utils/market-aggregation.js";
 import { RepositoryError } from "../utils/errors.js";
 import { fetchAllRows } from "../utils/supabase-pagination.js";
 import { formatDbError } from "../services/run-outcome.js";
-import { getOddsWriteModel, isPruneGuardEnabled } from "../config/odds-storage.js";
+import { getOddsWriteModel, isPruneGuardEnabled, isStaleExclusionEnabled } from "../config/odds-storage.js";
+import { isStaleQuote, staleQuoteThresholdMs } from "../services/odds-freshness.js";
 import { writeOddsSnapshots, type SnapshotMatchHeader, type SnapshotWriteSummary } from "./odds-snapshot-writer.js";
 import {
   CANONICAL_MARKET_CODES,
@@ -59,6 +60,8 @@ export interface FullOfferComparison {
       eventUrl?: string;
       scrapedAt: string;
       rawMarketName?: string;
+      /** Older than staleAfterMs: shown, kept in bestOdds unless EXCLUDE_STALE_FROM_BEST_ODDS=true. */
+      stale?: true;
     }>;
     bestOdds: Record<string, { bookmaker: PolishBookmaker; odds: number }>;
   }>;
@@ -455,6 +458,8 @@ export async function getFullOfferByMatch(
   const canonicalAway = getCanonicalTeamName(awayTeam, leagueSlug);
 
   const data = await getMatchMarketRows(matchId);
+  const now = new Date();
+  const staleAfter = staleQuoteThresholdMs();
 
   if (data.length === 0) {
     return null; // No data is not an error
@@ -498,14 +503,19 @@ export async function getFullOfferByMatch(
       eventUrl: row.event_url ?? undefined,
       scrapedAt: row.scraped_at,
       rawMarketName: row.raw_market_name ?? undefined,
+      ...(isStaleQuote(row.scraped_at, now, staleAfter) ? { stale: true as const } : {}),
     };
   }
 
+  const excludeStale = isStaleExclusionEnabled();
   const markets: FullOfferComparison["markets"] = {};
   for (const [marketKey, group] of Array.from(marketGroups.entries())) {
+    const forBest = excludeStale
+      ? Object.fromEntries(Object.entries(group.bookmakerOdds).filter(([, o]) => !(o as { stale?: true }).stale))
+      : group.bookmakerOdds;
     markets[marketKey] = {
       ...group,
-      bestOdds: calculateBestOdds(group.bookmakerOdds),
+      bestOdds: calculateBestOdds(forBest),
     };
   }
 
@@ -633,6 +643,8 @@ export interface BatchSaveResult {
   snapshot: SnapshotWriteSummary | null;
   /** Failed batches/calls of the secondary leg: logged, never counted in `errors`. */
   secondaryFailures: number;
+  /** Matches the primary snapshot leg rejected after kickoff; set only when non-empty. */
+  rejectedStarted?: string[];
 }
 
 export async function saveBatchFullOfferMarkets(
@@ -792,6 +804,11 @@ export async function saveBatchFullOfferMarkets(
         `failed ${s.failedCalls} in ${s.durationMs}ms`
     );
     result.snapshot = s;
+    if (s.rejectedStarted.length > 0) {
+      console.log(
+        `[FullOfferRepo] ${bookmaker}: ${s.rejectedStarted.length} match(es) rejected, kickoff passed: ${s.rejectedStarted.join(", ")}`
+      );
+    }
     return s;
   };
 
@@ -811,6 +828,7 @@ export async function saveBatchFullOfferMarkets(
     result.totalBatches = s.calls;
     result.firstError = s.firstError;
     if (s.pruneSkipped.length > 0) result.pruneSkipped = s.pruneSkipped;
+    if (s.rejectedStarted.length > 0) result.rejectedStarted = s.rejectedStarted;
   };
   const secondaryFailed = (leg: "legacy" | "snapshot", failures: number, firstError: string | null) => {
     if (failures === 0) return;

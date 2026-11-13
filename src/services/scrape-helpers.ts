@@ -12,6 +12,8 @@ export interface NormalizeAndSaveResult {
   errors: string[];
   /** Matches whose prune the degenerate-write guard skipped; set only when > 0. */
   pruneSkipped?: number;
+  /** Matches rejected after kickoff (snapshot model); set only when > 0. Not an error. */
+  rejectedStarted?: number;
 }
 
 export async function normalizeAndSaveMatches(
@@ -81,6 +83,9 @@ export async function normalizeAndSaveMatches(
         );
         result.pruneSkipped = skipped.length;
       }
+      // A started match is not a failure: classifyBookmakerRun turns "every match rejected" into partial
+      const rejected = batchResult.rejectedStarted ?? [];
+      if (rejected.length > 0) result.rejectedStarted = rejected.length;
     } catch (error) {
       const errorMsg = `Batch save failed: ${error instanceof Error ? error.message : "Unknown error"}`;
       console.error(`[ScrapeHelpers] ${errorMsg}`);

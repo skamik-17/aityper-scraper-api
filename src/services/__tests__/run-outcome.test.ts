@@ -319,3 +319,13 @@ describe("classifyBookmakerRun: a scraper cause with saved rows (perf plan 07 Ta
       ),
     ).toEqual({ status: "persist_failed", error: "0 of 420 normalized markets saved (all filtered as non-canonical)" }));
 });
+
+describe("classifyBookmakerRun: writes rejected after kickoff (plan 09 Task 8)", () => {
+  it("all matches rejected is partial, not persist_failed (Review Focus 4)", () =>
+    expect(classifyBookmakerRun({ success: true, matches: twenty }, { marketsNormalized: 4100, marketsSaved: 0, errors: [], rejectedStarted: 20 }))
+      .toEqual({ status: "partial", error: "All 20 matches rejected: kickoff passed" }));
+
+  it("a rejection next to a real save error stays persist_failed with that error", () =>
+    expect(classifyBookmakerRun({ success: true, matches: twenty }, { marketsNormalized: 4100, marketsSaved: 0, errors: ["Batch insert failed (1 of 1 batches): x"], rejectedStarted: 3 }).status)
+      .toBe("persist_failed"));
+});

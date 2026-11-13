@@ -31,11 +31,14 @@ function serve(rows: Array<Record<string, unknown>>): (q: RecordedQuery) => Fake
 }
 
 beforeEach(() => {
+  // The fixture's recording time: its quotes are fresh, so no stale flag (plan 09 Task 8) enters the snapshot
+  vi.useFakeTimers({ now: new Date("2026-11-13T16:05:00.000Z"), toFake: ["Date"] });
   fake = createFakeSupabase(serve(ROWS));
   db.client = fake.client;
   vi.spyOn(console, "error").mockImplementation(() => {});
 });
 afterEach(() => {
+  vi.useRealTimers();
   vi.restoreAllMocks();
   db.client = null;
 });

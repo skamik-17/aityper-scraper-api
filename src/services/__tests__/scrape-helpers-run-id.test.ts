@@ -30,4 +30,16 @@ describe("normalizeAndSaveMatches: run id", () => {
     await normalizeAndSaveMatches([match], "fortuna", "premier-league", { useBatchInsert: true, runId: RUN_ID });
     expect(m.saveBatchFullOfferMarkets).toHaveBeenCalledWith(expect.any(Array), "fortuna", "premier-league", { runId: RUN_ID });
   });
+
+  it("every match rejected after kickoff: rejectedStarted, no error, nothing saved", async () => {
+    m.saveBatchFullOfferMarkets.mockResolvedValueOnce({
+      inserted: 0, filtered: 0, errors: 0, matchesProcessed: 20, failedBatches: 0, totalBatches: 20, firstError: null,
+      rejectedStarted: Array.from({ length: 20 }, (_, i) => `premier-league:h${i}:a${i}`),
+    } as never);
+    const twenty = Array.from({ length: 20 }, (_, i) => ({ ...match, matchId: `m${i}`, homeTeam: `H${i}`, awayTeam: `A${i}` }));
+    const r = await normalizeAndSaveMatches(twenty, "fortuna", "premier-league", { useBatchInsert: true, runId: RUN_ID });
+    expect(r.rejectedStarted).toBe(20);
+    expect(r.errors).toEqual([]);
+    expect(r.marketsSaved).toBe(0);
+  });
 });

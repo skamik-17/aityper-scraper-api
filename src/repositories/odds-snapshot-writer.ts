@@ -35,6 +35,8 @@ export interface SaveOddsSnapshotResult {
   removed: number;
   prune_skipped: boolean;
   previous_rows: number | null;
+  /** Set when the match kicked off: nothing was written (migration 14's in-play rule). */
+  rejected?: "kickoff_passed";
 }
 
 export interface SnapshotWriteSummary {
@@ -48,6 +50,8 @@ export interface SnapshotWriteSummary {
   unchanged: number;
   removed: number;
   pruneSkipped: PruneSkip[];
+  /** Matches rejected after kickoff: not counted in received/inserted/…. */
+  rejectedStarted: string[];
   durationMs: number;
 }
 
@@ -80,6 +84,7 @@ export async function writeOddsSnapshots(
     unchanged: 0,
     removed: 0,
     pruneSkipped: [],
+    rejectedStarted: [],
     durationMs: 0,
   };
   const supabase = getSupabase();
@@ -112,6 +117,10 @@ export async function writeOddsSnapshots(
       continue;
     }
 
+    if (data?.rejected === "kickoff_passed") {
+      summary.rejectedStarted.push(header.match_id);
+      continue;
+    }
     // One failed match never stops the next one
     const received = Number(data?.received ?? 0);
     summary.received += received;

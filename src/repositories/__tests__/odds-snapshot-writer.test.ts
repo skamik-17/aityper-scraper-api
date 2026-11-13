@@ -120,4 +120,18 @@ describe("odds snapshot writer", () => {
     const s = await writeOddsSnapshots(RUN_ID, "fortuna", [{ header: HEADER, records: [rec()] }]);
     expect(s).toMatchObject({ calls: 1, failedCalls: 1, failedRows: 1, firstError: "fetch failed" });
   });
+
+  it("a write rejected after kickoff goes to rejectedStarted and counts nowhere else", async () => {
+    useFake(() =>
+      fake.queries.length === 1
+        ? { data: { received: 1, inserted: 0, updated: 0, unchanged: 0, removed: 0, prune_skipped: false, previous_rows: null, rejected: "kickoff_passed" } }
+        : { data: OK },
+    );
+    const s = await writeOddsSnapshots(RUN_ID, "fortuna", [
+      { header: HEADER, records: [rec()] },
+      { header: { ...HEADER, match_id: "premier-league:b:c" }, records: [rec()] },
+    ]);
+    expect(s.rejectedStarted).toEqual([HEADER.match_id]);
+    expect(s).toMatchObject({ calls: 2, failedCalls: 0, received: 40 });
+  });
 });

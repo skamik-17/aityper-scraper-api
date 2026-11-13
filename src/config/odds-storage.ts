@@ -38,3 +38,8 @@ export function readsSnapshotModel(env: NodeJS.ProcessEnv = process.env): boolea
   const model = getOddsWriteModel(env);
   return model === "switched" || model === "snapshot";
 }
+
+/** Whether stale quotes leave best-odds selection: off unless EXCLUDE_STALE_FROM_BEST_ODDS=true (owner B12). */
+export function isStaleExclusionEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env.EXCLUDE_STALE_FROM_BEST_ODDS === "true";
+}

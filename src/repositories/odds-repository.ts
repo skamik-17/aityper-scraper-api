@@ -170,6 +170,28 @@ export async function getOddsFreshnessByBookmaker(
   return freshness;
 }
 
+export interface CleanupOddsResult {
+  current: number;
+  matches: number;
+  snapshots: number;
+  history: number;
+}
+
+/**
+ * Snapshot-model retention (migration 14's cleanup_odds): quotes 3 h after kickoff and
+ * snapshots unseen for 24 h. Never passes p_history_keep. Throws on a PostgREST error.
+ */
+export async function cleanupOdds(): Promise<CleanupOddsResult> {
+  const { data, error } = await (getSupabase() as any).rpc("cleanup_odds", {});
+  if (error) throw new Error(`cleanup_odds failed: ${formatDbError(error)}`);
+  return {
+    current: Number(data?.current ?? 0),
+    matches: Number(data?.matches ?? 0),
+    snapshots: Number(data?.snapshots ?? 0),
+    history: Number(data?.history ?? 0),
+  };
+}
+
 export async function cleanupOldOdds(hoursToKeep: number = 24): Promise<{ deleted: number }> {
   const supabase = getSupabase();
 

@@ -91,6 +91,8 @@ interface NormalizedMarketsResponse {
     normalizedMarkets: number;
     coveragePercent: number;
     bookmakersWithOdds: string[];
+    /** Bookmakers with at least one stale quote in this match (plan 09 Task 8), sorted. */
+    staleBookmakers: string[];
   };
 }
 
@@ -199,6 +201,13 @@ router.get(
       : marketsWithBookmakers;
 
     const stats = calculateStatsWithBookmaker(filteredMarketsWithBookmakers);
+    const staleBookmakers = [
+      ...new Set(
+        Object.values(fullOfferComparison.markets).flatMap((m) =>
+          Object.entries(m.bookmakerOdds).filter(([, o]) => (o as { stale?: true }).stale).map(([bm]) => bm)
+        )
+      ),
+    ].sort();
 
     const response: NormalizedMarketsResponse = {
       match: {
@@ -217,6 +226,7 @@ router.get(
         normalizedMarkets: stats.normalizedMarkets,
         coveragePercent: stats.coveragePercent,
         bookmakersWithOdds: stats.bookmakersWithOdds,
+        staleBookmakers,
       },
     };
 

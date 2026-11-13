@@ -143,7 +143,9 @@ describe("runDailyCleanup (owner decision B11: keep scraper_runs 30 days)", () =
     m.cleanupOldOdds.mockRejectedValue(boom);
     await expect(runDailyCleanup()).resolves.toBeUndefined();
     expect(errorSpy).toHaveBeenCalledWith("[Retention] cleanup failed: rpc failed");
-    expect(m.deleteScraperRunsOlderThan).toHaveBeenCalledTimes(1);
+    // The retention seam prunes scraper_runs too (plan 09 Task 8): both calls run despite the odds failure
+    expect(m.deleteScraperRunsOlderThan).toHaveBeenCalledTimes(2);
+    expect(m.deleteScraperRunsOlderThan).toHaveBeenCalledWith(30);
   });
 
   it("a prune failure is logged and not fatal", async () => {

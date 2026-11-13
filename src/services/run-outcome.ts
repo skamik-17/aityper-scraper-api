@@ -60,7 +60,7 @@ function isSaveStageError(error: string): boolean {
  */
 export function classifyBookmakerRun(
   scrape: Pick<FullOfferScraperResult, "success" | "matches" | "error">,
-  save: Pick<NormalizeAndSaveResult, "marketsNormalized" | "marketsSaved" | "errors"> | null,
+  save: Pick<NormalizeAndSaveResult, "marketsNormalized" | "marketsSaved" | "errors" | "rejectedStarted"> | null,
 ): { status: BookmakerRunStatus; error: string | null } {
   if (!scrape.success) {
     return { status: "scrape_failed", error: scrape.error || "Scraper returned success=false without an error message" };
@@ -76,6 +76,10 @@ export function classifyBookmakerRun(
   }
 
   const saveError = summarizeErrors(save.errors);
+  // Every match kicked off between listing and save: an OK run, not a persistence failure
+  if (save.marketsSaved === 0 && (save.rejectedStarted ?? 0) > 0 && save.errors.length === 0) {
+    return { status: "partial", error: `All ${save.rejectedStarted} matches rejected: kickoff passed` };
+  }
   if (save.marketsSaved === 0) {
     // Nothing saved: the save-stage error is the cause, so it goes before the
     // normalization errors that scrape-helpers pushes first.

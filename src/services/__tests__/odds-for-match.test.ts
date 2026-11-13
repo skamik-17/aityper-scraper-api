@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { readFileSync } from "node:fs";
 import { createFakeSupabase, type RecordedQuery } from "../../__tests__/helpers/fake-supabase.js";
 
@@ -20,7 +20,13 @@ vi.mock("../../config/database.js", async () => ({ getSupabase: () => h.fake.cli
 import { getMatchOdds } from "../../repositories/odds-repository.js";
 import { getOddsForMatch } from "../odds-service.js";
 
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 beforeEach(() => {
+  // The fixture's recording time: its quotes are fresh, so no stale flag (plan 09 Task 8) enters the snapshot
+  vi.useFakeTimers({ now: new Date("2026-11-13T16:05:00.000Z"), toFake: ["Date"] });
   h.fake = createFakeSupabase(respond);
 });
 

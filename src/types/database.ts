@@ -49,6 +49,8 @@ export interface BookmakerOddsData {
   selections: MarketSelectionJson[];
   eventUrl?: string;
   scrapedAt: string;
+  /** Older than staleAfterMs (plan 09 Task 8); absent when fresh. */
+  stale?: true;
 }
 
 export type BestOdds = Record<string, {

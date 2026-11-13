@@ -263,11 +263,12 @@ const UNKNOWN_FILTERED_MARKETS = new Set<NormalizedMarketType>([
 ]);
 
 /**
- * Multi-player line markets: one raw market ("Odda co najmniej N celnych
- * strzałów") lists every player as a selection while the threshold N lives in
- * the raw market name. The catalog convention (see etoto) keys these by
- * "{Player} {N}+" selection codes in the base parameter bucket — a numeric
- * pseudo-parameter ("1"/"2") must never be emitted.
+ * Multi-player line markets: Fuksiarz's raw game ("Odda co najmniej N celnych
+ * strzałów") lists every player as an outcome while the threshold N lives in
+ * the raw market name. The parser splits it into one raw market per player,
+ * and the normalizer emits a player param plus an "N+" selection parsed from
+ * the raw name (see extractParamValue / normalizeSelectionForMarket). A
+ * numeric pseudo-parameter ("1"/"2") must never be emitted.
  */
 const PLAYER_LINE_MARKETS = new Set<NormalizedMarketType>([
   "PLAYER_SHOTS",

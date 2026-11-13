@@ -45,3 +45,23 @@ describe("RESULT_OR_BTTS copy", () => {
     );
   });
 });
+
+describe("RESULT_OR_HALF_TIME_TOTAL copy", () => {
+  // Controller ruling 22 (lvbet): the label ("Wynik meczu lub 1. połowa -
+  // liczba goli"), the code and the description all say OR, like lvbet's
+  // full-match "Rezultat lub ilość bramek (X)" legs on RESULT_OR_TOTAL, but
+  // the selection templates said AND ("wygrywa i powyżej"), a different and
+  // much longer-priced bet.
+  it("selection descriptions say OR, like its label, description and the full-match RESULT_OR_TOTAL", () => {
+    const market = getMarketByCode("RESULT_OR_HALF_TIME_TOTAL")!;
+    expect(market.labels.pl).toBe("Wynik meczu lub 1. połowa - liczba goli");
+    expect(market.descriptionTemplates).toEqual({
+      HOME_OVER: "{homeTeam} wygrywa lub powyżej {param} goli w 1. połowie",
+      HOME_UNDER: "{homeTeam} wygrywa lub poniżej {param} goli w 1. połowie",
+      DRAW_OVER: "Remis lub powyżej {param} goli w 1. połowie",
+      DRAW_UNDER: "Remis lub poniżej {param} goli w 1. połowie",
+      AWAY_OVER: "{awayTeam} wygrywa lub powyżej {param} goli w 1. połowie",
+      AWAY_UNDER: "{awayTeam} wygrywa lub poniżej {param} goli w 1. połowie",
+    });
+  });
+});

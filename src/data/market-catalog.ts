@@ -5450,7 +5450,7 @@ const MATCH_AUDIT_WAVE_MARKETS: MarketCatalogEntry[] = [
     parameterType: "decimal",
     selections: ["HOME_OVER","HOME_UNDER","DRAW_OVER","DRAW_UNDER","AWAY_OVER","AWAY_UNDER"],
     viewType: ViewType.PARAMETERIZED_COMBINATION,
-    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa i powyżej {param} goli w 1. połowie", HOME_UNDER: "{homeTeam} wygrywa i poniżej {param} goli w 1. połowie", DRAW_OVER: "Remis i powyżej {param} goli w 1. połowie", DRAW_UNDER: "Remis i poniżej {param} goli w 1. połowie", AWAY_OVER: "{awayTeam} wygrywa i powyżej {param} goli w 1. połowie", AWAY_UNDER: "{awayTeam} wygrywa i poniżej {param} goli w 1. połowie" },
+    descriptionTemplates: { HOME_OVER: "{homeTeam} wygrywa lub powyżej {param} goli w 1. połowie", HOME_UNDER: "{homeTeam} wygrywa lub poniżej {param} goli w 1. połowie", DRAW_OVER: "Remis lub powyżej {param} goli w 1. połowie", DRAW_UNDER: "Remis lub poniżej {param} goli w 1. połowie", AWAY_OVER: "{awayTeam} wygrywa lub powyżej {param} goli w 1. połowie", AWAY_UNDER: "{awayTeam} wygrywa lub poniżej {param} goli w 1. połowie" },
     displayOrder: 500,
   },
   {

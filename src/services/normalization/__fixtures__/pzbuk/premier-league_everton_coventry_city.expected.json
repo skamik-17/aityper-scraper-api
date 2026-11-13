@@ -517,7 +517,7 @@
       "rawName": "Połowa/Reg. czas gry"
     },
     {
-      "blessed": true,
+      "blessed": false,
       "expected": {
         "customLabel": null,
         "marketCode": "OTHER",
@@ -543,7 +543,7 @@
       "rawName": "1. Połowa - handicap"
     },
     {
-      "blessed": true,
+      "blessed": false,
       "expected": {
         "customLabel": null,
         "marketCode": "OTHER",
@@ -569,7 +569,7 @@
       "rawName": "1. Połowa - handicap"
     },
     {
-      "blessed": true,
+      "blessed": false,
       "expected": {
         "customLabel": null,
         "marketCode": "OTHER",
@@ -855,7 +855,196 @@
     },
     {
       "blessed": true,
-      "expected": null,
+      "expected": {
+        "customLabel": null,
+        "marketCode": "OTHER",
+        "marketKey": "OTHER",
+        "matchedBy": "id",
+        "paramValue": null,
+        "parameters": null,
+        "selections": [
+          {
+            "code": "Maitland-Niles, Ainsley",
+            "label": "Maitland-Niles, Ainsley",
+            "odds": 5.68
+          },
+          {
+            "code": "Branthwaite, Jarrad",
+            "label": "Branthwaite, Jarrad",
+            "odds": 5.38
+          },
+          {
+            "code": "Dewsbury-Hall, Kiernan",
+            "label": "Dewsbury-Hall, Kiernan",
+            "odds": 5.18
+          },
+          {
+            "code": "O'Brien, Jake",
+            "label": "O'Brien, Jake",
+            "odds": 4.99
+          },
+          {
+            "code": "Thomas, Bobby",
+            "label": "Thomas, Bobby",
+            "odds": 4.09
+          },
+          {
+            "code": "Bentley, Daniel",
+            "label": "Bentley, Daniel",
+            "odds": 8.87
+          },
+          {
+            "code": "Barry, Thierno",
+            "label": "Barry, Thierno",
+            "odds": 4.89
+          },
+          {
+            "code": "Mykolenko, Vitaliy",
+            "label": "Mykolenko, Vitaliy",
+            "odds": 5.68
+          },
+          {
+            "code": "Hamer, Gustavo",
+            "label": "Hamer, Gustavo",
+            "odds": 3.59
+          },
+          {
+            "code": "Grimes, Matt",
+            "label": "Grimes, Matt",
+            "odds": 5.38
+          },
+          {
+            "code": "Cherif, Sidiki",
+            "label": "Cherif, Sidiki",
+            "odds": 5.88
+          },
+          {
+            "code": "Keane, Michael",
+            "label": "Keane, Michael",
+            "odds": 6.98
+          },
+          {
+            "code": "Armstrong, Harrison",
+            "label": "Armstrong, Harrison",
+            "odds": 4.19
+          },
+          {
+            "code": "Yirenkyi, Caleb",
+            "label": "Yirenkyi, Caleb",
+            "odds": 3.34
+          },
+          {
+            "code": "Dibling, Tyler",
+            "label": "Dibling, Tyler",
+            "odds": 4.49
+          },
+          {
+            "code": "Johnson, Brennan",
+            "label": "Johnson, Brennan",
+            "odds": 4.59
+          },
+          {
+            "code": "Mfuni, Stephen",
+            "label": "Mfuni, Stephen",
+            "odds": 4.19
+          },
+          {
+            "code": "Sakamoto, Tatsuhiro",
+            "label": "Sakamoto, Tatsuhiro",
+            "odds": 6.58
+          },
+          {
+            "code": "Rohl, Merlin",
+            "label": "Rohl, Merlin",
+            "odds": 5.09
+          },
+          {
+            "code": "Garner, James",
+            "label": "Garner, James",
+            "odds": 3.99
+          },
+          {
+            "code": "Rudoni, Jack",
+            "label": "Rudoni, Jack",
+            "odds": 5.68
+          },
+          {
+            "code": "Hackney, Hayden",
+            "label": "Hackney, Hayden",
+            "odds": 4.29
+          },
+          {
+            "code": "Tchaouna, Loum",
+            "label": "Tchaouna, Loum",
+            "odds": 5.98
+          },
+          {
+            "code": "Mason-Clark, Ephron",
+            "label": "Mason-Clark, Ephron",
+            "odds": 5.98
+          },
+          {
+            "code": "Torp, Victor",
+            "label": "Torp, Victor",
+            "odds": 4.79
+          },
+          {
+            "code": "DaSilva, Jay",
+            "label": "DaSilva, Jay",
+            "odds": 5.68
+          },
+          {
+            "code": "Awoniyi, Taiwo",
+            "label": "Awoniyi, Taiwo",
+            "odds": 6.98
+          },
+          {
+            "code": "Pickford, Jordan",
+            "label": "Pickford, Jordan",
+            "odds": 11.47
+          },
+          {
+            "code": "Tarkowski, James",
+            "label": "Tarkowski, James",
+            "odds": 4.69
+          },
+          {
+            "code": "Pinnock, Ethan",
+            "label": "Pinnock, Ethan",
+            "odds": 6.68
+          },
+          {
+            "code": "Van Ewijk, Milan",
+            "label": "Van Ewijk, Milan",
+            "odds": 5.58
+          },
+          {
+            "code": "Onyeka, Frank",
+            "label": "Onyeka, Frank",
+            "odds": 3.39
+          },
+          {
+            "code": "Thomas-Asante, Brandon",
+            "label": "Thomas-Asante, Brandon",
+            "odds": 6.38
+          },
+          {
+            "code": "Gboho, Yann",
+            "label": "Gboho, Yann",
+            "odds": 6.48
+          },
+          {
+            "code": "Rushworth, Carl",
+            "label": "Rushworth, Carl",
+            "odds": 9.37
+          },
+          {
+            "code": "George, Tyrique",
+            "label": "George, Tyrique",
+            "odds": 5.18
+          }
+        ]
+      },
       "index": 22,
       "marketCode": "OTHER",
       "rawName": "Zawodnik z kartką (lub zmiennik)"
@@ -4060,7 +4249,7 @@
       "rawName": "2. Połowa - Suma"
     },
     {
-      "blessed": true,
+      "blessed": false,
       "expected": {
         "customLabel": null,
         "marketCode": "OTHER",
@@ -4086,7 +4275,7 @@
       "rawName": "2. Połowa - handicap"
     },
     {
-      "blessed": true,
+      "blessed": false,
       "expected": {
         "customLabel": null,
         "marketCode": "OTHER",
@@ -4112,7 +4301,7 @@
       "rawName": "2. Połowa - handicap"
     },
     {
-      "blessed": true,
+      "blessed": false,
       "expected": {
         "customLabel": null,
         "marketCode": "OTHER",

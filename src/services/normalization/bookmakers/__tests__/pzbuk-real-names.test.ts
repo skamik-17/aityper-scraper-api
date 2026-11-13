@@ -6,6 +6,12 @@ type Row = [id: string, name: string, param: string, sels: [string, number][], c
 const norm = ([id, name, param, sels]: Row) =>
   pzbukNormalizer.normalizeMarket({ bookmakerMarketId: id, name, paramValue: param, selections: sels.map(([n, o]) => ({ name: n, odds: o })) }, ctx);
 const SCORERS: [string, number][] = [["Keane, Michael", 11.19], ["Barry, Thierno", 4.18]];
+// Labels of the 2026-11-06 capture (premier-league_everton_coventry_city.json #14, #46, #153).
+const HT_FT: [string, number][] = [["Everton FC/Everton FC", 2.36], ["Everton FC/remis", 15.74], ["Everton FC/Coventry City", 49.18], ["remis/Everton FC", 4.52], ["remis/remis", 5.71], ["remis/Coventry City", 10.33], ["Coventry City/Everton FC", 24.59], ["Coventry City/remis", 16.72], ["Coventry City/Coventry City", 8.26]];
+const RESULT_BTTS: [string, number][] = [["Everton FC & tak", 3.39], ["Everton FC & nie", 2.6], ["remis & tak", 4.9], ["remis & nie", 11.2], ["Coventry City & tak", 9.1], ["Coventry City & nie", 15.3]];
+const DC_BTTS: [string, number][] = [["Everton FC/remis & tak", 3.67], ["Everton FC/remis & nie", 1.46], ["Everton FC/Coventry City & tak", 4.07], ["Everton FC/Coventry City & nie", 1.51], ["remis/Coventry City & tak", 6.1], ["remis/Coventry City & nie", 2.58]];
+// Team x method knockout market (world-cup-2026_france_morocco.json #11, with this context's teams).
+const TEAM_METHOD: [string, number][] = [["Everton FC regulaminowy czas gry", 1.43], ["Coventry City regulaminowy czas gry", 5.31], ["Everton FC po dogrywce", 7.97], ["Coventry City po dogrywce", 24.59], ["Everton FC po rzutach karnych", 12.29], ["Coventry City po rzutach karnych", 12.29]];
 const rows: Row[] = [
   ["126", "Kartki 1x2", "0", [["Everton FC", 2.75], ["remis", 3.83], ["Coventry City", 1.95]], "CARDS_RACE", ["HOME", 2.75]],
   ["78", "2. Połowa - Podwójna szansa", "0", [["Everton FC lub remis", 1.18], ["Everton FC lub Coventry City", 1.38], ["remis lub Coventry City", 1.64]], "SECOND_HALF_DOUBLE_CHANCE", ["HOME_OR_DRAW", 1.18]],
@@ -23,6 +29,27 @@ const rows: Row[] = [
   ["61", "1. Połowa - handicap", "0.5", [["Everton FC (+0.5)", 1.14], ["Coventry City (-0.5)", 4.52]], "OTHER"],
   ["80", "2. Połowa - handicap", "0", [["Everton FC (1:0)", 1.17], ["remis (1:0)", 5.11], ["Coventry City (1:0)", 15.71]], "OTHER"],
   ["146", "1. Połowa - Everton FC Dokładna liczba kartek", "0", [["0", 1.63], ["1", 2.41], ["2", 6.69], ["3+", 23.61]], "HALF_TIME_HOME_EXACT_CARDS", ["3+", 23.61]],
+  // 2-way half handicaps: OTHER until verified as FIRST/SECOND_HALF_ASIAN_HANDICAP (plan OQ1, ruling 10)
+  ["81", "2. Połowa - handicap", "0.5", [["Everton FC (+0.5)", 1.17], ["Coventry City (-0.5)", 4.03]], "OTHER"],
+  // id map entries that win over a blank or placeholder name (the id map runs before matchMarketByName).
+  // Proven by real names: id 2 "Zakwalifikowanie się" (WC #13), id 42 "Połowa/Reg. czas gry" (PL #14).
+  ["2", "Rynek 2", "0", [["Everton FC", 1.2], ["Coventry City", 4.02]], "TEAM_TO_QUALIFY", ["HOME", 1.2]],
+  ["42", "Rynek 42", "0", HT_FT, "HALFTIME_FULLTIME", ["HOME_HOME", 2.36]],
+  // Unverified or refuted guesses parked in OTHER (evidence/pzbuk/market-type-ids-2026-11-06.json).
+  ["3", "Rynek 3", "0", [["Everton FC (1:0)", 1.13], ["remis (1:0)", 5.21], ["Coventry City (1:0)", 21.61]], "OTHER"],
+  ["4", "Rynek 4", "0", HT_FT, "OTHER"],
+  ["5", "Rynek 5", "0", TEAM_METHOD, "OTHER"],
+  ["20", "Rynek 20", "1.5", [["ponad 1.5", 1.69], ["poniżej 1.5", 2.01]], "OTHER"],
+  ["38", "Rynek 38", "0", [["0", 5.4], ["1", 3.05], ["2", 3.29], ["3+", 3.14]], "OTHER"],
+  ["39", "Rynek 39", "0", RESULT_BTTS, "OTHER"],
+  ["41", "Rynek 41", "0", DC_BTTS, "OTHER"],
+  ["499", "Podwójna szansa (mecz) & 2. połowa oba zespoły strzelą", "0", DC_BTTS, "OTHER"],
+  ["500", "1. Połowa - Podwójna szansa & oba zespoły strzelą", "0", DC_BTTS, "OTHER"],
+  ["2395", "Zawodnik z kartką (lub zmiennik)", "0", [["Maitland-Niles, Ainsley", 5.68], ["Branthwaite, Jarrad", 5.38]], "OTHER"],
+  // Player goals incl. extra time (PL #45). By name it reached TOTAL_GOALS, where a player label starting
+  // with "pon" reads as UNDER (normalizeOverUnderSelection); the "Ponce" label is synthetic.
+  ["725", "Liczba goli gracza (z dogrywką)", "0", [["Ponce, Ezequiel 1+", 4.1]], "OTHER"],
+  ["725", "Liczba goli gracza (z dogrywką)", "0", [["Mykołenko, Witalij 1+", 11.57], ["Alcaraz, Carlos 1+", 4.08]], "OTHER"],
   // ordinal templates ({SpecialIntValue1}): the "2." names are synthetic (live-only), odds illustrative
   ["36", "2. strzelec gola", "0", SCORERS, "OTHER"],
   ["8", "2. gol", "0", [["Everton FC", 2.1], ["żaden", 5.0], ["Coventry City", 3.2]], "OTHER"],
@@ -51,7 +78,7 @@ const rows: Row[] = [
   ["167", "Rynek 167", "4.5", [["ponad 4.5", 1.88], ["poniżej 4.5", 1.73]], "HALF_TIME_CORNERS_TOTAL", ["OVER", 1.88]],
   ["8", "1. gol", "0", [["Everton FC", 1.5], ["żaden", 12.77], ["Coventry City", 2.75]], "FIRST_TEAM_TO_SCORE", ["NONE", 12.77]],
   ["57", "1. Połowa - 1. gol", "0", [["Everton FC", 2.9], ["żaden", 1.9], ["Coventry City", 4.4]], "HALF_TIME_FIRST_GOAL", ["NONE", 1.9]],
-  // 21/23 pass today only because every selection is UNKNOWN and the market is dropped
+  // 21/23 are parked in OTHER by id until verified (coverage follow-up, plan OQ1)
   ["21", "Everton FC Dokładna liczba goli", "0", [["0", 5.4], ["1", 3.05], ["2", 3.29], ["3+", 3.14]], "OTHER"],
   ["23", "Zakres liczby goli", "0", [["0-1", 3.64], ["2-3", 1.92], ["4-5", 3.44], ["6+", 12.04]], "OTHER"],
   // scope guard: unknown ids with half/stat-scoped names never reach full-match codes
@@ -62,10 +89,14 @@ const rows: Row[] = [
 describe("pzbuk routing by real API names (2026-11-06 capture)", () => {
   it.each(rows)("id %s %s -> $4", (...row) => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const out = norm(row as Row);
-    // A dropped market (the scope-guard rows) is logged as unknown; a routed one is not.
-    expect(warn.mock.calls.length > 0).toBe(out === null);
-    warn.mockRestore();
+    let out: ReturnType<typeof norm>;
+    try {
+      out = norm(row as Row);
+      // A dropped market (the scope-guard rows) is logged as unknown; a routed one is not.
+      expect(warn.mock.calls.length > 0).toBe(out === null);
+    } finally {
+      warn.mockRestore();
+    }
     const [, , param, , code, sel] = row as Row;
     expect(out?.marketCode ?? "OTHER").toBe(code);
     if (sel) expect(out!.selections.find((s) => String(s.code) === sel[0])?.odds).toBe(sel[1]);
@@ -89,17 +120,59 @@ const outs = () => {
 describe("pzbuk real-names fixture invariants", () => {
   it("has 167 entries from the 2026-11-06 capture", () => expect(fx.entries).toHaveLength(167));
   it("has no non-OTHER marketKey collision with overlapping selection codes", () => {
-    const seen = new Map<string, Set<string>>(); const collisions: string[] = [];
+    const seen = new Map<string, Set<string>>(); const collisions: string[] = []; let nonOther = 0;
     for (const { raw, out } of outs()) {
       if (!out || out.marketCode === "OTHER") continue;
+      nonOther++;
       const codes = seen.get(out.marketKey) ?? new Set<string>();
       for (const s of out.selections) { if (codes.has(String(s.code))) collisions.push(`${out.marketKey}:${s.code} <- ${raw.name}`); codes.add(String(s.code)); }
       seen.set(out.marketKey, codes);
     }
     expect(collisions).toEqual([]);
+    // Non-vacuity: the invariant is only meaningful while the fixture still routes its markets.
+    expect([nonOther, seen.size]).toEqual([76, 76]);
   });
   it("takes MATCH_WINNER only from id 1", () => {
     const mw = outs().filter(({ out }: any) => out?.marketCode === "MATCH_WINNER");
     expect(mw.map(({ raw, out }: any) => [raw.bookmakerMarketId, out.selections.map((s: any) => s.odds)])).toEqual([["1", [1.66, 3.92, 4.91]]]);
+  });
+});
+
+describe("pzbuk fail-closed: one code on two selections", () => {
+  const WC = { homeTeam: "France", awayTeam: "Morocco", league: "world-cup-2026" };
+  const run = (id: string, name: string, sels: [string, number][], context = ctx) => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      const out = pzbukNormalizer.normalizeMarket({ bookmakerMarketId: id, name, selections: sels.map(([n, o]) => ({ name: n, odds: o })) }, context);
+      return { out, warnings: warn.mock.calls.map((c) => String(c[0])) };
+    } finally {
+      warn.mockRestore();
+    }
+  };
+  const RESOLUTION = "W jaki sposób rozstrzygnie się mecz?";
+
+  it("drops the team x method knockout market instead of publishing it as MATCH_RESOLUTION_METHOD", () => {
+    // world-cup-2026_france_morocco.json #11: Polish team names against the English context.
+    const wc: [string, number][] = [["Francja regulaminowy czas gry", 1.43], ["Maroko regulaminowy czas gry", 5.31], ["Francja po dogrywce", 7.97], ["Maroko po dogrywce", 24.59], ["Francja po rzutach karnych", 12.29], ["Maroko po rzutach karnych", 12.29]];
+    expect(run("5", RESOLUTION, wc, WC).out).toBeNull();
+    expect(run("5", RESOLUTION, TEAM_METHOD).out).toBeNull();
+  });
+  it("drops it when only one side resolves to a context team (duplicate UNKNOWN)", () => {
+    const partial: [string, number][] = [["Francja regulaminowy czas gry", 1.43], ["Nibylandia regulaminowy czas gry", 5.31], ["Francja po dogrywce", 7.97], ["Nibylandia po dogrywce", 24.59], ["Francja po rzutach karnych", 12.29], ["Nibylandia po rzutach karnych", 12.29]];
+    const { out, warnings } = run("5", RESOLUTION, partial, { ...WC, awayTeam: "Neverland" });
+    expect(out).toBeNull();
+    expect(warnings).toEqual([expect.stringMatching(/^\[pzbuk\] Dropping MATCH_RESOLUTION_METHOD /)]);
+  });
+  it("still routes the 3-way match resolution market", () => {
+    const { out } = run("5", RESOLUTION, [["w regulaminowym czasie gry", 1.2], ["po dogrywce", 7.5], ["po rzutach karnych", 9.1]]);
+    expect(out?.selections.map((s) => [s.code, s.odds])).toEqual([["REGULAR_TIME", 1.2], ["EXTRA_TIME", 7.5], ["PENALTIES", 9.1]]);
+    expect(out?.marketCode).toBe("MATCH_RESOLUTION_METHOD");
+  });
+  it("drops any non-OTHER market that repeats a selection code, and keeps OTHER as is", () => {
+    const twice: [string, number][] = [["Everton FC", 1.66], ["Everton FC", 1.7], ["Coventry City", 4.91]];
+    const { out, warnings } = run("1", "1x2", twice);
+    expect(out).toBeNull();
+    expect(warnings).toEqual([expect.stringMatching(/^\[pzbuk\] Dropping MATCH_WINNER "1x2" \(id: 1\): .*"Everton FC" -> HOME/)]);
+    expect(run("14", "Handicap", twice).out?.marketCode).toBe("OTHER");
   });
 });

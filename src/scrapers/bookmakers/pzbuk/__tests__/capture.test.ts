@@ -10,7 +10,9 @@ const league = load("ws-league-frames.json");
 const event = load("ws-event-frames.json");
 const fakePage = () => new EventEmitter() as unknown as Page & EventEmitter;
 const fakeSocket = (url: string) => Object.assign(new EventEmitter(), { url: () => url });
-const replay = (ws: EventEmitter, frames: any[]) => frames.filter((f) => f.dir === "recv").forEach((f) => ws.emit("framereceived", { payload: Buffer.from(f.text) }));
+// Replays both directions in capture order: sent SUBSCRIBE frames attribute each DATA stream to its market group.
+const replay = (ws: EventEmitter, frames: any[]) =>
+  frames.forEach((f) => ws.emit(f.dir === "sent" ? "framesent" : "framereceived", { payload: Buffer.from(f.text) }));
 const recv = (ws: EventEmitter, text: string) => ws.emit("framereceived", { payload: Buffer.from(text) });
 
 describe("pzbuk captureWebSocketData", () => {
@@ -61,6 +63,43 @@ describe("pzbuk captureWebSocketData", () => {
     const r = await p;
     expect([r.state?.markets.length, r.state?.selections.length]).toEqual([157, 656]);
     expect(r.diagnostics.groups).toEqual({ declared: [1, 2, 7, 8, 12, 13, 15, 17, 19, 28], seen: [1, 2, 7, 8, 12, 13, 15, 17, 19, 28] });
+  });
+  it("reports a silent Popularne stream although another stream's markets also list group 1", async () => {
+    // Stream 5 (group 1 "Popularne") never answers; stream 11 (group 28) carries only market 2179,
+    // which lists marketGroupIds [28, 1].
+    const frames = event.frames
+      .filter((f: any) => !(f.dir === "recv" && f.text.startsWith('{"type":"DATA","streamId":5,')))
+      .map((f: any) => {
+        if (!(f.dir === "recv" && f.text.startsWith('{"type":"DATA","streamId":11,'))) return f;
+        const env = JSON.parse(f.text);
+        const st = env.payload[0].payload;
+        st.markets = st.markets.filter((m: any) => m.marketType.marketGroupIds.join() === "28,1");
+        const ids = new Set(st.markets.map((m: any) => m.id));
+        st.selections = st.selections.filter((x: any) => ids.has(x.marketId));
+        return { ...f, text: JSON.stringify(env) };
+      });
+    const page = fakePage();
+    const p = captureWebSocketData(page, true, 4408475);
+    const ws = fakeSocket(event.socketUrl); page.emit("websocket", ws); replay(ws, frames);
+    await vi.advanceTimersByTimeAsync(26_000);
+    const r = await p;
+    expect(r.diagnostics.groups).toEqual({ declared: [1, 2, 7, 8, 12, 13, 15, 17, 19, 28], seen: [2, 7, 8, 12, 13, 15, 17, 19, 28] });
+  });
+  it("attributes stream ids per socket", async () => {
+    // Synthetic: a second matched socket reuses stream id 5 for group 2; the first socket's
+    // stream 5 (group 1) never answers.
+    const group1 = event.frames.find((f: any) => f.dir === "recv" && f.text.startsWith('{"type":"DATA","streamId":5,')).text;
+    const sub = (streamId: number, group: number) =>
+      JSON.stringify({ type: "SUBSCRIBE", streamId, route: "events", version: 1, payload: { filters: { eventIds: [4408475], marketGroupIds: [group] } } });
+    const page = fakePage();
+    const p = captureWebSocketData(page, true, 4408475);
+    const a = fakeSocket(event.socketUrl); page.emit("websocket", a);
+    const b = fakeSocket(event.socketUrl); page.emit("websocket", b);
+    a.emit("framesent", { payload: sub(5, 1) });
+    b.emit("framesent", { payload: sub(5, 2) });
+    recv(b, group1);
+    await vi.advanceTimersByTimeAsync(26_000);
+    expect((await p).diagnostics.groups?.seen).toEqual([2]);
   });
   it("counts chunked frames and the largest reassembled frame", async () => {
     // Synthetic chunking: no live frame has reached the announced 1048576 B yet.

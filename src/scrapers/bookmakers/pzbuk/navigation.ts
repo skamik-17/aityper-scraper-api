@@ -37,6 +37,7 @@ import {
   decodeFrame,
   errorMessage,
   initialStatesOf,
+  parseSubscription,
   subscribedGroupIds,
   FrameAssembler,
   SingleEventAccumulator,
@@ -245,8 +246,9 @@ function frameText(payload: string | Buffer): string {
  * listing (after `WS_MIN_WAIT`), or with `state: null` at `WS_MAX_WAIT`.
  *
  * Single-event mode (match details) merges the single-event INITIAL_STATE
- * payloads of `expectedEventId` (any event when omitted) across the page's
- * market-group streams:
+ * payloads of `expectedEventId` (the first merged event when omitted) across
+ * the page's market-group streams. A group counts as seen only when its own
+ * SUBSCRIBE stream answered:
  * 1. Dismisses the cookie consent popup
  * 2. Fires one expansion trigger (group headers that are not yet subscribed +
  *    all "Pokaż więcej")
@@ -295,11 +297,11 @@ export async function captureWebSocketData(
       resolve({ state, diagnostics });
     };
 
-    const handleInitialState = (state: PZBukInitialState) => {
+    const handleInitialState = (state: PZBukInitialState, streamGroupIds: readonly number[]) => {
       diagnostics.initialStates++;
       diagnostics.maxEvents = Math.max(diagnostics.maxEvents, state.events.length);
       if (singleEvent) {
-        if (accumulator.add(state)) lastUpdateTime = Date.now();
+        if (accumulator.add(state, streamGroupIds)) lastUpdateTime = Date.now();
       } else if (state.events.length >= 1 && state.selections.length > 0) {
         finish(state);
       }
@@ -313,9 +315,14 @@ export async function captureWebSocketData(
       diagnostics.matchedSockets++;
 
       const assembler = new FrameAssembler();
+      // Market-group ids per stream id of this socket (stream ids are per socket).
+      const streamGroups = new Map<number, number[]>();
       const onSent = (frame: { payload: string | Buffer }) => {
         if (resolved) return;
-        for (const id of subscribedGroupIds(frameText(frame.payload))) subscribed.add(id);
+        const text = frameText(frame.payload);
+        for (const id of subscribedGroupIds(text)) subscribed.add(id);
+        const subscription = parseSubscription(text);
+        if (subscription !== null) streamGroups.set(subscription.streamId, subscription.marketGroupIds);
       };
       const onReceived = (frame: { payload: string | Buffer }) => {
         if (resolved) return;
@@ -343,12 +350,14 @@ export async function captureWebSocketData(
             case "control":
               diagnostics.lastControl = { type: decoded.type, message: decoded.message };
               break;
-            case "data":
+            case "data": {
+              const streamGroupIds = decoded.streamId === null ? [] : streamGroups.get(decoded.streamId) ?? [];
               for (const state of initialStatesOf(decoded)) {
                 if (resolved) break;
-                handleInitialState(state);
+                handleInitialState(state, streamGroupIds);
               }
               break;
+            }
           }
         } catch (error) {
           diagnostics.invalidFrames++;

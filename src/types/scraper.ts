@@ -90,6 +90,8 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
+    // Browser fallback only (plan 08 Task 8 A/B 2026-11-14: bytes 5.24 -> 2.34 MB, same markets)
+    policy: { browser: { block: "media+trackers", stealth: false } },
   },
   totalbet: {
     bookmaker: "totalbet",

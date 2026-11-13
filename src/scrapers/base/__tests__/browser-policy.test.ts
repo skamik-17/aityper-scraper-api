@@ -92,3 +92,20 @@ describe("blockedUrlPatterns", () => {
     expect(TRACKER_HOSTS.flatMap((t) => own.filter((o) => covers(t, o)))).toEqual([]);
   });
 });
+
+describe("rolled-out browser policies (plan 08 Task 8: one bookmaker per measured A/B)", () => {
+  // Every level here passed A/B/A2 on its browser fallback; pzbuk is never rolled out (Open Question 2)
+  const ROLLED_OUT: Partial<Record<PolishBookmaker, "media" | "media+trackers">> = {
+    betfan: "media+trackers",
+  };
+
+  it("only the measured bookmakers block, and none of them runs stealth", () => {
+    const bms = Object.keys(DEFAULT_SCRAPER_CONFIGS) as PolishBookmaker[];
+    const resolved = Object.fromEntries(bms.map((bm) => [bm, resolveBrowserPolicy(bm, DEFAULT_SCRAPER_CONFIGS[bm], {})]));
+    expect(Object.fromEntries(bms.map((bm) => [bm, resolved[bm].block]))).toEqual(
+      Object.fromEntries(bms.map((bm) => [bm, ROLLED_OUT[bm] ?? "none"])),
+    );
+    expect(bms.filter((bm) => resolved[bm].stealth)).toEqual([]);
+    expect(resolved.pzbuk.block).toBe("none");
+  });
+});

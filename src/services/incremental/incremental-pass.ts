@@ -373,6 +373,16 @@ export class IncrementalHourLedger {
     this.hours.set(k, h);
   }
 
+  /** Counts a pass that produced no pass result at all (a hard timeout, a thrown unit) as failed. */
+  noteFailure(bookmaker: PolishBookmaker, league: string, error: string): void {
+    const k = `${bookmaker}|${league}`;
+    const h = this.hours.get(k) ?? { passes: 0, failedPasses: 0, firstError: null };
+    h.passes++;
+    h.failedPasses++;
+    h.firstError ??= error;
+    this.hours.set(k, h);
+  }
+
   /** Returns and resets; zeros when nothing was noted. */
   take(bookmaker: PolishBookmaker, league: string): HourSummary {
     const k = `${bookmaker}|${league}`;

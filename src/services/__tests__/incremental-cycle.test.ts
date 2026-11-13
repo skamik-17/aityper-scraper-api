@@ -34,6 +34,7 @@ const m = vi.hoisted(() => {
     getRecentRunRows: vi.fn(),
     probeDatabase: vi.fn(),
     cfg: { bookmakers: new Set(["forbet", "etoto"]), passMinutes: 10, dryRun: false, error: null as string | null },
+    hardTimeout: new Set<string>(),
   };
 });
 
@@ -55,6 +56,16 @@ vi.mock("../../repositories/scraper-run-repository.js", async (importOriginal) =
   insertBookmakerRunOutcomes: m.insertOutcomes,
   getRecentRunRows: m.getRecentRunRows,
 }));
+vi.mock("../../scrapers/hard-deadline.js", async (importOriginal) => {
+  const real = await importOriginal<typeof import("../../scrapers/hard-deadline.js")>();
+  return {
+    ...real,
+    scrapeWithHardDeadline: vi.fn(async (scraper: any, job: any, signal?: AbortSignal) =>
+      m.hardTimeout.has(job.bookmaker)
+        ? { success: false, bookmaker: job.bookmaker, league: job.league, matches: [], error: "hard timeout after 120s" }
+        : real.scrapeWithHardDeadline(scraper, job, signal)),
+  };
+});
 vi.mock("../../utils/proc-sampler.js", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../../utils/proc-sampler.js")>()),
   readProcessTree: async () => ({ rootRssBytes: 300 * 2 ** 20, chromium: [] }),
@@ -92,6 +103,7 @@ let out: string[];
 const lines = (prefix: string) => out.filter((l) => l.startsWith(prefix));
 
 beforeEach(() => {
+  m.hardTimeout.clear();
   scraperHealth.reset();
   incrementalHourLedger.take("forbet", PL);
   incrementalHourLedger.take("etoto", PL);
@@ -196,5 +208,44 @@ describe("incremental ticks in hourly units (Review Focus 6)", () => {
     expect(lines("[ALERT")).toEqual([]);
     expect(r.get(PL)!.aborted).toBe("db_unreachable");
     expect(m.scrapers.forbet.listEvents).not.toHaveBeenCalled();
+  });
+
+  it("a scraper without the incremental contract is skipped on incremental ticks and keeps its hourly full pass", async () => {
+    const sts = m.scrapers.sts as Record<string, unknown>;
+    const { listEvents, fetchEvent } = sts;
+    delete sts.listEvents;
+    delete sts.fetchEvent;
+    try {
+      await runScrapeCycle([PL], ["sts", "forbet"], { modes: { sts: "incremental", forbet: "incremental" }, recordOutcomes: false, closeBrowsers: false });
+      expect(m.scrapers.sts.scrapeFullOffer).not.toHaveBeenCalled();
+      expect(m.scrapers.forbet.listEvents).toHaveBeenCalledTimes(1);
+      await runScrapeCycle([PL], ["sts", "forbet"], { modes: { sts: "incremental", forbet: "incremental" }, recordOutcomes: true, closeBrowsers: false });
+      expect(m.scrapers.sts.scrapeFullOffer).toHaveBeenCalledTimes(1);
+    } finally {
+      Object.assign(sts, { listEvents, fetchEvent });
+    }
+  });
+
+  it("a hard timeout on an incremental tick is carried into the hourly outcome", async () => {
+    m.hardTimeout.add("forbet");
+    await incrementalTick();
+    m.hardTimeout.clear();
+    m.scrapers.forbet.listEvents.mockResolvedValue([refOf("forbet", 0)]);
+    await runScrapeCycle([PL], ["forbet"], { modes: { forbet: "incremental" }, recordOutcomes: true, closeBrowsers: false });
+    const [o] = m.insertOutcomes.mock.calls[0][0] as Array<{ status: string; error: string | null }>;
+    expect(o).toMatchObject({ status: "partial", error: "1 of 1 incremental passes this hour failed | hard timeout after 120s" });
+  });
+
+  it("a hard timeout on the hourly tick still consumes the hour's notes", async () => {
+    m.scrapers.forbet.listEvents.mockRejectedValueOnce(new Error("fetch HTTP 503 https://api.example/list"));
+    await incrementalTick();
+    m.hardTimeout.add("forbet");
+    await runScrapeCycle([PL], ["forbet"], { modes: { forbet: "incremental" }, recordOutcomes: true, closeBrowsers: false });
+    const [o] = m.insertOutcomes.mock.calls[0][0] as Array<{ status: string; error: string | null }>;
+    expect(o).toMatchObject({
+      status: "scrape_failed",
+      error: "hard timeout after 120s | 1 of 1 incremental passes this hour failed | fetch HTTP 503 https://api.example/list",
+    });
+    expect(incrementalHourLedger.take("forbet", PL)).toEqual({ passes: 0, failedPasses: 0, firstError: null });
   });
 });

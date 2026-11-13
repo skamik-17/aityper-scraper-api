@@ -618,6 +618,19 @@ export function normalize(name: string): string {
  * @param scrapedName - Team name from bookmaker
  * @param league - League slug (e.g., "ekstraklasa", "premier-league")
  */
+/** Upper bound of the matchToCanonical memo (FIFO eviction beyond it). */
+export const TEAM_MATCH_MEMO_MAX = 10_000;
+
+// Team data, aliases and the per-league Fuse index are static, so a result
+// for (league, raw name) never changes; misses are stored too (null), because
+// non-team labels ("Tak", player names) are the expensive Fuse misses.
+const teamMatchMemo = new Map<string, CanonicalTeam | null>();
+
+/** Clears the matchToCanonical memo (tests; a future reload of team data). */
+export function clearTeamMatchMemo(): void {
+  teamMatchMemo.clear();
+}
+
 export function matchToCanonical(
   scrapedName: string,
   league: string = "ekstraklasa"
@@ -628,6 +641,28 @@ export function matchToCanonical(
     return null;
   }
 
+  // Debug mode keeps every per-call warning, so it bypasses the memo.
+  if (process.env.TEAM_MATCHER_DEBUG === "true") {
+    return resolveCanonical(scrapedName, league, teams);
+  }
+
+  const key = `${league}\u0000${scrapedName}`;
+  if (teamMatchMemo.has(key)) return teamMatchMemo.get(key)!;
+
+  const result = resolveCanonical(scrapedName, league, teams);
+  if (teamMatchMemo.size >= TEAM_MATCH_MEMO_MAX) {
+    const oldest = teamMatchMemo.keys().next().value;
+    if (oldest !== undefined) teamMatchMemo.delete(oldest);
+  }
+  teamMatchMemo.set(key, result);
+  return result;
+}
+
+function resolveCanonical(
+  scrapedName: string,
+  league: string,
+  teams: CanonicalTeam[]
+): CanonicalTeam | null {
   const aliases = LEAGUE_ALIASES[league] ?? {};
 
   // 1. Check explicit aliases first (fastest path for known abbreviations)

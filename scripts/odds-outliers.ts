@@ -532,15 +532,27 @@ async function fetchMatch(args: Args, home: string, away: string, league: string
   return { url, data: body.data };
 }
 
+/**
+ * The (home, away) pairs of a `GET /api/odds?league=` body (`data.matches[].{homeTeam,awayTeam}`).
+ * Entries without both names are dropped; any other shape gives an empty list.
+ */
+export function matchPairsFromOddsList(body: unknown): { home: string; away: string }[] {
+  const matches = (body as { data?: { matches?: unknown } } | null)?.data?.matches;
+  if (!Array.isArray(matches)) return [];
+  const pairs: { home: string; away: string }[] = [];
+  for (const m of matches as Array<{ homeTeam?: unknown; awayTeam?: unknown } | null>) {
+    if (typeof m?.homeTeam === "string" && m.homeTeam !== "" && typeof m.awayTeam === "string" && m.awayTeam !== "") {
+      pairs.push({ home: m.homeTeam, away: m.awayTeam });
+    }
+  }
+  return pairs;
+}
+
 /** Distinct (home, away) pairs of a league, read from the same API the frontend uses. */
 async function listMatches(args: Args, league: string): Promise<{ home: string; away: string }[]> {
-  const res = await fetch(`${args.backend}/api/odds/match?league=${encodeURIComponent(league)}`);
+  const res = await fetch(`${args.backend}/api/odds?league=${encodeURIComponent(league)}`);
   if (res.ok) {
-    const body = (await res.json()) as { success: boolean; data?: { matches?: unknown[] } };
-    const matches = (body.data?.matches ?? []) as { homeTeam?: string; awayTeam?: string }[];
-    const pairs = matches
-      .filter((m) => m.homeTeam && m.awayTeam)
-      .map((m) => ({ home: m.homeTeam!, away: m.awayTeam! }));
+    const pairs = matchPairsFromOddsList(await res.json());
     if (pairs.length > 0) return pairs;
   }
   throw new Error(

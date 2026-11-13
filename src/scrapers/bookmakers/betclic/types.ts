@@ -36,6 +36,8 @@ export interface BetclicListingMatch {
   matchId: string | null;
   /** Original match name from API */
   matchName: string;
+  /** Raw kickoff string from listing proto field 3, e.g. "2026-11-07T12:30:00.0000000Z" */
+  startTime?: string;
   /** Parsed home team name */
   homeTeam: string;
   /** Parsed away team name */

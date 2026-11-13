@@ -34,6 +34,7 @@ import {
   isValidEvent,
 } from "./parser.js";
 import type { BetfanEvent } from "./types.js";
+import { toIsoStartTime } from "../../shared/start-time.js";
 
 export class BetfanPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "betfan";
@@ -254,7 +255,7 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(event.eventId),
                   markets,
-                  startTime: detailEvent.eventStartTime ?? event.eventStartTime,
+                  startTime: toIsoStartTime(detailEvent.eventStart ?? event.eventStart),
                   scrapedAt: new Date(),
                 });
                 console.log(`[Betfan/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets`);
@@ -269,7 +270,7 @@ export class BetfanPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(event.eventId),
                   markets,
-                  startTime: event.eventStartTime,
+                  startTime: toIsoStartTime(event.eventStart),
                   scrapedAt: new Date(),
                 });
                 console.log(`[Betfan/FullOffer] ${teams.homeTeam} vs ${teams.awayTeam}: ${markets.length} markets (fallback)`);

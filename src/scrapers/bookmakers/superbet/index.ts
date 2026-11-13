@@ -35,6 +35,7 @@ import {
   isUpcomingOfferedEvent,
 } from "./parser.js";
 import type { SuperbetEvent } from "./types.js";
+import { toIsoStartTime } from "../../shared/start-time.js";
 
 export class SuperbetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "superbet";
@@ -273,7 +274,7 @@ export class SuperbetPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(fullEvent.eventId),
                   markets,
-                  startTime: fullEvent.startTime,
+                  startTime: toIsoStartTime(fullEvent.unixDateMillis),
                   scrapedAt: new Date(),
                 });
 

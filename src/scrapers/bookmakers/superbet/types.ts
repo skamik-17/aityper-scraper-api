@@ -59,8 +59,6 @@ export interface SuperbetEvent {
   tournamentId: number;
   /** Sport ID (5 = football) */
   sportId: number;
-  /** Event start time ISO string */
-  startTime?: string;
   /** All available odds for this event */
   odds?: SuperbetOddsSelection[];
   /** Event status */

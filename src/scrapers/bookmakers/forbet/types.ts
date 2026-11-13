@@ -47,8 +47,8 @@ export interface ForbetEvent {
   eventName: string;
   /** Category ID the event belongs to */
   categoryId?: number;
-  /** Event start time as ISO string */
-  eventStartTime?: string;
+  /** Event kickoff, epoch milliseconds */
+  eventStart?: number;
   /** All available games (markets) for this event */
   eventGames?: ForbetGame[];
   /** Event status */

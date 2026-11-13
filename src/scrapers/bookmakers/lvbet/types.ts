@@ -83,8 +83,8 @@ export interface LVBetMatch {
   away?: string[];
   /** Sports group IDs for URL building */
   sports_groups_ids?: number[];
-  /** Match start time */
-  start_time?: string;
+  /** Match kickoff, ISO 8601 with offset */
+  date?: string;
   /** Match status */
   status?: string;
 }

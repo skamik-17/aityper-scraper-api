@@ -49,8 +49,8 @@ export interface EtotoEvent {
   eventName: string;
   /** Category ID */
   categoryId: number;
-  /** Event start time (timestamp) */
-  startTime?: number;
+  /** Event kickoff, epoch milliseconds */
+  eventStart?: number;
   /** All available games (markets) for this event */
   eventGames?: EtotoGame[];
   /** Event status */

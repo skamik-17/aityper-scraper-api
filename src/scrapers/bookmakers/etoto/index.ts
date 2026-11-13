@@ -35,6 +35,7 @@ import {
   hasValid1X2Odds,
 } from "./parser.js";
 import type { EtotoEvent } from "./types.js";
+import { toIsoStartTime } from "../../shared/start-time.js";
 
 export class EtotoPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "etoto";
@@ -272,7 +273,7 @@ export class EtotoPlaywrightScraper extends PlaywrightScraper {
                 awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                 eventUrl: buildEventUrl(fullEvent.eventId),
                 markets,
-                startTime: fullEvent.startTime ? new Date(fullEvent.startTime).toISOString() : undefined,
+                startTime: toIsoStartTime(fullEvent.eventStart),
                 scrapedAt: new Date(),
               });
 

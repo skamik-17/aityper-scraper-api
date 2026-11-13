@@ -50,6 +50,7 @@ import {
   hasValid1X2Odds,
 } from "./parser.js";
 import type { ForbetEvent } from "./types.js";
+import { toIsoStartTime } from "../../shared/start-time.js";
 
 // Cache for events data using centralized cache manager
 
@@ -284,7 +285,7 @@ export class ForbetPlaywrightScraper extends PlaywrightScraper {
                 awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
                 eventUrl: buildEventUrl(fullEvent.eventId),
                 markets,
-                startTime: fullEvent.eventStartTime,
+                startTime: toIsoStartTime(fullEvent.eventStart),
                 scrapedAt: new Date(),
               });
 

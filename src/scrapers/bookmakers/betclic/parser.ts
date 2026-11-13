@@ -886,6 +886,7 @@ export function parseListingResponse(data: Buffer, league: string): BetclicListi
 
       const matchFields = matchEntry.value;
       const matchName = getFieldValue<string>(matchFields, PROTO_FIELDS.MATCH_NAME) || "";
+      const startTime = getFieldValue<string>(matchFields, PROTO_FIELDS.MATCH_START_TIME);
       const parts = matchName.split(TEAM_SEPARATOR).map((t) => t.trim());
       if (parts.length !== 2) continue;
 
@@ -926,6 +927,7 @@ export function parseListingResponse(data: Buffer, league: string): BetclicListi
         matches.push({
           matchId,
           matchName,
+          ...(startTime ? { startTime } : {}),
           homeTeam,
           awayTeam,
           homeOdds: odds[0],

@@ -40,6 +40,7 @@ import {
 } from "./parser.js";
 import type { BetclicListingMatch } from "./types.js";
 import { assessMatchGroups } from "./match-groups.js";
+import { toIsoStartTime } from "../../shared/start-time.js";
 
 /** Same value as plan 02's MAX_SKIPPED_DETAIL_RATIO: more skipped matches than this fails the run. */
 const MAX_SKIPPED_MATCH_RATIO = 0.5;
@@ -346,6 +347,7 @@ export class BetclicPlaywrightScraper extends PlaywrightScraper {
 
       const offer: FullMatchOffer = {
         matchId,
+        startTime: toIsoStartTime(listingMatch.startTime),
         bookmaker: this.bookmaker,
         homeTeam: getCanonicalTeamName(homeTeam, ctx.league),
         awayTeam: getCanonicalTeamName(awayTeam, ctx.league),

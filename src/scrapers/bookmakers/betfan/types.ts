@@ -59,8 +59,8 @@ export interface BetfanEvent {
   eventName?: string;
   /** Category ID (league) */
   categoryId: number;
-  /** Event start time (ISO string or timestamp) */
-  eventStartTime?: string;
+  /** Event kickoff, epoch milliseconds */
+  eventStart?: number;
   /** Participants (teams) */
   participants?: BetfanParticipant[];
   /** All available games (markets) for this event */

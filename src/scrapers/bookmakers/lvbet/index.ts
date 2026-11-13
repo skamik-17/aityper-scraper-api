@@ -33,6 +33,7 @@ import {
   hasValid1X2Odds,
 } from "./parser.js";
 import type { LVBetMatch } from "./types.js";
+import { toIsoStartTime } from "../../shared/start-time.js";
 
 export class LVBetPlaywrightScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "lvbet";
@@ -283,7 +284,7 @@ export class LVBetPlaywrightScraper extends PlaywrightScraper {
                   awayTeam: getCanonicalTeamName(awayTeam, leagueSlug),
                   eventUrl: buildEventUrl(match, leagueSlug),
                   markets,
-                  startTime: match.start_time,
+                  startTime: toIsoStartTime(match.date),
                   scrapedAt: new Date(),
                 });
 

@@ -21,6 +21,7 @@ export const LEAGUE_IDS: Record<string, string> = {
   "serie-a": "148",
   "ligue-1": "395",
   "world-cup-2026": "1810",
+  "nations-league": "1336",
 };
 
 /**
@@ -40,6 +41,9 @@ export const LEAGUE_URLS: Record<string, string> = {
     "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/395-francja-ligue-1",
   "world-cup-2026":
     "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/1810-miedzynarodowe-mistrzostwa-swiata",
+  // Browser fallback only; built from the id-slug pattern of the other leagues
+  "nations-league":
+    "https://www.pzbuk.pl/pl/sportsbook/sport/1-pilka-nozna/leagues/1336-miedzynarodowe-uefa-liga-narodow",
 };
 
 /**

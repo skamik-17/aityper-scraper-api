@@ -28,6 +28,7 @@ export const CATEGORY_IDS: Record<string, number> = {
   "serie-a": 118,
   "ligue-1": 165,
   "world-cup-2026": 73181,
+  "nations-league": 29929,
 };
 
 /**

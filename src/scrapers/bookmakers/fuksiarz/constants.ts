@@ -32,13 +32,15 @@ export const LEAGUE_URLS: Record<string, string> = {
  * These are used to filter events by league in API requests
  * Found via network inspection of the Fuksiarz website
  */
-export const CATEGORY_IDS: Record<string, number> = {
+export const CATEGORY_IDS: Record<string, number | string> = {
   ekstraklasa: 265,
   "premier-league": 625,
   laliga: 654,
   "serie-a": 635,
   "ligue-1": 1152,
   "world-cup-2026": 174616,
+  // League A-D categories in one multi request
+  "nations-league": "178719,178718,178722,231480",
 };
 
 /**

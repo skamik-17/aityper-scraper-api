@@ -164,6 +164,15 @@ export const LEAGUES: LeagueConfig[] = [
       // Superbet splits the league phase into 14 groups; the scraper reads all of them from TOURNAMENT_IDS
       superbet: { id: 32375 },
       lvbet: { id: 35699 },
+      // Fuksiarz splits the league into League A-D categories; its multi endpoint takes a comma list.
+      // Never 231641 (season specials whose names look like matches).
+      fuksiarz: { id: "178719,178718,178722,231480" },
+      betfan: { id: 277 },
+      forbet: { id: 29929 },
+      etoto: { id: 286 },
+      totalbet: { id: "3de58c0b-4015-42f6-88c8-38ae34897b82" },
+      betcris: { id: 27844 },
+      pzbuk: { id: "1336" },
       // Betby lists League A and League B as two tournaments; Leagues C/D are not offered
       betters: { id: "2707230903544983592", extraIds: ["2707230903544983600"] },
       lebull: { id: "2707230903544983592", extraIds: ["2707230903544983600"] },

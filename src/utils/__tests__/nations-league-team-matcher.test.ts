@@ -43,6 +43,13 @@ describe("nations league team matching", () => {
     ["Albania", "Albania"], ["Armenia", "Armenia"], ["Malta", "Malta"],
   ])("%s → %s", (raw, canonical) => expect(getCanonicalTeamName(raw, L)).toBe(canonical));
 
+  it.each([
+    // Raw spellings seen in live discovery 2026-11-14: fortuna abbreviation, betfan and pzbuk capitals,
+    // betcris leading space
+    ["Bośnia i Herc.", "Bosnia-Herzegovina"], ["POLSKA", "Poland"], ["CZARNOGÓRA", "Montenegro"],
+    [" San Marino", "San Marino"],
+  ])("bookmaker spelling %j → %s", (raw, canonical) => expect(getCanonicalTeamName(raw, L)).toBe(canonical));
+
   it("Ireland and Northern Ireland never merge", () => {
     expect(getNormalizedTeamName("Irlandia", L)).not.toBe(getNormalizedTeamName("Irlandia Płn.", L));
     expect(getCanonicalTeamName("Northern Ireland", L)).toBe("N.Ireland");

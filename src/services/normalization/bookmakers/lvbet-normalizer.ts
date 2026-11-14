@@ -2131,6 +2131,10 @@ function normalizeSelectionForMarket(
  * verification does NOT extend to FIRST_HALF_ASIAN_HANDICAP, though: a
  * dedicated audit (round 3, reconfirmed round 5) found every non-zero
  * first-half line mirrored onto the wrong sign relative to peer consensus.
+ * SECOND_HALF_ASIAN_HANDICAP is inverted the same way (live consensus
+ * 2026-11-14, 12 matches): an explicit "-1.5" priced the home side at
+ * 1.03-1.08, which peers price at home +1.5, and an unsigned "1" priced
+ * home -1. An earlier fix negated only the unsigned lines.
  * CARDS_HANDICAP was likewise found sign-inverted (its own line progression
  * trends the opposite direction from betcris/fuksiarz/superbet's).
  * CORNERS_HANDICAP was confirmed sign-inverted across its ENTIRE curve
@@ -2144,21 +2148,10 @@ const LVBET_SIGN_INVERTED_HANDICAP_MARKETS = new Set<NormalizedMarketType>([
   "FIRST_HALF_EUROPEAN_HANDICAP",
   "SECOND_HALF_EUROPEAN_HANDICAP",
   "FIRST_HALF_ASIAN_HANDICAP",
+  "SECOND_HALF_ASIAN_HANDICAP",
   "CARDS_HANDICAP",
   "CORNERS_HANDICAP",
   "HALF_TIME_CORNERS_HANDICAP",
-]);
-
-/**
- * SECOND_HALF_ASIAN_HANDICAP markets whose raw label omits the sign on a
- * generic line ("Handicap 1", "Handicap 2", vs. the usual explicit
- * "Handicap -2.5"/"Handicap +0.5"). Cross-checked against 4 peer bookmakers'
- * monotonic line progression: an unsigned trailing number here means the
- * HOME side is favored by that amount (i.e. it should resolve as negative),
- * not the positive default parseLvbetHandicapParam would otherwise produce.
- */
-const LVBET_HANDICAP_DEFAULT_NEGATIVE_UNSIGNED_MARKETS = new Set<NormalizedMarketType>([
-  "SECOND_HALF_ASIAN_HANDICAP",
 ]);
 
 /**
@@ -2168,15 +2161,9 @@ const LVBET_HANDICAP_DEFAULT_NEGATIVE_UNSIGNED_MARKETS = new Set<NormalizedMarke
  * Digits of the "3-drogowy" qualifier, the "1./2. Połowa" prefix and minute
  * windows ("1-15 min.") are stripped first so they are never mistaken for
  * the line. The sign is negated for the markets listed in
- * LVBET_SIGN_INVERTED_HANDICAP_MARKETS (see comment there); for markets in
- * LVBET_HANDICAP_DEFAULT_NEGATIVE_UNSIGNED_MARKETS, a trailing number with NO
- * explicit sign character defaults to negative instead of positive.
+ * LVBET_SIGN_INVERTED_HANDICAP_MARKETS (see comment there).
  */
-function parseLvbetHandicapParam(
-  name: string,
-  invertSign: boolean,
-  defaultNegativeWhenUnsigned: boolean
-): string | undefined {
+function parseLvbetHandicapParam(name: string, invertSign: boolean): string | undefined {
   const cleaned = name
     .replace(/3[-\s]?drogow\w*/gi, "")
     .replace(/[12]\.\s*połowa/gi, "")
@@ -2186,10 +2173,7 @@ function parseLvbetHandicapParam(
   const lastMatch = matches[matches.length - 1];
   const value = parseFloat(lastMatch.replace(",", "."));
   if (Number.isNaN(value)) return undefined;
-  let line = invertSign ? -value : value;
-  if (defaultNegativeWhenUnsigned && !/^[+-]/.test(lastMatch) && line > 0) {
-    line = -line;
-  }
+  const line = invertSign ? -value : value;
   if (line > 0) return `+${line}`;
   return `${line}`;
 }
@@ -2275,11 +2259,7 @@ function extractParamValue(
       // A handicap name with no visible number is a level (0) line — LVBet
       // omits the zero instead of printing "Handicap 0".
       return (
-        parseLvbetHandicapParam(
-          marketName,
-          LVBET_SIGN_INVERTED_HANDICAP_MARKETS.has(marketCode),
-          LVBET_HANDICAP_DEFAULT_NEGATIVE_UNSIGNED_MARKETS.has(marketCode)
-        ) ??
+        parseLvbetHandicapParam(marketName, LVBET_SIGN_INVERTED_HANDICAP_MARKETS.has(marketCode)) ??
         parseOverUnderLine(selectionNames) ??
         "0"
       );

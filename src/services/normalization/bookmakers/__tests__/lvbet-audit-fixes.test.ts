@@ -214,3 +214,32 @@ describe("lvbet audit fixes (audit-match, round 8, Arsenal vs Coventry City)", (
     );
   });
 });
+
+describe("lvbet SECOND_HALF_ASIAN_HANDICAP line sign (live consensus 2026-11-14)", () => {
+  // The number in "2. Połowa - Handicap X" is quoted from the away side, as in the first half:
+  // across 12 matches every explicit "-X" priced the home side at 1.03-1.08, which peers price
+  // at home +X, while unsigned "X" priced home -X. Stored as -X, the explicit lines showed a
+  // home favourite at 1.05 on the -1.5 line.
+  const norm = (name: string, home: number, away: number) =>
+    lvbetNormalizer.normalizeMarket(
+      { name, selections: [{ name: "Arsenal", odds: home }, { name: "Coventry City", odds: away }] },
+      ctx,
+    );
+
+  it.each([
+    ["2. Połowa - Handicap -1.5", 1.07, 6.75, "+1.5"],
+    ["2. Połowa - Handicap -1", 1.08, 6.5, "+1"],
+    ["2. Połowa - Handicap -2.5", 1.02, 9.75, "+2.5"],
+    ["2. Połowa - Handicap 1", 4.65, 1.15, "-1"],
+    ["2. Połowa - Handicap 2", 7.75, 1.05, "-2"],
+  ])("%s → home %s", (name, home, away, param) => {
+    const out = norm(name, home, away);
+    expect(out?.marketCode).toBe("SECOND_HALF_ASIAN_HANDICAP");
+    expect(out?.paramValue).toBe(param);
+    expect(out?.selections.map((s) => [s.code, s.odds])).toEqual([["HOME", home], ["AWAY", away]]);
+  });
+
+  it("a name without a number stays the level line", () => {
+    expect(norm("2. Połowa - Handicap", 1.7, 2.05)?.paramValue).toBe("0");
+  });
+});

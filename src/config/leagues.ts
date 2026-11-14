@@ -2,6 +2,8 @@ import type { PolishBookmaker } from "./index.js";
 
 export interface LeagueBookmakerConfig {
   id: string | number;
+  /** Further competition ids when the bookmaker splits the league (e.g. Betby's Nations League A and B). */
+  extraIds?: ReadonlyArray<string | number>;
   url?: string;
   tournamentFilter?: string;
   countryFilter?: string;
@@ -162,6 +164,9 @@ export const LEAGUES: LeagueConfig[] = [
       // Superbet splits the league phase into 14 groups; the scraper reads all of them from TOURNAMENT_IDS
       superbet: { id: 32375 },
       lvbet: { id: 35699 },
+      // Betby lists League A and League B as two tournaments; Leagues C/D are not offered
+      betters: { id: "2707230903544983592", extraIds: ["2707230903544983600"] },
+      lebull: { id: "2707230903544983592", extraIds: ["2707230903544983600"] },
     },
   },
 ];

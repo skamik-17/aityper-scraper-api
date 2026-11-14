@@ -21,7 +21,7 @@
  * one). A budget abort fails the scrape with nothing written: no listing fallback then.
  */
 
-import { getBookmakerLeagueId } from "../../../config/leagues.js";
+import { getBookmakerLeagueConfig } from "../../../config/leagues.js";
 import type { FullMatchOffer, FullOfferScraperResult } from "../../../types/full-offer.js";
 import type {
   ScraperConfig,
@@ -113,11 +113,12 @@ export class BetbyScraper extends PlaywrightScraper {
     this.lastRunStats = null;
     const runBudget = budget ?? createScrapeBudget(BETBY_BUDGET_MS);
     try {
-      const tournamentId = this.tournamentId(league);
-      if (tournamentId === null) throw new Error(`Unknown league: ${league}`);
+      const tournamentIds = betbyTournamentIds(league, this.bookmaker);
+      if (tournamentIds === null) throw new Error(`Unknown league: ${league}`);
+      const tournamentId = tournamentIds.join(",");
 
       const snapshot = await this.client.fetchSnapshot(runBudget.signal);
-      const refs = selectLeagueEvents(snapshot, tournamentId, this.now());
+      const refs = selectLeagueEvents(snapshot, tournamentIds, this.now());
       if (refs.length === 0) {
         // README §3 empty-listing rule: success with no matches (observability: `empty`)
         const reason = `Betby ${this.tag}: 0 upcoming matches for tournament ${tournamentId} in snapshot ${snapshot.manifestVersion} (${Object.keys(snapshot.events).length} events)`;
@@ -192,14 +193,6 @@ export class BetbyScraper extends PlaywrightScraper {
     }
   }
 
-  /** The league's Betby tournament id, or null when the league is not mapped for this brand. */
-  private tournamentId(league: string): string | null {
-    const id = getBookmakerLeagueId(league, this.bookmaker);
-    if (id === undefined) return null;
-    // A number here would be a config bug: a 19-digit id cannot survive as a JS number.
-    if (typeof id !== "string") throw new Error(`Betby ${this.tag}: tournament id for ${league} must be a string, got ${id}`);
-    return id;
-  }
 
   /**
    * What the event endpoint gives for one match:
@@ -232,4 +225,18 @@ export class BetbyScraper extends PlaywrightScraper {
     console.warn(`[${this.tag}/FullOffer] ${ref.eventId}: no event payload (${reason}); using listing markets`);
     return { none: reason };
   }
+}
+
+/**
+ * The league's Betby tournament ids (its main id plus any extraIds), or null when the league is
+ * not mapped for this brand. Ids stay strings: a 19-digit id cannot survive as a JS number.
+ */
+export function betbyTournamentIds(league: string, bookmaker: BetbyBookmaker): string[] | null {
+  const cfg = getBookmakerLeagueConfig(league, bookmaker);
+  if (cfg === undefined) return null;
+  const ids = [cfg.id, ...(cfg.extraIds ?? [])];
+  for (const id of ids) {
+    if (typeof id !== "string") throw new Error(`Betby ${bookmaker}: tournament id for ${league} must be a string, got ${id}`);
+  }
+  return ids as string[];
 }

@@ -66,13 +66,15 @@ export function renderTemplate(t: string, specs: Record<string, string>, competi
  * (`type: "tournament"`) and events that have started are left out. The snapshot is
  * shared and frozen, so team names are trimmed into new objects, never in place.
  */
-export function selectLeagueEvents(s: BetbySnapshot, tournamentId: string, nowMs: number): BetbyEventRef[] {
+export function selectLeagueEvents(s: BetbySnapshot, tournamentIds: string | readonly string[], nowMs: number): BetbyEventRef[] {
+  // A league can span several Betby tournaments (the Nations League's League A and B)
+  const wanted = new Set(typeof tournamentIds === "string" ? [tournamentIds] : tournamentIds);
   const picked: { scheduled: number; ref: BetbyEventRef }[] = [];
   for (const [eventId, event] of Object.entries(s.events)) {
     // The snapshot holds every sport of the brand; one malformed event must not fail every league.
     const d = event?.desc;
     if (d === null || typeof d !== "object") continue;
-    if (d.sport !== "1" || d.type !== "match" || d.tournament !== tournamentId) continue;
+    if (d.sport !== "1" || d.type !== "match" || !wanted.has(d.tournament)) continue;
     if (!Array.isArray(d.competitors) || d.competitors.length !== 2) continue;
     if (!(d.scheduled * 1000 > nowMs)) continue;
     const [homeTeam, awayTeam] = d.competitors.map((c) => (typeof c?.name === "string" ? c.name.trim() : ""));

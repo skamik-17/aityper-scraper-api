@@ -29,11 +29,10 @@
  *   npx tsx scripts/betby-smoke.ts --bookmaker betters --league premier-league
  *   npx tsx scripts/betby-smoke.ts --bookmaker lebull --league premier-league --compare-api http://localhost:3001
  */
-import { getBookmakerLeagueId } from "../src/config/leagues.js";
 import { bettersScraper } from "../src/scrapers/bookmakers/betters/index.js";
 import { lebullScraper } from "../src/scrapers/bookmakers/lebull/index.js";
 import { selectLeagueEvents } from "../src/scrapers/shared/betby/parser.js";
-import type { BetbyScraper } from "../src/scrapers/shared/betby/scraper.js";
+import { betbyTournamentIds, type BetbyScraper } from "../src/scrapers/shared/betby/scraper.js";
 import {
   evaluateSmoke,
   formatPct,
@@ -171,8 +170,8 @@ async function main(): Promise<void> {
   if (getNormalizerForBookmaker(bookmaker) !== normalizer) {
     throw new Error(`the normalizer registered for ${bookmaker} is not the Betby normalizer`);
   }
-  const tournamentId = getBookmakerLeagueId(league, bookmaker);
-  if (typeof tournamentId !== "string") usageError(`no Betby tournament id for league "${league}" on ${bookmaker}`);
+  const tournamentIds = betbyTournamentIds(league, bookmaker);
+  if (tournamentIds === null) usageError(`no Betby tournament id for league "${league}" on ${bookmaker}`);
 
   // Read the odds API first: when it is down, nothing has been asked of the bookmaker yet.
   const oddsList = args.compareApi !== undefined ? await fetchOddsList(args.compareApi, league) : null;
@@ -185,7 +184,7 @@ async function main(): Promise<void> {
 
   // The client caches the snapshot for 45 s, so this is the snapshot the scrape just used.
   const nowMs = Date.now();
-  const snapshotCount = selectLeagueEvents(await scraper.client.fetchSnapshot(), tournamentId, nowMs).length;
+  const snapshotCount = selectLeagueEvents(await scraper.client.fetchSnapshot(), tournamentIds, nowMs).length;
   const options: SmokeGateOptions = { ...args.gate, nowMs, maxDurationMs: MAX_DURATION_MS };
 
   const rows: SmokeMatchRow[] = [];

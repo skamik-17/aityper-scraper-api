@@ -29,6 +29,16 @@ describe("betby parser", () => {
     expect(selectLeagueEvents(snapshotFrom("betters"), PL, Date.parse("2026-11-06T21:00:00Z"))).toHaveLength(10);
   });
 
+  it("selectLeagueEvents takes every tournament of a split league (Nations League A + B)", () => {
+    const s = snapshotFrom("betters");
+    const ids = Object.keys(s.events).filter((id) => s.events[id]?.desc?.tournament === PL);
+    // Move two PL matches into a second tournament, as Betby splits the Nations League into League A and B
+    for (const id of ids.slice(0, 2)) s.events[id] = { ...s.events[id], desc: { ...s.events[id].desc, tournament: "2707230903544983600" } };
+    const now = Date.parse("2026-11-06T16:00:00Z");
+    expect(selectLeagueEvents(s, PL, now)).toHaveLength(9);
+    expect(selectLeagueEvents(s, [PL, "2707230903544983600"], now)).toHaveLength(11);
+  });
+
   it("selectLeagueEvents keeps 19-digit ids as exact strings", () => {
     const refs = selectLeagueEvents(snapshotFrom("betters"), PL, Date.parse("2026-11-06T16:00:00Z"));
     for (const r of refs) { expect(typeof r.eventId).toBe("string"); expect(r.eventId).toMatch(/^\d{19}$/); }

@@ -26,6 +26,8 @@ export const LEAGUE_URLS: Record<string, string> = {
   "serie-a": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/wlochy/serie-a",
   "ligue-1": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/francja/ligue-1",
   "world-cup-2026": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/swiat/mistrzostwa-swiata",
+  // Browser fallback only; URL not opened during discovery
+  "nations-league": "https://www.superbet.pl/zaklady-bukmacherskie/pilka-nozna/europa/liga-narodow",
 };
 
 /**
@@ -46,6 +48,14 @@ export const TOURNAMENT_IDS: Record<string, number[]> = {
     1432, 1433, 1434, 1435, 1436, 1437, 1438, 1439, // groups A-H
     94891, 94892, 94893, 94894,                     // groups I-L
     1431,                                           // Final placeholder
+  ],
+  // UEFA Nations League 2026/27: groups A1-A4, B1-B4, C1-C4 (32374 + 32383-32385), D1-D2.
+  // The "zakłady specjalne" ids 102964, 104654 and 104655 are left out.
+  "nations-league": [
+    32375, 32376, 32377, 32378, // A1-A4
+    32379, 32380, 32381, 32382, // B1-B4
+    32374, 32383, 32384, 32385, // C1-C4
+    32386, 32387,               // D1-D2
   ],
 };
 

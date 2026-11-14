@@ -54,6 +54,7 @@ export const COMPETITION_IDS: Record<string, number> = {
   "serie-a": 6,
   "ligue-1": 4,
   "world-cup-2026": 1,
+  "nations-league": 22676,
 };
 
 /**
@@ -66,6 +67,7 @@ export const LEAGUE_SLUGS: Record<string, string> = {
   "serie-a": "serie-a-c6",
   "ligue-1": "ligue-1-c4",
   "world-cup-2026": "ms-c1",
+  "nations-league": "uefa-liga-narodow-c22676",
 };
 
 /**

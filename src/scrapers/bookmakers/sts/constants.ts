@@ -81,6 +81,16 @@ export const LEAGUE_CONFIG: Record<
     countryFilter: "",
     tournamentFilter: "mistrzostwa",
   },
+  // UEFA Nations League under "Międzynarodowe" (categoryId 3), tournament 12277 "Liga Narodów UEFA".
+  // Strict ids: the name filter alone also matches the CONCACAF Nations League.
+  "nations-league": {
+    url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/liga-narodow-uefa/1/3/12277",
+    tournamentId: 12277,
+    countryFilter: "",
+    tournamentFilter: "liga narod",
+    strictTournamentId: true,
+    categoryId: 3,
+  },
 };
 
 /**

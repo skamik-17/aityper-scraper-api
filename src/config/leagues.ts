@@ -149,6 +149,21 @@ export const LEAGUES: LeagueConfig[] = [
       totalbet: { id: "298d1945-aed7-4b43-ba39-3dbc23a59cd0" },
     },
   },
+  {
+    // UEFA Nations League 2026/27 (TheSportsDB 4490). Ids from live discovery 2026-11-14.
+    slug: "nations-league",
+    displayName: "UEFA Nations League",
+    displayNamePl: "Liga Narodów UEFA",
+    country: "Europe",
+    bookmakers: {
+      sts: { id: 12277, url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/liga-narodow-uefa/1/3/12277" },
+      fortuna: { id: "ufo:tour:00-078" },
+      betclic: { id: 22676 },
+      // Superbet splits the league phase into 14 groups; the scraper reads all of them from TOURNAMENT_IDS
+      superbet: { id: 32375 },
+      lvbet: { id: 35699 },
+    },
+  },
 ];
 
 const leaguesBySlug = new Map<string, LeagueConfig>(

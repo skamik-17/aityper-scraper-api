@@ -33,6 +33,14 @@ export const TSDB_LEAGUE_META: Record<string, TsdbLeagueMeta> = {
     season: "2026",
     rounds: [1, 2, 3, 32, 16, 125, 150, 160, 170, 180, 200],
   },
+  // UEFA Nations League 2026/27 (league 4490): league phase rounds 1-6 (26 matches each).
+  // Knock-out and play-off rounds (March 2027) are added once TSDB publishes their intRound values.
+  "nations-league": {
+    theSportsDbId: "4490",
+    totalRounds: 6,
+    season: "2026-2027",
+    rounds: [1, 2, 3, 4, 5, 6],
+  },
 };
 
 export function getTsdbLeagueMeta(leagueSlug: string): TsdbLeagueMeta | null {

@@ -26,6 +26,8 @@ export const TOURNAMENT_IDS: Record<string, number> = {
   "serie-a": 37680,
   "ligue-1": 37682,
   "world-cup-2026": 37392,
+  // The separate "Liga A/B/C/D" groups (57700, 57910, 57907, 57699) are empty; 35699 holds every match
+  "nations-league": 35699,
 };
 
 /**

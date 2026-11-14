@@ -36,6 +36,9 @@ export const LEAGUE_URLS: Record<string, string> = {
     "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/francja/1-francja",
   "world-cup-2026":
     "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/fifa-world-cup",
+  // Browser fallback only (the HTTP scraper uses TOURNAMENT_IDS); URL not opened during discovery
+  "nations-league":
+    "https://www.efortuna.pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/liga-narodow",
 };
 
 /**
@@ -54,6 +57,7 @@ export const TOURNAMENT_IDS: Record<string, string> = {
   "serie-a": "ufo:tour:00-06t",         // Serie A (Italy)
   "ligue-1": "ufo:tour:00-0bo",         // Ligue 1 (France)
   "world-cup-2026": "ufo:tour:00-2h1",  // FIFA World Cup 2026 (international)
+  "nations-league": "ufo:tour:00-078",  // UEFA Nations League (international)
 };
 
 /**

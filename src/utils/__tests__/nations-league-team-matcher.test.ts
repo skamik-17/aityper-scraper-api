@@ -53,4 +53,12 @@ describe("nations league team matching", () => {
     expect(getCanonicalTeamName("Wybrzeże Kości Słoniowej", "world-cup-2026")).toBe("Ivory Coast");
     expect(getCanonicalTeamName("Niemcy", "world-cup-2026")).toBe("Germany");
   });
+
+  it("a nation outside the World Cup roster never fuzzy-matches another nation there", () => {
+    // Discovery 2026-11-14: before the shared alias table these resolved Walia→Australia, Dania→Canada,
+    // Łotwa→Norway, Serbia→Algeria under world-cup-2026
+    for (const raw of ["Walia", "Dania", "Łotwa", "Serbia"]) {
+      expect(matchToCanonical(raw, "world-cup-2026")).toBeNull();
+    }
+  });
 });

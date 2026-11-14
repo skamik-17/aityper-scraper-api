@@ -88,9 +88,14 @@ export async function refreshLeagueWindows(
   }
 }
 
+/** False while the last refresh found the league outside its fixture window. */
+export function isLeagueScheduled(league: string): boolean {
+  return !outside.has(league);
+}
+
 /** The leagues a scheduled run should scrape, in their configured order. */
 export function scheduledLeagues(leagues: readonly string[]): string[] {
-  return leagues.filter((league) => !outside.has(league));
+  return leagues.filter(isLeagueScheduled);
 }
 
 /** Tests only: forget every decision. */

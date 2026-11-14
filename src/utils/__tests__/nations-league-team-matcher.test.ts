@@ -54,6 +54,9 @@ describe("nations league team matching", () => {
     expect(getNormalizedTeamName("Irlandia", L)).not.toBe(getNormalizedTeamName("Irlandia Płn.", L));
     expect(getCanonicalTeamName("Northern Ireland", L)).toBe("N.Ireland");
     expect(getCanonicalTeamName("Republic of Ireland", L)).toBe("Ireland");
+    // Without an alias these fell to the substring tier and resolved to Ireland
+    expect(getCanonicalTeamName("N. Ireland", L)).toBe("N.Ireland");
+    expect(getCanonicalTeamName("N Ireland", L)).toBe("N.Ireland");
   });
 
   it("the World Cup keeps resolving the same Polish names (shared national alias table)", () => {

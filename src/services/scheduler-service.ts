@@ -16,7 +16,7 @@ import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js"
 import { decideStartupScrape, getStalestOkRunAt } from "./startup-policy.js";
 import { formatIncrementalConfigLine, getIncrementalConfig } from "../config/incremental.js";
 import { buildTickRequest, type ScrapeMode } from "./incremental/scrape-dispatch.js";
-import { refreshLeagueWindows, scheduledLeagues } from "./league-window.js";
+import { isLeagueScheduled, refreshLeagueWindows, scheduledLeagues } from "./league-window.js";
 
 // At startup the local Supabase stack can still be coming up: wait for it instead of failing once.
 const STARTUP_DB_WAIT_MS = 120_000;
@@ -138,7 +138,11 @@ async function executeRun(req: RunRequest, ctx: RunExecutionContext): Promise<vo
   const target = req.trigger === "admin" ? lastAdminResults : lastResults;
   for (const [league, result] of multi.leagues) target.set(league, result);
   // The next scheduled run picks its leagues from a fresh fixture-window decision
-  if (req.trigger !== "admin") await refreshLeagueWindows(CONFIG.ENABLED_LEAGUES);
+  if (req.trigger !== "admin") {
+    await refreshLeagueWindows(CONFIG.ENABLED_LEAGUES);
+    // A league that left its window is not scraped again for weeks: keep it out of the health view
+    for (const league of [...lastResults.keys()]) if (!isLeagueScheduled(league)) lastResults.delete(league);
+  }
 
   if (startup) {
     console.log(

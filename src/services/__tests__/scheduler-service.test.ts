@@ -13,7 +13,7 @@ const m = vi.hoisted(() => ({
 }));
 
 // Fixture windows: every league in its window unless a test says otherwise
-const lw = vi.hoisted(() => ({ refreshLeagueWindows: vi.fn(), scheduledLeagues: vi.fn() }));
+const lw = vi.hoisted(() => ({ refreshLeagueWindows: vi.fn(), scheduledLeagues: vi.fn(), isLeagueScheduled: vi.fn() }));
 vi.mock("../league-window.js", async () => lw);
 
 vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist, runScrapeCycle: m.runScrapeCycle }));
@@ -35,6 +35,7 @@ vi.mock("../../repositories/scraper-run-repository.js", async () => ({
 
 import { CONFIG } from "../../config/index.js";
 import {
+  getSchedulerStatus,
   runAllLeaguesScrape,
   runDailyCleanup,
   runInitialTsdbSync,
@@ -80,6 +81,7 @@ beforeEach(() => {
   m.deleteScraperRunsOlderThan.mockResolvedValue(3);
   lw.refreshLeagueWindows.mockReset().mockResolvedValue(undefined);
   lw.scheduledLeagues.mockReset().mockImplementation((leagues: readonly string[]) => [...leagues]);
+  lw.isLeagueScheduled.mockReset().mockReturnValue(true);
   errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 });
@@ -184,6 +186,20 @@ describe("startup timers", () => {
     startScheduler();
     await vi.advanceTimersByTimeAsync(5_000);
     expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.anything());
+  });
+
+  it("a league that leaves its window drops out of the health view after the run", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    m.runScrapeCycle.mockImplementation(async (leagues: string[]) => new Map(leagues.map((l) => [l, scrapeResult({ league: l })])));
+    // The post-run refresh finds nations-league outside its window
+    lw.refreshLeagueWindows.mockImplementation(async () => {
+      if (m.runScrapeCycle.mock.calls.length > 0) lw.isLeagueScheduled.mockImplementation((l: string) => l !== "nations-league");
+    });
+    startScheduler();
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league", "nations-league"], undefined, expect.anything());
+    expect(Object.keys(getSchedulerStatus().lastResults)).toEqual(["premier-league"]);
   });
 
   it("the windows are refreshed before the startup decision and after every scheduled run", async () => {

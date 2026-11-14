@@ -7,7 +7,10 @@ import type { PolishBookmaker } from "../../config/index.js";
 import type { BookmakerStatus } from "../../types/database.js";
 import type { BookmakerHealthMeta } from "../../services/bookmaker-status.js";
 
-const m = vi.hoisted(() => ({ getAllLatestOdds: vi.fn() }));
+const m = vi.hoisted(() => ({ getAllLatestOdds: vi.fn(), outside: new Set<string>() }));
+vi.mock("../../services/league-window.js", async () => ({
+  isLeagueScheduled: (league: string) => !m.outside.has(league),
+}));
 
 // The real config, with a second enabled league so the merge has something to merge.
 vi.mock("../../config/index.js", async (importOriginal) => {
@@ -67,6 +70,7 @@ afterAll(async () => {
 
 beforeEach(() => {
   m.getAllLatestOdds.mockReset().mockImplementation(leagueOdds);
+  m.outside.clear();
 });
 
 const post = (leagues: string[]) =>
@@ -77,6 +81,13 @@ const post = (leagues: string[]) =>
   }).then((r) => r.json());
 
 describe("POST /api/odds/batch meta", () => {
+  it("an enabled league outside its fixture window does not merge (nothing scrapes it between windows)", async () => {
+    m.outside.add("la-liga");
+    const { meta } = await post(["premier-league", "la-liga"]);
+    expect(meta.bookmakerStatus.betcris).toBe("stale");
+    expect(meta.bookmakerHealth.betcris.lastSuccessAt).toBe("2026-11-06T16:02:49.798Z");
+  });
+
   it("worst status wins across enabled leagues, as plain strings (today the first league wins)", async () => {
     const { meta } = await post(["premier-league", "la-liga", "ekstraklasa"]);
     expect(meta.bookmakerStatus.betcris).toBe("error");

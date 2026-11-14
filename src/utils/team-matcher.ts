@@ -568,6 +568,8 @@ const NATIONAL_TEAM_ALIASES: Record<string, string> = {
   "Irlandia Płn": "N.Ireland",
   "Płn. Irlandia": "N.Ireland",
   "Northern Ireland": "N.Ireland",
+  "N. Ireland": "N.Ireland",
+  "N Ireland": "N.Ireland",
   "Macedonia Północna": "North Macedonia",
   "Macedonia Płn.": "North Macedonia",
   "Macedonia Płn": "North Macedonia",

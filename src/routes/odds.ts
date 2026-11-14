@@ -13,6 +13,7 @@ import type {
 import { ApiError, asyncHandler } from "../middleware/error-handler.js";
 import { ERROR_CODES } from "../types/api.js";
 import { CONFIG } from "../config/index.js";
+import { isLeagueScheduled } from "../services/league-window.js";
 import type { BookmakerStatus } from "../types/database.js";
 import {
   getAllLatestOdds,
@@ -235,8 +236,11 @@ router.post("/batch", asyncHandler(async (req, res) => {
 
   // Merge bookmaker status over the scraped leagues (worst status wins, values
   // stay plain strings). A league nothing scrapes would otherwise turn every
-  // bookmaker stale; with no scraped league requested, all of them count.
-  const enabled = leagues.filter((l) => (CONFIG.ENABLED_LEAGUES as readonly string[]).includes(l));
+  // bookmaker stale; with no scraped league requested, all of them count. An
+  // enabled league outside its fixture window is not scraped either.
+  const enabled = leagues.filter(
+    (l) => (CONFIG.ENABLED_LEAGUES as readonly string[]).includes(l) && isLeagueScheduled(l),
+  );
   const mergeLeagues = new Set(enabled.length > 0 ? enabled : leagues);
   const mergedBookmakerStatus: Record<string, BookmakerStatus> = {};
   const mergedBookmakerHealth: Record<string, BookmakerHealthMeta> = {};

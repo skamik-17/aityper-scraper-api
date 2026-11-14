@@ -28,30 +28,6 @@ export interface STSFixture {
 }
 
 /**
- * Parsed odds from STS WebSocket
- */
-export interface STSOdds {
-  /** 1X2 home win */
-  odds1: number | null;
-  /** 1X2 draw */
-  oddsX: number | null;
-  /** 1X2 away win */
-  odds2: number | null;
-  /** Double Chance 1X */
-  odds1X: number | null;
-  /** Double Chance X2 */
-  oddsX2: number | null;
-  /** Double Chance 12 */
-  odds12: number | null;
-  /** BTTS Yes */
-  bttsYes: number | null;
-  /** BTTS No */
-  bttsNo: number | null;
-  /** Over/Under by line (e.g., "2.5" -> {over, under}) */
-  overUnder: Record<string, { over: number; under: number }>;
-}
-
-/**
  * Raw outcome from STS WebSocket market data
  */
 export interface STSOutcome {

@@ -13,7 +13,6 @@ import type { FullMatchOffer } from "../../../../types/full-offer.js";
 
 const league = loadRecording("league-538-frames.json");
 const match = loadRecording("match-31321159-frames.json");
-const LEAGUE = "https://www.betcris.pl/zaklady-bukmacherskie/match/Soccer/England/538";
 /** A page that loads but never opens a Swarm socket */
 const EMPTY: RecordedSwarmEvent[] = [
   { t: 0, kind: "goto" },
@@ -46,25 +45,6 @@ describe("betcris scraper flow", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
-  });
-
-  // Characterization test: passes before and after this task (guards the listing path).
-  it("betcris scrapeLeague: returns 20 matches from the recorded listing", async () => {
-    const fake = createFakeSwarmPage(() => ({ events: league }));
-    useFakeBrowser(fake);
-    const r = await settle(new BetcrisPlaywrightScraper().scrapeLeague("premier-league"));
-    expect(r.status).toBe("success");
-    expect(r.data).toHaveLength(20);
-  });
-
-  it("betcris scrapeMatchDetails: browser branch returns game 31321159 from the recorded frames", async () => {
-    const url = `${LEAGUE}/31321159`;
-    const fake = createFakeSwarmPage(() => ({ events: match }));
-    useFakeBrowser(fake);
-    const r = await settle(new BetcrisPlaywrightScraper().scrapeMatchDetails(url));
-    expect(r.status).toBe("success");
-    expect(r.data).toMatchObject({ homeTeam: "Everton", eventUrl: url });
-    expect(fake.calls).toContain(`goto:${url}`);
   });
 
   it("betcris scrapeFullOffer: listing failure is bounded to two attempts and reports the reason", async () => {
@@ -180,16 +160,6 @@ describe("betcris scraper flow", () => {
     useFakeBrowser(offerPage());
     await settle(new BetcrisPlaywrightScraper().scrapeFullOffer("premier-league"));
     expect(setMany).not.toHaveBeenCalled(); // before: once per captured game (20)
-  });
-
-  it("betcris scrapeMatchDetails: navigates even right after scrapeFullOffer captured the game", async () => {
-    const fake = offerPage(); useFakeBrowser(fake);
-    const s = new BetcrisPlaywrightScraper();
-    await settle(s.scrapeFullOffer("premier-league"));
-    expect(fake.gotoAt).toHaveLength(1 + 20);
-    const r = await settle(s.scrapeMatchDetails(`${LEAGUE}/31321159`));
-    expect(r.status).toBe("success");
-    expect(fake.gotoAt).toHaveLength(1 + 20 + 1); // before: served from the cache, no navigation
   });
 
   // The budget module the scraper sees (fresh per test after vi.resetModules), so its

@@ -3,82 +3,15 @@
  */
 
 import type { PolishBookmaker } from "../config/index.js";
-import type {
-  Market1X2Odds,
-  MarketDoubleChanceOdds,
-  MarketBTTSOdds,
-  MarketOverUnderOdds,
-} from "./full-offer.js";
 
-// Scraper result status
-export type ScraperStatus =
-  | "success"
-  | "error"
-  | "timeout"
-  | "blocked"
-  | "not_found";
+/** What a browser session blocks through CDP. There is no stylesheet level: CSS is never blocked. */
+export type BrowserBlockLevel = "none" | "media" | "media+trackers";
 
-// Raw scraped odds (before normalization)
-export interface RawScrapedOdds {
-  bookmaker: PolishBookmaker;
-  eventName: string;
-  homeTeam: string;
-  awayTeam: string;
-  homeOdds: number;
-  drawOdds: number;
-  awayOdds: number;
-  hasNoTaxPromo: boolean;
-  promoDetails?: string;
-  scrapedAt: Date;
-  eventId?: string;
-  eventUrl?: string;
-}
-
-// Extended scraped odds with all market types (from match detail page)
-export interface RawScrapedMatchOdds {
-  bookmaker: PolishBookmaker;
-  eventName: string;
-  homeTeam: string;
-  awayTeam: string;
-  eventUrl: string; // Required - match detail page URL
-  eventId?: string;
-  hasNoTaxPromo: boolean;
-  promoDetails?: string;
-  scrapedAt: Date;
-
-  // 1X2 Market (always present)
-  market1X2: Market1X2Odds;
-
-  // Additional markets (optional - may not be available on all bookmakers)
-  marketDoubleChance?: MarketDoubleChanceOdds;
-  marketOverUnder?: Record<string, MarketOverUnderOdds>; // Keys: "0.5", "1.5", etc.
-  marketBTTS?: MarketBTTSOdds;
-}
-
-// Event URL entry for listing page scraping
-export interface EventUrlEntry {
-  matchKey: string; // Normalized "homeTeam vs awayTeam" key
-  eventUrl: string; // Full URL to match detail page
-}
-
-// Match detail scraping result
-export interface MatchDetailResult {
-  status: ScraperStatus;
-  bookmaker: PolishBookmaker;
-  data?: RawScrapedMatchOdds;
-  error?: string;
-  duration: number;
-  timestamp: Date;
-}
-
-// Scraper result wrapper
-export interface ScraperResult {
-  status: ScraperStatus;
-  bookmaker: PolishBookmaker;
-  data?: RawScrapedOdds[];
-  error?: string;
-  duration: number;
-  timestamp: Date;
+/** Browser-path policy of one scraper (plan 08). Defaults: block "none", stealth off, lifetime = the job budget. */
+export interface BrowserPolicy {
+  block: BrowserBlockLevel;
+  stealth: boolean;
+  maxSessionMs?: number;
 }
 
 // Scraper configuration
@@ -90,15 +23,7 @@ export interface ScraperConfig {
   retries: number;
   rateLimit: number; // requests per minute
   enabled: boolean;
-  disableResourceBlocking?: boolean; // Some scrapers need full page load (WebSocket-based)
-}
-
-// Match identification for scraping
-export interface MatchIdentifier {
-  homeTeam: string;
-  awayTeam: string;
-  kickoffTime?: Date;
-  leagueId?: string;
+  policy?: { browser?: BrowserPolicy };
 }
 
 // Default scraper configs
@@ -165,6 +90,8 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
+    // Browser fallback only (plan 08 Task 8 A/B 2026-11-14: bytes 5.24 -> 2.34 MB, same markets)
+    policy: { browser: { block: "media+trackers", stealth: false } },
   },
   totalbet: {
     bookmaker: "totalbet",
@@ -219,7 +146,6 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
-    disableResourceBlocking: true, // Uses WebSocket for Swarm API data
   },
   pzbuk: {
     bookmaker: "pzbuk",
@@ -229,6 +155,5 @@ export const DEFAULT_SCRAPER_CONFIGS: Record<PolishBookmaker, ScraperConfig> = {
     retries: 2,
     rateLimit: 20,
     enabled: true,
-    disableResourceBlocking: true, // Uses WebSocket for RSocket data
   },
 };

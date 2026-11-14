@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fakeBudget } from "../../../__tests__/helpers/run-fixtures.js";
-import { DEFAULT_SCRAPER_CONFIGS, type MatchDetailResult, type ScraperConfig, type ScraperResult } from "../../../types/scraper.js";
+import { DEFAULT_SCRAPER_CONFIGS, type ScraperConfig } from "../../../types/scraper.js";
 import { runInScrapeJob } from "../../shared/job-context.js";
 import { PlaywrightScraper, type BrowserSession } from "../playwright-base.js";
 
@@ -23,18 +23,6 @@ class AbortTestScraper extends PlaywrightScraper {
   }
   run<T>(op: () => Promise<T>): Promise<T | { error: string }> {
     return this.executeWithBrowser(op, (e) => ({ error: (e as Error).message }));
-  }
-  scrapeLeague(): Promise<ScraperResult> {
-    throw new Error("unused");
-  }
-  scrapeMatch(): Promise<ScraperResult> {
-    throw new Error("unused");
-  }
-  scrapeMatchDetails(): Promise<MatchDetailResult> {
-    throw new Error("unused");
-  }
-  async extractEventUrls(): Promise<never[]> {
-    return [];
   }
 }
 

@@ -41,8 +41,8 @@ describe("betcris transport selection", () => {
     expect(maxDurationMsFor("betcris", resolveFresh(browser))).toBe(720_000);
   });
 
-  it("the browser fallback never blocks resources (CSS blocked = 0 matches)", () => {
-    // plan 08 Task 3 rewrites this guard to resolveBrowserPolicy("betcris", …) with no stylesheet pattern (cross-plan #5)
-    expect(DEFAULT_SCRAPER_CONFIGS.betcris.disableResourceBlocking).toBe(true);
+  it("the browser fallback never blocks stylesheets (CSS blocked = 0 matches)", async () => {
+    const { blockedUrlPatterns, resolveBrowserPolicy } = await import("../../../base/browser-policy.js");
+    expect(blockedUrlPatterns(resolveBrowserPolicy("betcris", DEFAULT_SCRAPER_CONFIGS.betcris, {}).block).filter((p) => /css/i.test(p))).toEqual([]);
   });
 });

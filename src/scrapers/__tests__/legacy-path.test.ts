@@ -11,11 +11,7 @@ import { exportedNames, findLegacyCalls, findLegacyMethods, legacyDirOf } from "
 const ROOT = join(fileURLToPath(new URL(".", import.meta.url)), "../../..");
 
 // Every legacyDirOf(...) the scan reports at this commit (`npx tsx scripts/legacy-lines.ts`)
-const ALLOWED = new Set([
-  "bookmakers/betcris",
-  "bookmakers/pzbuk",
-  "bookmakers/sts",
-]);
+const ALLOWED = new Set<string>([]);
 
 describe("legacy 1X2 path", () => {
   it("legacy 1X2 methods exist only in allowed directories", () =>
@@ -32,22 +28,26 @@ describe("legacy 1X2 path", () => {
     expect(names).toContain("getScraper");
   });
 
-  // Task 17 (partial): what has no user left while sts, betcris and pzbuk still carry the
-  // legacy path. The full "legacy types are gone" check lands with their deletion.
-  it("legacy types without a user are gone", () => {
+  it("no legacy method is left anywhere", () => expect(findLegacyMethods(ROOT)).toEqual([]));
+
+  it("legacy types are gone", () => {
     const scraperTypes = exportedNames(ROOT, "src/types/scraper.ts");
-    for (const t of ["NormalizedMatch", "AggregatedOdds", "Scraper"]) expect(scraperTypes).not.toContain(t);
+    for (const t of ["ScraperResult", "RawScrapedOdds", "RawScrapedMatchOdds", "EventUrlEntry", "MatchDetailResult", "MatchIdentifier", "NormalizedMatch", "AggregatedOdds", "Scraper", "ScraperStatus"])
+      expect(scraperTypes).not.toContain(t);
     expect(scraperTypes).toEqual(expect.arrayContaining(["ScraperConfig", "DEFAULT_SCRAPER_CONFIGS"]));
+    for (const t of ["Market1X2Odds", "MarketDoubleChanceOdds", "MarketBTTSOdds", "MarketOverUnderOdds"])
+      expect(exportedNames(ROOT, "src/types/full-offer.ts")).not.toContain(t);
+  });
+
+  it("the base class declares no legacy member and no legacy result helper", () => {
+    const base = readFileSync(join(ROOT, "src/scrapers/base/playwright-base.ts"), "utf8");
+    for (const m of ["scrapeLeague", "scrapeMatch", "scrapeMatchDetails", "extractEventUrls", "createErrorResult", "createNotFoundResult", "createMatchDetailErrorResult", "createMatchDetailNotFoundResult", "createTimeoutResult", "createMatchDetailTimeoutResult", "createNotImplementedResult", "executeLeagueScrape"])
+      expect(base).not.toMatch(new RegExp(`\\b${m}\\b`));
   });
 
   it("the dead scraper_runs writers are gone", () => {
     const names = exportedNames(ROOT, "src/repositories/scraper-run-repository.ts");
     for (const n of ["ScraperRunRecord", "insertScraperRun", "updateScraperRun"]) expect(names).not.toContain(n);
     expect(names).toEqual(expect.arrayContaining(["insertBookmakerRunOutcomes", "toScraperRunInsert", "getLastSuccessfulScrapeTime"]));
-  });
-
-  it("the base class has no legacy result helper nothing calls", () => {
-    const base = readFileSync(join(ROOT, "src/scrapers/base/playwright-base.ts"), "utf8");
-    for (const m of ["createTimeoutResult", "createMatchDetailTimeoutResult", "createNotImplementedResult"]) expect(base).not.toContain(m);
   });
 });

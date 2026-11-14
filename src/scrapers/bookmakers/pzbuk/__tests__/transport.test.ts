@@ -13,8 +13,6 @@ describe("pzbuk transport selection", () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
     expect(createPzbukScraper({ SCRAPER_TRANSPORT_PZBUK: "chromium" })).toBeInstanceOf(PzbukWsScraper);
   });
-  it("keeps the legacy 1X2 methods only on the browser class", () =>
-    expect(["scrapeLeague" in PzbukBrowserScraper.prototype, "scrapeLeague" in PzbukWsScraper.prototype]).toEqual([true, false]));
   it("the smoke reads frame counters from either class (cumulative, both start at zero)", () => {
     for (const s of [createPzbukScraper({}), createPzbukScraper({ SCRAPER_TRANSPORT_PZBUK: "browser" })]) {
       expect(hasFrameCounters(s)).toBe(true);

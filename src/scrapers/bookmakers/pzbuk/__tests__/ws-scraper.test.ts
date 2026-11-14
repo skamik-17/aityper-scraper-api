@@ -3,7 +3,7 @@ import { PZBUK_WS_URL, PZBUK_WS_HEADERS } from "../ws-direct.js";
 import { mapEventOffer } from "../full-offer-mapper.js";
 import { createScrapeBudget } from "../../../shared/budget.js";
 import { hasTransportStats } from "../../../shared/scraper-contract.js";
-import { browserPool } from "../../../base/browser-pool.js";
+import { browserRuntime } from "../../../base/browser-runtime.js";
 import { scriptedSession } from "./helpers/scripted-ws-session.js";
 import { wire, chunk, listingMessage, listingEvents, offerMessage, offerState, SETUP_32K } from "./helpers/direct-fixture.js";
 import type { PZBukEvent, PZBukInitialState } from "../types.js";
@@ -134,8 +134,8 @@ describe("PzbukWsScraper", () => {
     expect(open).not.toHaveBeenCalled();
   });
   it("never touches the browser pool", async () => {
-    const acquire = vi.spyOn(browserPool, "acquire");
+    const openSession = vi.spyOn(browserRuntime, "openSession");
     await make(happy()).scraper.scrapeFullOffer("premier-league");
-    expect(acquire).not.toHaveBeenCalled();
+    expect(openSession).not.toHaveBeenCalled();
   });
 });

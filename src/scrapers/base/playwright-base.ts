@@ -1,22 +1,18 @@
 /**
  * Playwright Base Scraper
- * Abstract class providing common Playwright functionality for all scrapers
+ * Abstract class providing common Playwright functionality for all scrapers.
+ * Sessions come from the shared browser runtime (one Chromium, a context per session).
  */
 
-import { Browser, Page, BrowserContext } from "playwright";
+import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../config/index.js";
-import type {
-  ScraperResult,
-  ScraperConfig,
-  MatchIdentifier,
-  MatchDetailResult,
-  EventUrlEntry,
-} from "../../types/scraper.js";
+import type { ScraperConfig } from "../../types/scraper.js";
 import type { FullOfferScraperResult } from "../../types/full-offer.js";
-import { browserPool } from "./browser-pool.js";
+import { browserRuntime, type BrowserSession } from "./browser-runtime.js";
+import { resolveBrowserPolicy } from "./browser-policy.js";
 import { currentScrapeJob } from "../shared/job-context.js";
 import type { FullOfferScraper } from "../shared/scraper-contract.js";
-import type { ScrapeBudget } from "../shared/budget.js";
+import { createScrapeBudget, type ScrapeBudget } from "../shared/budget.js";
 import {
   attachNavigationRecorder,
   enrichFullOfferFailure,
@@ -24,39 +20,14 @@ import {
   type NavigationRecorder,
 } from "./navigation-diagnostics.js";
 
-// Default browser options
-const DEFAULT_USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+export type { BrowserSession } from "./browser-runtime.js";
 
-// Resource types to block for faster loading
-const BLOCKED_RESOURCE_TYPES = ["image", "stylesheet", "font", "media"];
-
-// Return type for initBrowser - includes cleanup function for proper resource management
-export interface BrowserSession {
-  page: Page;
-  browser: Browser;
-  context: BrowserContext;
-  cleanup: () => Promise<void>;
-}
+/** A crashed session is retried once when at least this share of its lifetime is left. */
+const CRASH_RETRY_MIN_LEFT = 0.4;
 
 export abstract class PlaywrightScraper implements FullOfferScraper {
   abstract bookmaker: PolishBookmaker;
   abstract config: ScraperConfig;
-
-  // Legacy 1X2 members (plan 10 Part B): optional while the last subclasses still carry
-  // them; nothing calls them (src/scrapers/__tests__/legacy-path.test.ts).
-
-  /** Legacy: listing matches with 1X2 odds for a league. */
-  scrapeLeague?(league: string): Promise<ScraperResult>;
-
-  /** Legacy: one match from the listing. */
-  scrapeMatch?(match: MatchIdentifier): Promise<ScraperResult>;
-
-  /** Legacy: Double Chance, Over/Under and BTTS from one match page. */
-  scrapeMatchDetails?(eventUrl: string): Promise<MatchDetailResult>;
-
-  /** Legacy: event URLs from the current listing page. */
-  extractEventUrls?(page: Page): Promise<EventUrlEntry[]>;
 
   /**
    * Scrape full offer (all markets) for all matches in a league
@@ -69,129 +40,19 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
   }
 
   /**
-   * Initialize browser session with proper resource management
-   * Returns browser, context, page and a cleanup function
-   * Safe for concurrent usage across multiple leagues
+   * Opens a browser session on the shared runtime. The budget comes from the caller or
+   * from the plan 07 job this runs in; the session never outlives the bookmaker's policy
+   * lifetime (its job budget by default) nor the budget.
    */
-  protected async initBrowser(): Promise<BrowserSession> {
-    let browser: Browser | null = null;
-    let context: BrowserContext | null = null;
-
-    // Try up to 2 times to get a valid browser
-    for (let attempt = 0; attempt < 2; attempt++) {
-      browser = await browserPool.acquire();
-
-      try {
-        context = await browser.newContext({
-          userAgent: DEFAULT_USER_AGENT,
-          locale: "pl-PL",
-          viewport: { width: 1920, height: 1080 },
-          javaScriptEnabled: true,
-          ignoreHTTPSErrors: true,
-          bypassCSP: true,
-        });
-
-        const page = await context.newPage();
-
-        // Create cleanup function with captured references
-        const capturedBrowser = browser;
-        const capturedContext = context;
-        const cleanup = async () => {
-          try {
-            if (capturedContext) await capturedContext.close();
-            if (capturedBrowser) browserPool.release(capturedBrowser);
-          } catch (error) {
-            console.error(`[${this.bookmaker}] Error during cleanup:`, error);
-          }
-        };
-
-        return { page, browser, context, cleanup };
-      } catch (error) {
-        console.log(`[${this.bookmaker}] Browser invalid, retrying...`);
-        if (browser) browserPool.remove(browser);
-        continue;
-      }
-    }
-
-    // Last attempt
-    browser = await browserPool.acquire();
-    context = await browser.newContext({
-      userAgent: DEFAULT_USER_AGENT,
-      locale: "pl-PL",
-      viewport: { width: 1920, height: 1080 },
-      javaScriptEnabled: true,
-      ignoreHTTPSErrors: true,
-      bypassCSP: true,
+  protected async initBrowser(budget?: ScrapeBudget): Promise<BrowserSession> {
+    const effective = budget ?? currentScrapeJob()?.budget;
+    const policy = resolveBrowserPolicy(this.bookmaker, this.config);
+    return browserRuntime.openSession({
+      bookmaker: this.bookmaker,
+      policy,
+      signal: effective?.signal,
+      maxSessionMs: Math.min(policy.maxSessionMs, effective?.remainingMs() ?? Infinity),
     });
-
-    const page = await context.newPage();
-
-    if (!this.config.disableResourceBlocking) {
-      await page.route("**/*", (route) => {
-        const resourceType = route.request().resourceType();
-        if (BLOCKED_RESOURCE_TYPES.includes(resourceType)) {
-          return route.abort();
-        }
-        return route.continue();
-      });
-    }
-
-    await this.applyStealthScripts(page);
-
-    const capturedBrowser = browser;
-    const capturedContext = context;
-    const cleanup = async () => {
-      try {
-        if (capturedContext) await capturedContext.close();
-        if (capturedBrowser) browserPool.release(capturedBrowser);
-      } catch (error) {
-        console.error(`[${this.bookmaker}] Error during cleanup:`, error);
-      }
-    };
-
-    return { page, browser, context, cleanup };
-  }
-
-  /**
-   * Apply stealth scripts to hide automation detection
-   */
-  protected async applyStealthScripts(page: Page): Promise<void> {
-    await page.addInitScript(() => {
-      Object.defineProperty(navigator, "webdriver", { get: () => false });
-      Object.defineProperty(navigator, "plugins", {
-        get: () => [
-          { name: "Chrome PDF Plugin", filename: "internal-pdf-viewer" },
-          { name: "Chrome PDF Viewer", filename: "mhjfbmdgcfjbbpaeojofohoefgiehjai" },
-          { name: "Native Client", filename: "internal-nacl-plugin" },
-        ],
-      });
-      Object.defineProperty(navigator, "languages", {
-        get: () => ["pl-PL", "pl", "en-US", "en"],
-      });
-      (window as unknown as { chrome: unknown }).chrome = { runtime: {} };
-    });
-  }
-
-  /**
-   * Navigate to a URL with retry logic
-   */
-  protected async navigateWithRetry(
-    page: Page,
-    url: string,
-    options: { timeout?: number; waitUntil?: "load" | "domcontentloaded" | "networkidle" } = {}
-  ): Promise<void> {
-    const { timeout = this.config.timeout, waitUntil = "networkidle" } = options;
-    const maxRetries = this.config.retries;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        await page.goto(url, { timeout, waitUntil });
-        return;
-      } catch (error) {
-        if (attempt === maxRetries) throw error;
-        await this.delay(Math.pow(2, attempt) * 1000);
-      }
-    }
   }
 
   /**
@@ -215,33 +76,6 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
 
   protected delay(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  protected createErrorResult(error: unknown, duration: number): ScraperResult {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error(`[${this.bookmaker}] Scraper error: ${errorMessage}`);
-    if (error instanceof Error && error.stack) {
-      console.error(`[${this.bookmaker}] Stack:`, error.stack.split('\n').slice(0, 3).join('\n'));
-    }
-    return { status: "error", bookmaker: this.bookmaker, error: errorMessage, duration, timestamp: new Date() };
-  }
-
-  protected createNotFoundResult(message: string, duration: number): ScraperResult {
-    return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
-  }
-
-  protected createMatchDetailErrorResult(error: unknown, duration: number): MatchDetailResult {
-    return {
-      status: "error",
-      bookmaker: this.bookmaker,
-      error: error instanceof Error ? error.message : "Unknown error",
-      duration,
-      timestamp: new Date(),
-    };
-  }
-
-  protected createMatchDetailNotFoundResult(message: string, duration: number): MatchDetailResult {
-    return { status: "not_found", bookmaker: this.bookmaker, error: message, duration, timestamp: new Date() };
   }
 
   // Full offer helper methods
@@ -285,41 +119,71 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
     };
   }
 
+  /**
+   * Runs `operation` on a fresh session and always cleans it up. When the browser crashed
+   * under the session (Chromium disconnected) and at least 40 % of its lifetime is left,
+   * the operation runs once more on a new session within the remaining time.
+   */
   protected async executeWithBrowser<T>(
     operation: (page: Page, session: BrowserSession) => Promise<T>,
-    errorHandler: (error: unknown, duration: number) => T
+    errorHandler: (error: unknown, duration: number) => T,
+    budget?: ScrapeBudget
   ): Promise<T> {
     const startTime = Date.now();
-    let cleanup: (() => Promise<void>) | null = null;
-    let detach: (() => void) | null = null;
+    let attemptBudget = budget;
 
-    try {
-      const session = await this.initBrowser();
-      cleanup = session.cleanup;
-      // The job's budget closes the context, so a scrape that ignores its signal still stops
-      const signal = currentScrapeJob()?.budget.signal;
-      const closeContext = () => {
-        void session.context.close().catch(() => {});
-      };
-      if (signal?.aborted) {
-        closeContext();
-      } else if (signal) {
-        signal.addEventListener("abort", closeContext, { once: true });
-        detach = () => signal.removeEventListener("abort", closeContext);
+    for (let attempt = 1; ; attempt++) {
+      let session: BrowserSession | null = null;
+      let detach: (() => void) | null = null;
+      let outcome: { ok: true; value: T } | { ok: false; error: unknown };
+
+      try {
+        session = await this.initBrowser(attemptBudget);
+        // The job's budget closes the context, so a scrape that ignores its signal still stops
+        const signal = currentScrapeJob()?.budget.signal;
+        const context = session.context;
+        const closeContext = () => {
+          void context.close().catch(() => {});
+        };
+        if (signal?.aborted) {
+          closeContext();
+        } else if (signal) {
+          signal.addEventListener("abort", closeContext, { once: true });
+          detach = () => signal.removeEventListener("abort", closeContext);
+        }
+        outcome = { ok: true, value: await operation(session.page, session) };
+      } catch (error) {
+        outcome = { ok: false, error };
+      } finally {
+        detach?.();
       }
-      return await operation(session.page, session);
-    } catch (error) {
-      return errorHandler(error, Date.now() - startTime);
-    } finally {
-      detach?.();
-      if (cleanup) await cleanup();
+
+      const runtime = session?.runtime;
+      if (attempt === 1 && session && runtime?.crashed()) {
+        const left = runtime.remainingMs();
+        const span = `${Math.round(left / 1000)}s of ${Math.round(runtime.lifetimeMs / 1000)}s left`;
+        if (left > 0 && left >= CRASH_RETRY_MIN_LEFT * runtime.lifetimeMs) {
+          await session.cleanup();
+          console.log(`[${this.bookmaker}] browser disconnected mid-session; retrying once (${span})`);
+          attemptBudget = budget ?? createScrapeBudget(left, currentScrapeJob()?.budget.signal);
+          continue;
+        }
+        console.log(`[${this.bookmaker}] browser disconnected mid-session; not retrying (${span})`);
+      }
+
+      try {
+        return outcome.ok ? outcome.value : errorHandler(outcome.error, Date.now() - startTime);
+      } finally {
+        if (session) await session.cleanup();
+      }
     }
   }
 
   protected async executeFullOfferScrape(
     league: string,
     leagueValidator: (league: string) => boolean,
-    scrapeLogic: (page: Page, league: string) => Promise<FullOfferScraperResult>
+    scrapeLogic: (page: Page, league: string) => Promise<FullOfferScraperResult>,
+    budget?: ScrapeBudget
   ): Promise<FullOfferScraperResult> {
     const startTime = Date.now();
 
@@ -351,24 +215,8 @@ export abstract class PlaywrightScraper implements FullOfferScraper {
         const result = this.createFullOfferErrorResult(league, error, duration);
         // The page may already be closed or crashed: use what was recorded so far.
         return recorder ? enrichFullOfferFailure(result, recorder.current()) : result;
-      }
-    );
-  }
-
-  protected async executeLeagueScrape(
-    league: string,
-    leagueValidator: (league: string) => boolean,
-    scrapeLogic: (page: Page, league: string) => Promise<ScraperResult>
-  ): Promise<ScraperResult> {
-    const startTime = Date.now();
-
-    if (!leagueValidator(league)) {
-      return this.createNotFoundResult(`Unknown league: ${league}`, Date.now() - startTime);
-    }
-
-    return this.executeWithBrowser(
-      async (page) => scrapeLogic(page, league),
-      (error, duration) => this.createErrorResult(error, duration)
+      },
+      budget
     );
   }
 }

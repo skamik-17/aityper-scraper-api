@@ -1,22 +1,12 @@
-import type { Page } from "playwright";
 import type { PolishBookmaker } from "../../../config/index.js";
 import { isLeagueSupported } from "../../../config/leagues.js";
-import type {
-  ScraperConfig,
-  ScraperResult,
-  RawScrapedOdds,
-  MatchIdentifier,
-  MatchDetailResult,
-  RawScrapedMatchOdds,
-  EventUrlEntry,
-} from "../../../types/scraper.js";
+import type { ScraperConfig } from "../../../types/scraper.js";
 import type {
   FullOfferScraperResult,
   FullMatchOffer,
 } from "../../../types/full-offer.js";
 import { DEFAULT_SCRAPER_CONFIGS } from "../../../types/scraper.js";
 import { PlaywrightScraper } from "../../base/playwright-base.js";
-import { findMatchingEvent, getCanonicalTeamName } from "../../../utils/team-matcher.js";
 import { buildPzbukMatchOffer } from "./full-offer-mapper.js";
 
 import {
@@ -36,24 +26,13 @@ import {
 } from "./ws-protocol.js";
 import {
   parseTeamNames,
-  parse1X2Odds,
-  parseDoubleChance,
-  parseBTTS,
-  parseOverUnder,
   parseAllMarkets,
   isValidEvent,
 } from "./parser.js";
-import type { PZBukEvent, PZBukMarket, PZBukSelection } from "./types.js";
-
-interface PZBukCachedEvent {
-  event: PZBukEvent;
-  markets: PZBukMarket[];
-  selections: PZBukSelection[];
-}
 
 /**
  * The Playwright PZBuk scraper: the fallback behind SCRAPER_TRANSPORT_PZBUK=browser
- * (the default is PzbukWsScraper), and the only class with the legacy 1X2 methods.
+ * (the default is PzbukWsScraper).
  */
 export class PzbukBrowserScraper extends PlaywrightScraper {
   bookmaker: PolishBookmaker = "pzbuk";
@@ -81,208 +60,6 @@ export class PzbukBrowserScraper extends PlaywrightScraper {
 
   private addTransportStats(diagnostics: CaptureDiagnostics): void {
     addFrameCounters(this.counters, diagnostics);
-  }
-
-  async scrapeLeague(league: string): Promise<ScraperResult> {
-    return this.executeLeagueScrape(
-      league,
-      (l) => isLeagueSupported(l, this.bookmaker),
-      async (page, leagueSlug) => {
-        const startTime = Date.now();
-
-        const capture = captureWebSocketData(page, false);
-        const navSuccess = await navigateToLeaguePage(page, leagueSlug);
-
-        if (!navSuccess) {
-          return this.createErrorResult(
-            new Error("Failed to navigate to league page"),
-            Date.now() - startTime
-          );
-        }
-
-        const { state: wsData, diagnostics } = await capture;
-
-        if (!wsData) {
-          const message = `No WebSocket data captured: ${describeCaptureFailure(diagnostics)}`;
-          console.warn(`[PZBuk] ${message}`);
-          return this.createNotFoundResult(message, Date.now() - startTime);
-        }
-
-        console.log(
-          `[PZBuk] Captured ${wsData.events.length} events, ${wsData.selections?.length || 0} selections`
-        );
-
-        const matches: RawScrapedOdds[] = [];
-
-        for (const event of wsData.events) {
-          if (!isValidEvent(event)) continue;
-
-          const teams = parseTeamNames(event);
-          if (!teams.homeTeam || !teams.awayTeam) continue;
-
-          const eventSelections = (wsData.selections || []).filter(
-            (s) => s.eventId === event.id
-          );
-
-          const odds1x2 = parse1X2Odds(eventSelections);
-
-          if (odds1x2.home <= 1 || odds1x2.draw <= 1 || odds1x2.away <= 1) {
-            continue;
-          }
-
-          const eventUrl = buildEventUrl(
-            event.id,
-            teams.homeTeam,
-            teams.awayTeam,
-            event.leagueId,
-            event.leagueName
-          );
-
-          matches.push({
-            bookmaker: this.bookmaker,
-            eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
-            homeTeam: getCanonicalTeamName(teams.homeTeam, leagueSlug),
-            awayTeam: getCanonicalTeamName(teams.awayTeam, leagueSlug),
-            homeOdds: odds1x2.home,
-            drawOdds: odds1x2.draw,
-            awayOdds: odds1x2.away,
-            hasNoTaxPromo: false,
-            scrapedAt: new Date(),
-            eventUrl,
-          });
-        }
-
-        console.log(`[PZBuk] Scraped ${matches.length} matches for ${leagueSlug}`);
-
-        return {
-          status: "success",
-          bookmaker: this.bookmaker,
-          data: matches,
-          duration: Date.now() - startTime,
-          timestamp: new Date(),
-        };
-      }
-    );
-  }
-
-  async scrapeMatch(match: MatchIdentifier): Promise<ScraperResult> {
-    const startTime = Date.now();
-    const league = match.leagueId ?? "ekstraklasa";
-
-    const allMatches = await this.scrapeLeague(league);
-    if (allMatches.status !== "success" || !allMatches.data) {
-      return allMatches;
-    }
-
-    const matchResult = findMatchingEvent(
-      { homeTeam: match.homeTeam, awayTeam: match.awayTeam },
-      allMatches.data,
-      league
-    );
-
-    if (!matchResult) {
-      return this.createNotFoundResult(
-        `Match not found on PZBuk: ${match.homeTeam} vs ${match.awayTeam}`,
-        Date.now() - startTime
-      );
-    }
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: [matchResult.event],
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
-    };
-  }
-
-  async scrapeMatchDetails(eventUrl: string): Promise<MatchDetailResult> {
-    const startTime = Date.now();
-
-    // The capture filter must match the real "/events/<id>-<slug>" URL, or
-    // any event's payload is merged.
-    const captureEventId = eventUrl.match(/\/events\/(\d+)/)?.[1];
-
-    return this.executeWithBrowser(
-      async (page) => {
-        const capture = captureWebSocketData(page, true, captureEventId);
-        const navSuccess = await navigateToEventPage(page, eventUrl);
-
-        if (!navSuccess) {
-          return this.createMatchDetailNotFoundResult(
-            "Failed to navigate to event page",
-            Date.now() - startTime
-          );
-        }
-
-        const { state: wsData, diagnostics } = await capture;
-
-        if (!wsData || wsData.markets.length === 0) {
-          const message = `No WebSocket data for match details: ${describeCaptureFailure(diagnostics)}`;
-          console.warn(`[PZBuk] ${message}`);
-          return this.createMatchDetailNotFoundResult(message, Date.now() - startTime);
-        }
-
-        const event = wsData.events[0];
-
-        const cached: PZBukCachedEvent = {
-          event,
-          markets: wsData.markets.filter((m) => m.eventId === event.id),
-          selections: wsData.selections.filter((s) => s.eventId === event.id),
-        };
-
-        return this.buildMatchDetailResult(cached, eventUrl, startTime);
-      },
-      (error, duration) => this.createMatchDetailErrorResult(error, duration)
-    );
-  }
-
-  private buildMatchDetailResult(
-    cached: PZBukCachedEvent,
-    eventUrl: string,
-    startTime: number
-  ): MatchDetailResult {
-    const teams = parseTeamNames(cached.event);
-
-    if (!teams.homeTeam) {
-      return this.createMatchDetailNotFoundResult(
-        "Could not parse team names",
-        Date.now() - startTime
-      );
-    }
-
-    const eventSelections = cached.selections.filter((s) => s.status === "Active");
-
-    const odds1x2 = parse1X2Odds(eventSelections);
-    const doubleChance = parseDoubleChance(eventSelections);
-    const btts = parseBTTS(eventSelections);
-    const overUnder = parseOverUnder(eventSelections);
-
-    const matchOdds: RawScrapedMatchOdds = {
-      bookmaker: this.bookmaker,
-      eventName: `${teams.homeTeam} - ${teams.awayTeam}`,
-      homeTeam: teams.homeTeam,
-      awayTeam: teams.awayTeam,
-      eventUrl,
-      hasNoTaxPromo: false,
-      scrapedAt: new Date(),
-      market1X2: {
-        home: odds1x2.home,
-        draw: odds1x2.draw,
-        away: odds1x2.away,
-      },
-      marketDoubleChance: doubleChance || undefined,
-      marketBTTS: btts || undefined,
-      marketOverUnder: overUnder || undefined,
-    };
-
-    return {
-      status: "success",
-      bookmaker: this.bookmaker,
-      data: matchOdds,
-      duration: Date.now() - startTime,
-      timestamp: new Date(),
-    };
   }
 
   async scrapeFullOffer(league: string): Promise<FullOfferScraperResult> {
@@ -442,9 +219,5 @@ export class PzbukBrowserScraper extends PlaywrightScraper {
         };
       }
     );
-  }
-
-  async extractEventUrls(_page: Page): Promise<EventUrlEntry[]> {
-    return [];
   }
 }

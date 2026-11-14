@@ -7,7 +7,7 @@ The STS scraper is a specialized module designed to extract real-time sports bet
 The module follows a highly decoupled design to handle the complexity of WebSocket-based data capture:
 
 ### Core Scrapers (`ws-scraper.ts`, `index.ts`, `offer-mapping.ts`)
-`StsWsScraper` (`ws-scraper.ts`) is the default full-offer scraper: a direct Node WebSocket client, no browser (see **Transport** below). `StsBrowserScraper` (`index.ts`, still exported as `STSPlaywrightScraper` / `STSScraper`) inherits from `PlaywrightScraper` and captures the same frames from real sts.pl pages; it is the fallback behind `SCRAPER_TRANSPORT_STS=browser` and still serves the legacy 1X2 methods. Its module-level `eventsCache` is written only by the browser class. Both transports turn a listing fixture plus its frames into a `FullMatchOffer` through the one `mapStsFixtureToOffer` in `offer-mapping.ts`, which also owns the `[STS/FullOffer]` log lines `sts-run-check.py` parses. `createStsScraper()` in `index.ts` makes the pick once at module load; `bookmakers/index.ts` only re-exports `stsScraper`.
+`StsWsScraper` (`ws-scraper.ts`) is the default full-offer scraper: a direct Node WebSocket client, no browser (see **Transport** below). `StsBrowserScraper` (`index.ts`, still exported as `STSPlaywrightScraper` / `STSScraper`) inherits from `PlaywrightScraper` and captures the same frames from real sts.pl pages; it is the fallback behind `SCRAPER_TRANSPORT_STS=browser`. Both transports turn a listing fixture plus its frames into a `FullMatchOffer` through the one `mapStsFixtureToOffer` in `offer-mapping.ts`, which also owns the `[STS/FullOffer]` log lines `sts-run-check.py` parses. `createStsScraper()` in `index.ts` makes the pick once at module load; `bookmakers/index.ts` only re-exports `stsScraper`.
 
 ### Browser Navigation (`navigation.ts`)
 This module is the "eyes" of the scraper. It handles:
@@ -116,53 +116,50 @@ The data extraction pipeline is designed to be resilient and efficient:
 5.  **Parsing Pipeline**:
     *   `parseWebSocketJson`: Extracts the raw JSON payload from the frame.
     *   `parseFixtures`: Traverses the JSON tree to find matches for the requested league.
-    *   `extractOdds`: Maps specific market and outcome IDs to the fixture based on its internal STS ID.
+    *   `mapStsFixtureToOffer` (`offer-mapping.ts`): Turns one fixture plus its `f_{fixtureId}_pl` snapshot into a `FullMatchOffer` (all markets).
 6.  **Team Matching**: Team names are normalized to canonical versions using the project's `team-matcher` utility to ensure database consistency.
-7.  **Output**: The final data is returned as a standardized result object (e.g., `ScraperResult`).
+7.  **Output**: The final data is returned as a `FullOfferScraperResult` (`success`, `matches: FullMatchOffer[]`, optional `error`).
 
 ## File Descriptions
 | File | Responsibility |
 | :--- | :--- |
-| `index.ts` | `StsBrowserScraper` (extends `PlaywrightScraper`): the browser fallback and the legacy league/match flows, with caching via `ScraperCache`. Also `createStsScraper()` / `stsScraper`, the transport pick. |
+| `index.ts` | `StsBrowserScraper` (extends `PlaywrightScraper`): the browser fallback full-offer scraper. Also `createStsScraper()` / `stsScraper`, the transport pick. |
 | `ws-scraper.ts` | `StsWsScraper`: the default browserless full-offer scraper over one WebSocket session per league call. |
 | `ws-protocol.ts` | Endpoint, headers, timeouts, subscription framing, the frame reducer, the snapshot breaker and the failure classification of the WebSocket path. |
 | `offer-mapping.ts` | `mapStsFixtureToOffer` and the `[STS/FullOffer]` log lines, shared by both transports. |
 | `navigation.ts` | Manages page interactions. Sets up `Page` event listeners for WebSocket frames and handles the cookie consent overlay. |
-| `parser.ts` | Contains the complex tree-traversal logic for the STS data structure. Extracts fixtures, basic odds, and extended markets. |
+| `parser.ts` | Contains the complex tree-traversal logic for the STS data structure. Extracts fixtures and every market of a fixture. |
 | `constants.ts` | Central repository for all static configuration: URLs, WS patterns, market IDs, league-specific filters, and timeouts. |
 | `outcome-map.ts` | Provides a lookup table for outcome IDs. Essential because STS WebSocket frames often omit selection names for standard outcomes. |
 | `types.ts` | TypeScript definitions for the internal STS WebSocket protocol, including categories, tournaments, fixtures, and markets. |
 
 ## Usage Examples
 
-### Scraping a Full League (legacy 1X2, browser class)
-```typescript
-import { StsBrowserScraper } from "./scrapers/bookmakers/sts/index.js";
-
-const browserScraper = new StsBrowserScraper();
-const result = await browserScraper.scrapeLeague("ekstraklasa");
-if (result.status === "success") {
-  console.log(`Scraped ${result.data.length} matches from Ekstraklasa`);
-}
-```
-
-### Scraping Specific Match Details
-```typescript
-const url = "https://www.sts.pl/kursy/lech-poznan-legia-warszawa/f1234567";
-const details = await browserScraper.scrapeMatchDetails(url);
-if (details.status === "success") {
-  const odds = details.data;
-  console.log(`1X2: ${odds.market1X2.home} - ${odds.market1X2.draw} - ${odds.market1X2.away}`);
-}
-```
-
-### Full Market Offer Extraction
+### Scraping a Full League
 ```typescript
 import { stsScraper } from "./scrapers/bookmakers/sts/index.js";
 
 // The picked transport: StsWsScraper unless SCRAPER_TRANSPORT_STS=browser
-const fullOffer = await stsScraper.scrapeFullOffer("premier-league");
-// Useful for deep analytics or building comprehensive market comparisons
+const result = await stsScraper.scrapeFullOffer("ekstraklasa");
+if (result.success) {
+  console.log(`Scraped ${result.matches.length} matches from Ekstraklasa`);
+}
+```
+
+### One Match's Markets
+```typescript
+const match = result.matches.find((m) => m.homeTeam === "Lech Poznań");
+for (const market of match?.markets ?? []) {
+  console.log(market.name, market.selections.map((s) => `${s.name} ${s.odds}`).join(" / "));
+}
+```
+
+### Forcing the Browser Fallback
+```typescript
+import { StsBrowserScraper } from "./scrapers/bookmakers/sts/index.js";
+
+// Same FullOfferScraper contract, captured from real sts.pl pages
+const viaBrowser = await new StsBrowserScraper().scrapeFullOffer("premier-league");
 ```
 
 ## Technical Details

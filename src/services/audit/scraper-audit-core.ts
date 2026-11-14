@@ -19,6 +19,7 @@
  * per-bookmaker wrapper scripts ask for.
  */
 import { getMarketByCode, type MarketCatalogEntry } from "../../data/market-catalog.js";
+import { browserRuntime } from "../../scrapers/base/browser-runtime.js";
 import { groupMarketsByTypeWithParameters } from "../market-type-grouper.js";
 import { isSelectionOrphan, HANDICAP_CODES } from "./selection-checks.js";
 import { getRelatedCodes } from "./family-codes.js";
@@ -123,7 +124,13 @@ export async function scrapeOneMatchFullOffer(
   hint?: { home?: string; away?: string },
   opts?: { pickRichest?: boolean },
 ): Promise<FullMatchOffer | null> {
-  const result = await scraper.scrapeFullOffer(league);
+  let result: Awaited<ReturnType<FullOfferCapableScraper["scrapeFullOffer"]>>;
+  try {
+    result = await scraper.scrapeFullOffer(league);
+  } finally {
+    // One-shot audit scripts exit right after their scrape: an idle browser would keep Node alive
+    await browserRuntime.closeIfIdle();
+  }
   if (!result.success || result.matches.length === 0) {
     console.error(
       `[audit-core] scrapeFullOffer(${league}) failed or empty: ${result.error ?? "no matches"}`,

@@ -108,7 +108,7 @@ only the due details. The aggregator (`src/scrapers/aggregator.ts`) runs one job
 under the RunCoordinator; `getScraper(bm)` returns the picked instance.
 
 The legacy 1X2 methods (`scrapeLeague`, `scrapeMatch`, `scrapeMatchDetails`, `extractEventUrls`)
-are optional on `PlaywrightScraper`, called by nothing, and being deleted; never add them
+and their result types are deleted; never add them back
 (`src/scrapers/__tests__/legacy-path.test.ts` guards this).
 
 ### Adding a New Scraper

@@ -9,7 +9,6 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import {
   MARKET_IDS,
   MARKET_GROUPS,
@@ -35,22 +34,12 @@ import { getSelectionNameByOutcomeId } from "./outcome-map.js";
 import type {
   STSCategory,
   STSFixture,
-  STSOdds,
   STSWebSocketData,
   STSMarket,
   STSMarketLine,
   STSOutcome,
-  WSCaptureResult,
 } from "./types.js";
 import { buildEventUrl } from "./navigation.js";
-
-/**
- * Parsed fixture with odds data
- */
-export interface ParsedFixtureWithOdds {
-  fixture: STSFixture;
-  odds: STSOdds;
-}
 
 /**
  * Parse JSON from WebSocket raw data string
@@ -224,115 +213,6 @@ export function parseFixtures(
   }
 
   return fixtures;
-}
-
-/**
- * Extract odds for a specific fixture from WebSocket data
- * Path: P.{assocKey}.m.{marketId}.l.{lineId}.o.{outcomeId}
- */
-export function extractOdds(
-  fixture: STSFixture,
-  fixtureJson: STSWebSocketData | null,
-  initialJson: STSWebSocketData | null
-): STSOdds {
-  const result: STSOdds = {
-    odds1: null,
-    oddsX: null,
-    odds2: null,
-    odds1X: null,
-    oddsX2: null,
-    odds12: null,
-    bttsYes: null,
-    bttsNo: null,
-    overUnder: {},
-  };
-
-  // Try fixture-specific data first, then initial data
-  const sources = [fixtureJson, initialJson].filter(Boolean) as STSWebSocketData[];
-
-  for (const source of sources) {
-    // The odds are in P.{assocKey}.m.{marketId}.l.{lineId}.o.{outcomeId}.O
-    const assocKey = `1m${fixture.stsId}`;
-    const marketData = source.P?.[assocKey]?.m;
-
-    if (!marketData) continue;
-
-    // Market 1 = 1X2 (Match result)
-    const market1x2 = marketData[String(MARKET_IDS.MATCH_RESULT_1X2)]?.l?.["1"]?.o;
-    if (market1x2) {
-      result.odds1 = market1x2[String(OUTCOME_1X2.HOME)]?.O || null;
-      result.oddsX = market1x2[String(OUTCOME_1X2.DRAW)]?.O || null;
-      result.odds2 = market1x2[String(OUTCOME_1X2.AWAY)]?.O || null;
-    }
-
-    // Market 10 = Double Chance
-    const marketDC = marketData[String(MARKET_IDS.DOUBLE_CHANCE)]?.l?.["1"]?.o;
-    if (marketDC) {
-      result.odds1X = marketDC[String(OUTCOME_DOUBLE_CHANCE.HOME_OR_DRAW)]?.O || null;
-      result.oddsX2 = marketDC[String(OUTCOME_DOUBLE_CHANCE.DRAW_OR_AWAY)]?.O || null;
-      result.odds12 = marketDC[String(OUTCOME_DOUBLE_CHANCE.HOME_OR_AWAY)]?.O || null;
-    }
-
-    // Market 43 = BTTS (tak/nie)
-    const marketBTTS = marketData[String(MARKET_IDS.BTTS)]?.l?.["1"]?.o;
-    if (marketBTTS) {
-      result.bttsYes = marketBTTS[String(OUTCOME_BTTS.YES)]?.O || null;
-      result.bttsNo = marketBTTS[String(OUTCOME_BTTS.NO)]?.O || null;
-    }
-
-    // Market 25 = Total Goals Over/Under
-    const marketOU = marketData[String(MARKET_IDS.TOTAL_GOALS)]?.l;
-    if (marketOU) {
-      for (const [, lineData] of Object.entries(marketOU) as [string, STSMarketLine][]) {
-        const outcomes = lineData.o;
-        if (!outcomes) continue;
-
-        const overOutcome = outcomes[String(OUTCOME_OVER_UNDER.OVER)];
-        const underOutcome = outcomes[String(OUTCOME_OVER_UNDER.UNDER)];
-
-        if (!overOutcome?.O || !underOutcome?.O) continue;
-
-        // Extract line value from outcome name (e.g., "+2.5" or "-2.5")
-        const outcomeName = overOutcome.n || underOutcome.n || "";
-        const lineMatch = outcomeName.match(/[+-]?(\d+[.,]5)/);
-
-        if (lineMatch) {
-          const line = parseFloat(lineMatch[1].replace(",", ".")).toFixed(1);
-          result.overUnder[line] = { over: overOutcome.O, under: underOutcome.O };
-        }
-      }
-    }
-
-    // If we found 1X2 odds, we're done with this source
-    if (result.odds1) break;
-  }
-
-  return result;
-}
-
-/**
- * Parse all fixtures with their odds for a league
- */
-export function parseLeagueData(
-  captureResult: WSCaptureResult,
-  league: string
-): ParsedFixtureWithOdds[] {
-  const initialJson = parseWebSocketJson(captureResult.initialData);
-  if (!initialJson) return [];
-
-  const fixtures = parseFixtures(initialJson, league);
-  const results: ParsedFixtureWithOdds[] = [];
-
-  for (const fixture of fixtures) {
-    const fixtureJson = captureResult.fixtureData.get(fixture.id) || null;
-    const odds = extractOdds(fixture, fixtureJson, initialJson);
-
-    if (odds.odds1 && odds.oddsX && odds.odds2) {
-      results.push({ fixture, odds });
-    }
-  }
-
-  return results;
 }
 
 /**
@@ -710,28 +590,4 @@ function extractAsianHandicapFromSelections(line: STSMarketLine): string | null 
   }
 
   return null;
-}
-
-/**
- * Check if fixture has valid 1X2 odds
- */
-export function hasValid1X2Odds(odds: STSOdds): boolean {
-  return (
-    odds.odds1 !== null &&
-    odds.odds1 > 0 &&
-    odds.oddsX !== null &&
-    odds.oddsX > 0 &&
-    odds.odds2 !== null &&
-    odds.odds2 > 0
-  );
-}
-
-/**
- * Convert STSOdds to standard markets for backward compatibility
- */
-export function oddsToMarketOverUnder(
-  odds: STSOdds
-): Record<string, MarketOverUnderOdds> | undefined {
-  if (Object.keys(odds.overUnder).length === 0) return undefined;
-  return odds.overUnder as Record<string, MarketOverUnderOdds>;
 }

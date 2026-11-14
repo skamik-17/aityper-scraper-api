@@ -9,7 +9,6 @@
  */
 
 import type { MarketSelection, ScrapedMarket } from "../../../types/full-offer.js";
-import type { MarketOverUnderOdds } from "../../../types/full-offer.js";
 import type {
   PZBukInitialState,
   PZBukEvent,
@@ -557,150 +556,6 @@ function groupSelections(
 }
 
 /**
- * Parse 1X2 market from grouped selections
- * Used for backward compatibility with scrapeLeague
- */
-export function parse1X2Odds(
-  selections: PZBukSelection[]
-): { home: number; draw: number; away: number } {
-  const result = { home: 0, draw: 0, away: 0 };
-
-  // The sportsbook-api/ws envelope delivers marketTypeId as a JSON number even
-  // though the type declares string, so the legacy helpers compare as strings.
-  const matchResultSelections = selections.filter(
-    (s) => String(s.marketTypeId) === MARKET_TYPES.MATCH_RESULT && s.status === "Active"
-  );
-
-  for (const sel of matchResultSelections) {
-    const odds = sel.trueOdds;
-    if (!odds || odds <= 1) continue;
-
-    if (sel.outcomeType === OUTCOME_TYPES.HOME) {
-      result.home = odds;
-    } else if (
-      sel.outcomeType === OUTCOME_TYPES.TIE ||
-      sel.outcomeType === OUTCOME_TYPES.DRAW
-    ) {
-      result.draw = odds;
-    } else if (sel.outcomeType === OUTCOME_TYPES.AWAY) {
-      result.away = odds;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Parse Double Chance market from selections
- */
-export function parseDoubleChance(
-  selections: PZBukSelection[]
-): { homeOrDraw: number; drawOrAway: number; homeOrAway: number } | null {
-  const result = { homeOrDraw: 0, drawOrAway: 0, homeOrAway: 0 };
-  let found = false;
-
-  const dcSelections = selections.filter(
-    (s) => String(s.marketTypeId) === MARKET_TYPES.DOUBLE_CHANCE && s.status === "Active"
-  );
-
-  for (const sel of dcSelections) {
-    const name = sel.name?.toLowerCase() || "";
-
-    if (
-      sel.outcomeType === OUTCOME_TYPES.HOME_OR_DRAW ||
-      (name.includes("lub remis") && !name.startsWith("remis"))
-    ) {
-      result.homeOrDraw = sel.trueOdds;
-      found = true;
-    } else if (
-      sel.outcomeType === OUTCOME_TYPES.DRAW_OR_AWAY ||
-      name.startsWith("remis lub")
-    ) {
-      result.drawOrAway = sel.trueOdds;
-      found = true;
-    } else if (
-      sel.outcomeType === OUTCOME_TYPES.HOME_OR_AWAY ||
-      (name.includes(" lub ") && !name.includes("remis"))
-    ) {
-      result.homeOrAway = sel.trueOdds;
-      found = true;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse BTTS market from selections
- */
-export function parseBTTS(
-  selections: PZBukSelection[]
-): { yes: number; no: number } | null {
-  const result = { yes: 0, no: 0 };
-  let found = false;
-
-  const bttsSelections = selections.filter(
-    (s) => String(s.marketTypeId) === MARKET_TYPES.BTTS && s.status === "Active"
-  );
-
-  for (const sel of bttsSelections) {
-    const name = sel.name?.toLowerCase() || "";
-
-    if (
-      sel.outcomeType === OUTCOME_TYPES.YES ||
-      name === "tak" ||
-      name === "yes"
-    ) {
-      result.yes = sel.trueOdds;
-      found = true;
-    } else if (
-      sel.outcomeType === OUTCOME_TYPES.NO ||
-      name === "nie" ||
-      name === "no"
-    ) {
-      result.no = sel.trueOdds;
-      found = true;
-    }
-  }
-
-  return found ? result : null;
-}
-
-/**
- * Parse Over/Under markets from selections
- * Returns a record keyed by line (e.g., "2.5")
- */
-export function parseOverUnder(
-  selections: PZBukSelection[]
-): Record<string, MarketOverUnderOdds> | null {
-  const result: Record<string, MarketOverUnderOdds> = {};
-
-  const ouSelections = selections.filter(
-    (s) => String(s.marketTypeId) === MARKET_TYPES.OVER_UNDER && s.status === "Active"
-  );
-
-  for (const sel of ouSelections) {
-    const points = sel.points;
-    if (points === undefined) continue;
-
-    const lineStr = Number(points).toFixed(1);
-    if (!lineStr.includes(".5")) continue; // Only standard lines
-
-    if (!result[lineStr]) {
-      result[lineStr] = { over: 0, under: 0 };
-    }
-
-    if (sel.outcomeType === OUTCOME_TYPES.OVER) {
-      result[lineStr].over = sel.trueOdds;
-    } else if (sel.outcomeType === OUTCOME_TYPES.UNDER) {
-      result[lineStr].under = sel.trueOdds;
-    }
-  }
-
-  return Object.keys(result).length > 0 ? result : null;
-}
-
-/**
  * Parse ALL markets from WebSocket data into unified ScrapedMarket format
  * This is the main function for full offer scraping
  */
@@ -817,14 +672,4 @@ export function isValidEvent(event: PZBukEvent): boolean {
   }
 
   return true;
-}
-
-/**
- * Check if event has valid 1X2 odds
- */
-export function hasValid1X2Odds(
-  selections: PZBukSelection[]
-): boolean {
-  const odds = parse1X2Odds(selections);
-  return odds.home > 1 && odds.draw > 1 && odds.away > 1;
 }

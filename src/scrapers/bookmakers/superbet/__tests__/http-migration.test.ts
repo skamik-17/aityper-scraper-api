@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createReplayHttpClient } from "../../../../__tests__/helpers/replay-http.js";
 import { captureLogs, envelope, runBrowserPathOffline, stripScrapedAt, type ReplayRoutes } from "../../../../__tests__/helpers/replay-page.js";
-import { browserPool } from "../../../base/browser-pool.js";
+import { browserRuntime } from "../../../base/browser-runtime.js";
 import type { HttpClient } from "../../../shared/http/http-client.js";
 import { SuperbetHttpScraper } from "../http-scraper.js";
 import { SuperbetBrowserScraper } from "../index.js";
@@ -87,9 +87,9 @@ describe("SuperbetHttpScraper", () => {
   });
 
   it("never acquires a browser", async () => {
-    const acquire = vi.spyOn(browserPool, "acquire");
+    const openSession = vi.spyOn(browserRuntime, "openSession");
     await run(ROUTES);
-    expect(acquire).not.toHaveBeenCalled();
+    expect(openSession).not.toHaveBeenCalled();
   });
 
   it("fails with the first cause when more than half the details fail", async () =>

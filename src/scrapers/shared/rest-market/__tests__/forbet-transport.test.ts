@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createReplayHttpClient } from "../../../../__tests__/helpers/replay-http.js";
-import { browserPool } from "../../../base/browser-pool.js";
+import { browserRuntime } from "../../../base/browser-runtime.js";
 import { ForbetBrowserScraper } from "../../../bookmakers/index.js";
 import { FORBET_REST_MARKET, ForbetHttpScraper } from "../brands/forbet.js";
 import { driveBrowserScraperOffline, loadFixtureRoutes, withoutScrapedAt, type ReplayRoutes } from "./offline-harness.js";
@@ -63,11 +63,11 @@ describe("forbet over HTTP", () => {
   });
 
   it("HTTP path requests the listing and 3 details and opens no browser", async () => {
-    const acquire = vi.spyOn(browserPool, "acquire");
+    const openSession = vi.spyOn(browserRuntime, "openSession");
     const replay = createReplayHttpClient(loadFixtureRoutes("forbet", URLS));
     await new ForbetHttpScraper(replay).scrapeFullOffer("premier-league");
     expect([...replay.calls].sort()).toEqual([URLS.list, ...IDS.map(URLS.detail)].sort());
-    expect(acquire).not.toHaveBeenCalled();
+    expect(openSession).not.toHaveBeenCalled();
   });
 
   it("an empty listing is success:true with 0 matches", async () => {

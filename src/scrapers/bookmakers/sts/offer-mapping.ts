@@ -60,7 +60,8 @@ export function mapStsFixtureToOffer(
   // Luton Town" row. This is the exact call site where two distinct inputs
   // became one output, so it is the one place that can name both raw inputs in
   // the warning - which is the diagnostic this bug otherwise leaves no trace of.
-  if (homeMatch.id === awayMatch.id) return { kind: "skip", warning: stsLog.sameClub(fixture, homeMatch.name) };
+  // Compare canonical names: they are unique per roster, while national-team rosters carry id "".
+  if (homeMatch.name === awayMatch.name) return { kind: "skip", warning: stsLog.sameClub(fixture, homeMatch.name) };
 
   return {
     kind: "offer",

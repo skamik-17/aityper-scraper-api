@@ -45,6 +45,16 @@ describe("mapStsFixtureToOffer", () => {
       .toEqual({ kind: "skip", warning: '[STS/FullOffer] Dropping "Leeds" vs "Leeds United": both canonicalize to Leeds United' });
   });
 
+  it.each([
+    ["nations-league", "Hiszpania", "Anglia", "Spain", "England"],
+    ["world-cup-2026", "Niemcy", "Brazylia", "Germany", "Brazil"],
+  ])("national teams without TSDB ids map by name (%s %s vs %s)", (league, home, away, homeTeam, awayTeam) => {
+    // Rosters of national teams carry id "" for every nation; live 2026-11-14 STS dropped every
+    // Nations League fixture as one club when the identity check compared those ids
+    const r = mapStsFixtureToOffer({ ...fx("f2921896"), home, away }, snap("f2921896"), ipl, league);
+    expect(r).toMatchObject({ kind: "offer", offer: { homeTeam, awayTeam } });
+  });
+
   it("silent skip when no payload has the fixture's markets", () => {
     expect(mapStsFixtureToOffer(fx("f2921896"), null, null, "premier-league")).toEqual({ kind: "skip", warning: null });
   });

@@ -457,10 +457,11 @@ const LIGUE_1_ALIASES: Record<string, string> = {
 };
 
 /**
- * Explicit aliases for World Cup 2026 (bookmaker Polish names → TheSportsDB canonical).
- * Seed set; expanded with real scraped variants during scraper wiring.
+ * National-team aliases (bookmaker Polish and English names → TheSportsDB canonical), shared by
+ * every national-team competition (World Cup 2026, UEFA Nations League). An alias whose target
+ * is not in a league's roster resolves to nothing there, so sharing never invents a team.
  */
-const WORLD_CUP_ALIASES: Record<string, string> = {
+const NATIONAL_TEAM_ALIASES: Record<string, string> = {
   "Algieria": "Algeria",
   "Argentyna": "Argentina",
   "Australia": "Australia",
@@ -529,6 +530,58 @@ const WORLD_CUP_ALIASES: Record<string, string> = {
   "Bośnia i Herc.": "Bosnia-Herzegovina", // abbreviated form
   "W.Ziel.Przyl.": "Cape Verde", // Wyspy Zielonego Przylądka abbreviation
   "Wyspy Ziel. Przyl.": "Cape Verde", // betclic mid-length abbreviation
+  // UEFA nations (Nations League 2026/27, TheSportsDB league 4490)
+  "Albania": "Albania",
+  "Andora": "Andorra",
+  "Armenia": "Armenia",
+  "Azerbejdżan": "Azerbaijan",
+  "Białoruś": "Belarus",
+  "Bułgaria": "Bulgaria",
+  "Cypr": "Cyprus",
+  "Czarnogóra": "Montenegro",
+  "Republika Czeska": "Czech Republic",
+  "Czechia": "Czech Republic",
+  "Dania": "Denmark",
+  "Estonia": "Estonia",
+  "Wyspy Owcze": "Faroe Islands",
+  "Farery": "Faroe Islands",
+  "Finlandia": "Finland",
+  "Gruzja": "Georgia",
+  "Gibraltar": "Gibraltar",
+  "Grecja": "Greece",
+  "Węgry": "Hungary",
+  "Islandia": "Iceland",
+  "Irlandia": "Ireland",
+  "Republic of Ireland": "Ireland",
+  "Izrael": "Israel",
+  "Włochy": "Italy",
+  "Kazachstan": "Kazakhstan",
+  "Kosowo": "Kosovo",
+  "Łotwa": "Latvia",
+  "Liechtenstein": "Liechtenstein",
+  "Litwa": "Lithuania",
+  "Luksemburg": "Luxembourg",
+  "Malta": "Malta",
+  "Mołdawia": "Moldova",
+  "Irlandia Północna": "N.Ireland",
+  "Irlandia Płn.": "N.Ireland",
+  "Irlandia Płn": "N.Ireland",
+  "Płn. Irlandia": "N.Ireland",
+  "Northern Ireland": "N.Ireland",
+  "Macedonia Północna": "North Macedonia",
+  "Macedonia Płn.": "North Macedonia",
+  "Macedonia Płn": "North Macedonia",
+  "Północna Macedonia": "North Macedonia",
+  "Polska": "Poland",
+  "Rumunia": "Romania",
+  "San Marino": "San Marino",
+  "Serbia": "Serbia",
+  "Słowacja": "Slovakia",
+  "Słowenia": "Slovenia",
+  "Türkiye": "Turkey",
+  "Turkiye": "Turkey",
+  "Ukraina": "Ukraine",
+  "Walia": "Wales",
 };
 
 /**
@@ -540,7 +593,8 @@ const LEAGUE_ALIASES: Record<string, Record<string, string>> = {
   laliga: LALIGA_ALIASES,
   "serie-a": SERIE_A_ALIASES,
   "ligue-1": LIGUE_1_ALIASES,
-  "world-cup-2026": WORLD_CUP_ALIASES,
+  "world-cup-2026": NATIONAL_TEAM_ALIASES,
+  "nations-league": NATIONAL_TEAM_ALIASES,
 };
 
 /**

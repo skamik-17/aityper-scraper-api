@@ -4,6 +4,7 @@ import { LALIGA_TEAMS } from "./laliga-teams.js";
 import { SERIE_A_TEAMS } from "./serie-a-teams.js";
 import { LIGUE_1_TEAMS } from "./ligue-1-teams.js";
 import { WORLD_CUP_2026_TEAMS } from "./world-cup-2026-teams.js";
+import { NATIONS_LEAGUE_TEAMS } from "./nations-league-teams.js";
 
 export type { CanonicalTeam };
 
@@ -14,6 +15,7 @@ export const LEAGUE_TEAMS: Record<string, CanonicalTeam[]> = {
   "serie-a": SERIE_A_TEAMS,
   "ligue-1": LIGUE_1_TEAMS,
   "world-cup-2026": WORLD_CUP_2026_TEAMS,
+  "nations-league": NATIONS_LEAGUE_TEAMS,
 };
 
 export function getTeamsForLeague(league: string): CanonicalTeam[] {
@@ -26,3 +28,4 @@ export { LALIGA_TEAMS } from "./laliga-teams.js";
 export { SERIE_A_TEAMS } from "./serie-a-teams.js";
 export { LIGUE_1_TEAMS } from "./ligue-1-teams.js";
 export { WORLD_CUP_2026_TEAMS } from "./world-cup-2026-teams.js";
+export { NATIONS_LEAGUE_TEAMS } from "./nations-league-teams.js";

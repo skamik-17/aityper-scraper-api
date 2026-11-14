@@ -89,6 +89,24 @@ export async function countTsdbFixtures(leagueSlug: string): Promise<number> {
   return count ?? 0;
 }
 
+/** Cached fixtures of the league kicking off in [fromIso, toIso]. */
+export async function countTsdbFixturesBetween(leagueSlug: string, fromIso: string, toIso: string): Promise<number> {
+  const supabase = db();
+
+  const { count, error } = await supabase.from("tsdb_fixtures")
+    .select("id", { count: "exact", head: true })
+    .eq("league_slug", leagueSlug)
+    .gte("kickoff_time", fromIso)
+    .lte("kickoff_time", toIso);
+
+  if (error) {
+    console.error("[tsdbFixturesRepo] countTsdbFixturesBetween error:", error);
+    throw error;
+  }
+
+  return count ?? 0;
+}
+
 export async function countUpcomingTsdbFixtures(leagueSlug: string): Promise<number> {
   const supabase = db();
 

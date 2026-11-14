@@ -75,6 +75,13 @@ describe("runFullOfferCycle", () => {
     expect(r.get("premier-league")!.runId).toBe(ID_PL);
   });
 
+  it("a two-league cycle: every bookmaker walks premier-league, then nations-league", async () => {
+    const r = await runFullOfferCycle({ leagues: ["premier-league", "nations-league"], bookmakers: ["betters", "forbet"] });
+    expect(scrapers.betters.scrapeFullOffer.mock.calls.map((c) => c[0])).toEqual(["premier-league", "nations-league"]);
+    expect(r.get("premier-league")!.outcomes.map((o) => o.bookmaker)).toEqual(["betters", "forbet"]);
+    expect(r.get("nations-league")!.outcomes.map((o) => o.bookmaker)).toEqual(["betters", "forbet"]);
+  });
+
   it("builds units only where the league is supported", async () => {
     const r = await runFullOfferCycle({ leagues: ["premier-league", "world-cup-2026"], bookmakers: ["betters", "forbet"] });
     expect(scrapers.betters.scrapeFullOffer.mock.calls.map((c) => c[0])).toEqual(["premier-league"]);

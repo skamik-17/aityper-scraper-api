@@ -16,6 +16,7 @@ import { syncAllEnabledLeagues, syncStaleLeagues } from "./tsdb-sync-service.js"
 import { decideStartupScrape, getStalestOkRunAt } from "./startup-policy.js";
 import { formatIncrementalConfigLine, getIncrementalConfig } from "../config/incremental.js";
 import { buildTickRequest, type ScrapeMode } from "./incremental/scrape-dispatch.js";
+import { refreshLeagueWindows, scheduledLeagues } from "./league-window.js";
 
 // At startup the local Supabase stack can still be coming up: wait for it instead of failing once.
 const STARTUP_DB_WAIT_MS = 120_000;
@@ -136,6 +137,8 @@ async function executeRun(req: RunRequest, ctx: RunExecutionContext): Promise<vo
   if (!recordOutcomes) return;
   const target = req.trigger === "admin" ? lastAdminResults : lastResults;
   for (const [league, result] of multi.leagues) target.set(league, result);
+  // The next scheduled run picks its leagues from a fresh fixture-window decision
+  if (req.trigger !== "admin") await refreshLeagueWindows(CONFIG.ENABLED_LEAGUES);
 
   if (startup) {
     console.log(
@@ -151,8 +154,11 @@ async function executeRun(req: RunRequest, ctx: RunExecutionContext): Promise<vo
 /** The process-wide run lock: startup, interval and admin runs all go through it. */
 export const runCoordinator = new RunCoordinator(executeRun);
 
-function fullRun(trigger: "startup" | "interval"): RunRequest {
-  return { trigger, leagues: [...CONFIG.ENABLED_LEAGUES], bookmakers: [...CONFIG.BOOKMAKERS] };
+/** A scheduled full run over the enabled leagues inside their fixture window; null when none is. */
+function fullRun(trigger: "startup" | "interval"): RunRequest | null {
+  const leagues = scheduledLeagues(CONFIG.ENABLED_LEAGUES);
+  if (leagues.length === 0) return null;
+  return { trigger, leagues, bookmakers: [...CONFIG.BOOKMAKERS] };
 }
 
 /**
@@ -189,6 +195,7 @@ export async function runInitialTsdbSync(dbWaitMs: number = STARTUP_DB_WAIT_MS):
     if (results.length > 0) {
       const total = results.reduce((a, r) => a + r.synced, 0);
       console.log(`[Scheduler] Initial TSDB sync complete, synced: ${total} fixtures`);
+      await refreshLeagueWindows(CONFIG.ENABLED_LEAGUES);
     }
   } catch (error) {
     console.error("[Scheduler] Initial TSDB sync failed:", error);
@@ -219,17 +226,19 @@ export async function startScheduler(): Promise<void> {
   const intervalMs = CONFIG.SCRAPE_INTERVAL_MINUTES * 60_000;
   const tickMs = tickMinutes * 60_000;
   const request = ticking
-    ? (trigger: "startup" | "interval"): RunRequest | null =>
-        trigger === "startup"
-          ? fullRun("startup")
-          : buildTickRequest({
-              now: Date.now(),
-              lastFullAt,
-              fullIntervalMs: intervalMs,
-              leagues: CONFIG.ENABLED_LEAGUES,
-              bookmakers: CONFIG.BOOKMAKERS,
-              cfg: incremental,
-            })
+    ? (trigger: "startup" | "interval"): RunRequest | null => {
+        if (trigger === "startup") return fullRun("startup");
+        const leagues = scheduledLeagues(CONFIG.ENABLED_LEAGUES);
+        if (leagues.length === 0) return null;
+        return buildTickRequest({
+          now: Date.now(),
+          lastFullAt,
+          fullIntervalMs: intervalMs,
+          leagues,
+          bookmakers: CONFIG.BOOKMAKERS,
+          cfg: incremental,
+        });
+      }
     : fullRun;
   const scheduler = new IntervalScheduler({ intervalMs: tickMs, coordinator: runCoordinator, request });
   intervalScheduler = scheduler;
@@ -251,9 +260,13 @@ export async function startScheduler(): Promise<void> {
 
   console.log("[Scheduler] Scheduled jobs started");
 
-  // Startup scrape or the next interval run, from how fresh the stored data is
+  // Startup scrape or the next interval run, from how fresh the stored data is. A league outside
+  // its fixture window has no fresh run to wait for, so it never forces a startup scrape.
+  await refreshLeagueWindows(CONFIG.ENABLED_LEAGUES);
+  // stopScheduler() (shutdown) may have run during the fixture lookup
+  if (intervalScheduler !== scheduler) return;
   const now = new Date();
-  const stalestOkRunAt = await getStalestOkRunAt(CONFIG.ENABLED_LEAGUES);
+  const stalestOkRunAt = await getStalestOkRunAt(scheduledLeagues(CONFIG.ENABLED_LEAGUES));
   const decision = decideStartupScrape(CONFIG.STARTUP_SCRAPE, stalestOkRunAt, now, intervalMs);
   // stopScheduler() (shutdown) may have run during the freshness lookup
   if (intervalScheduler !== scheduler) return;
@@ -286,6 +299,7 @@ export function startTsdbSyncJobs(): void {
         const results = await syncAllEnabledLeagues();
         const total = results.reduce((a, r) => a + r.synced, 0);
         console.log(`[Scheduler] TSDB sync complete, synced: ${total} fixtures`);
+        await refreshLeagueWindows(CONFIG.ENABLED_LEAGUES);
       } catch (error) {
         console.error("[Scheduler] TSDB sync failed:", error);
       }

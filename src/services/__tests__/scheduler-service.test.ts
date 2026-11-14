@@ -12,6 +12,10 @@ const m = vi.hoisted(() => ({
   deleteScraperRunsOlderThan: vi.fn(),
 }));
 
+// Fixture windows: every league in its window unless a test says otherwise
+const lw = vi.hoisted(() => ({ refreshLeagueWindows: vi.fn(), scheduledLeagues: vi.fn() }));
+vi.mock("../league-window.js", async () => lw);
+
 vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist, runScrapeCycle: m.runScrapeCycle }));
 vi.mock("../../scrapers/aggregator.js", async () => ({ closeAllBrowsers: m.closeAllBrowsers }));
 vi.mock("../tsdb-sync-service.js", async () => ({
@@ -29,6 +33,7 @@ vi.mock("../../repositories/scraper-run-repository.js", async () => ({
   deleteScraperRunsOlderThan: m.deleteScraperRunsOlderThan,
 }));
 
+import { CONFIG } from "../../config/index.js";
 import {
   runAllLeaguesScrape,
   runDailyCleanup,
@@ -73,6 +78,8 @@ beforeEach(() => {
   m.waitForDatabase.mockResolvedValue({ ok: true });
   m.cleanupOldOdds.mockResolvedValue({ deleted: 12 });
   m.deleteScraperRunsOlderThan.mockResolvedValue(3);
+  lw.refreshLeagueWindows.mockReset().mockResolvedValue(undefined);
+  lw.scheduledLeagues.mockReset().mockImplementation((leagues: readonly string[]) => [...leagues]);
   errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 });
@@ -87,7 +94,7 @@ afterEach(() => {
 describe("runAllLeaguesScrape", () => {
   it("forwards dbWaitMs from runAllLeaguesScrape to runScrapeAndPersist", async () => {
     await runAllLeaguesScrape({ dbWaitMs: 120_000 });
-    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
+    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league", "nations-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
   });
 
   it("cron and manual runs probe once instead of waiting", async () => {
@@ -98,7 +105,7 @@ describe("runAllLeaguesScrape", () => {
   it("an aborted league counts every bookmaker as an error", async () => {
     m.runScrapeCycle.mockResolvedValue(new Map([["premier-league",
       scrapeResult({ aborted: "db_unreachable", successCount: 0, errorCount: 14, uniqueMatches: 0, marketsScraped: 0, marketsSaved: 0 })]]));
-    expect(await runAllLeaguesScrape()).toMatchObject({ totalSuccessCount: 0, totalErrorCount: 14 });
+    expect(await runAllLeaguesScrape({ leagues: ["premier-league"] })).toMatchObject({ totalSuccessCount: 0, totalErrorCount: 14 });
   });
 });
 
@@ -165,7 +172,30 @@ describe("startup timers", () => {
     startScheduler();
     await vi.advanceTimersByTimeAsync(5_000);
     expect(m.runScrapeCycle).toHaveBeenCalledTimes(1);
-    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
+    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league", "nations-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
+  });
+
+  it("CONFIG.ENABLED_LEAGUES has both leagues", () => expect(CONFIG.ENABLED_LEAGUES).toEqual(["premier-league", "nations-league"]));
+
+  it("a scheduled run skips a league outside its fixture window", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    lw.scheduledLeagues.mockImplementation((leagues: readonly string[]) => leagues.filter((l) => l !== "nations-league"));
+    startScheduler();
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.anything());
+  });
+
+  it("the windows are refreshed before the startup decision and after every scheduled run", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(NOW);
+    startScheduler();
+    await vi.advanceTimersByTimeAsync(0);
+    expect(lw.refreshLeagueWindows).toHaveBeenCalledTimes(1);
+    expect(lw.refreshLeagueWindows).toHaveBeenCalledWith(CONFIG.ENABLED_LEAGUES);
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(m.runScrapeCycle).toHaveBeenCalledTimes(1);
+    expect(lw.refreshLeagueWindows).toHaveBeenCalledTimes(2);
   });
 
   it("the initial TSDB sync goes through runInitialTsdbSync", async () => {

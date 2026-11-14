@@ -27,6 +27,10 @@ vi.mock("../../config/incremental.js", async (importOriginal) => ({
   getIncrementalConfig: () => m.cfg,
 }));
 
+vi.mock("../league-window.js", async () => ({
+  refreshLeagueWindows: async () => {},
+  scheduledLeagues: (leagues: readonly string[]) => [...leagues],
+}));
 import { getSchedulerStatus, runCoordinator, startScheduler, stopScheduler } from "../scheduler-service.js";
 
 const MIN = 60_000;

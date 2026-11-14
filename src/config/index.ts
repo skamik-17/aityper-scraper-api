@@ -68,6 +68,8 @@ export const CONFIG = {
   // Supported leagues
   ENABLED_LEAGUES: [
     "premier-league",
+    // Scheduled runs skip it outside its fixture window (services/league-window.ts)
+    "nations-league",
   ] as const,
 
   // Bookmakers

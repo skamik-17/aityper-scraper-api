@@ -15,6 +15,11 @@ export interface LeagueConfig {
   displayNamePl: string;
   country: string;
   bookmakers: Partial<Record<PolishBookmaker, LeagueBookmakerConfig>>;
+  /**
+   * A competition that plays only in windows (international breaks): scheduled runs scrape it only
+   * while a cached TheSportsDB fixture kicks off between `tailHours` ago and `leadDays` ahead.
+   */
+  fixtureWindow?: { leadDays: number; tailHours: number };
 }
 
 export const LEAGUES: LeagueConfig[] = [
@@ -157,6 +162,8 @@ export const LEAGUES: LeagueConfig[] = [
     displayName: "UEFA Nations League",
     displayNamePl: "Liga Narodów UEFA",
     country: "Europe",
+    // Plays only in international windows; between them every bookmaker lists 0 matches
+    fixtureWindow: { leadDays: 14, tailHours: 3 },
     bookmakers: {
       sts: { id: 12277, url: "https://www.sts.pl/pl/zaklady-bukmacherskie/pilka-nozna/miedzynarodowe/liga-narodow-uefa/1/3/12277" },
       fortuna: { id: "ufo:tour:00-078" },

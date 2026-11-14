@@ -13,6 +13,10 @@ const m = vi.hoisted(() => ({
 }));
 vi.mock("../retention-service.js", async () => ({ runRetentionCleanup: m.runRetentionCleanup }));
 
+vi.mock("../league-window.js", async () => ({
+  refreshLeagueWindows: async () => {},
+  scheduledLeagues: (leagues: readonly string[]) => [...leagues],
+}));
 vi.mock("../scraper-service.js", async () => ({ runScrapeAndPersist: m.runScrapeAndPersist, runScrapeCycle: m.runScrapeCycle }));
 vi.mock("../../scrapers/aggregator.js", async () => ({ closeAllBrowsers: m.closeAllBrowsers }));
 vi.mock("node-cron", async () => ({
@@ -110,7 +114,7 @@ describe("scheduler runs through the RunCoordinator", () => {
       sp.decideStartupScrape.mockReturnValueOnce({ firstTrigger: "startup", firstDelayMs: 5_000, reason: "auto: no OK run on record" });
       void startScheduler();
       await vi.advanceTimersByTimeAsync(5_000);
-      expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
+      expect(m.runScrapeCycle).toHaveBeenCalledWith(["premier-league", "nations-league"], undefined, expect.objectContaining({ dbWaitMs: 120_000 }));
       await runCoordinator.whenIdle();
       stopScheduler();
     } finally {
